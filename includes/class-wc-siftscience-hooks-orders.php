@@ -1,0 +1,69 @@
+<?php
+
+/*
+ * Author: Nabeel Sulieman
+ * Description: This class handles the display of SiftScience feedback icons in order list and order view.
+ * License: GPL2
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
+
+	include_once( 'class-wc-siftscience-html.php' );
+
+	class WC_SiftScience_Hooks_Orders {
+		public function run() {
+			add_filter( 'manage_edit-shop_order_columns', array( $this, 'create_header' ), 100 );
+			add_action( 'manage_shop_order_posts_custom_column', array( $this, 'create_row' ), 11 );
+
+            add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+        }
+
+		public function create_row( $column ) {
+			if ( $column == 'siftsci' ) {
+				WC_SiftScience_Html::score_label_icons();
+			}
+		}
+
+		public function create_header( $columns ) {
+			$icon = 'Sift Sci';
+			$header = WC_SiftScience_Html::tool_tip( $icon, 'SiftScience' );
+			$html = WC_SiftScience_Html::div( $header, array( 'style' => 'width: 24px;' ) );
+			$newcolumns = array();
+
+			foreach ( $columns as $k => $v ) {
+				$newcolumns[$k] = $v;
+				if ( $k == 'order_status' ) {
+					$newcolumns['siftsci'] = $html;
+				}
+			}
+
+			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
+			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
+
+			return $newcolumns;
+		}
+
+        public function add_meta_box() {
+            add_meta_box(
+                'wc_sift_score_meta_box',
+                'SiftScience Fraud score',
+                array( $this, 'display_siftsci_box' ),
+                'shop_order',
+                'side',
+                'high'
+            );
+        }
+
+        public function display_siftsci_box() {
+            WC_SiftScience_Html::score_label_icons( false );
+
+            $js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
+            WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
+        }
+	}
+
+endif;
