@@ -54,6 +54,14 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		private function is_production() {
 			return get_option( self::$mode ) === 'production';
 		}
+
+		public function admin_notice() {
+			echo "<div class='notice notice-error is-dismissible'><p>This is a test message</p></div>";
+		}
+
+		public function add_admin_notice() {
+			add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+		}
 	}
 
 endif;
