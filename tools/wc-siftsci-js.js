@@ -4,7 +4,7 @@
  * License: GPL2
  */
 
-var _sift = _sift || [];
+var _sift = window._sift = window._sift || [];
 _sift.push( [ '_setAccount', _wc_siftsci_js_input_data.js_key ] );
 _sift.push( [ '_setUserId', _wc_siftsci_js_input_data.user_id ] );
 _sift.push( [ '_setSessionId', _wc_siftsci_js_input_data.session_id ] );
