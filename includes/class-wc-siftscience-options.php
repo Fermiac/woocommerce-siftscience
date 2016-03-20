@@ -48,7 +48,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function is_setup() {
-			return get_option( WC_SiftScience_Options::$is_api_setup ) === 1;
+			return ( get_option( WC_SiftScience_Options::$is_api_setup ) === '1' );
 		}
 
 		private function is_production() {

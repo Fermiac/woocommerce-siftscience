@@ -14,15 +14,17 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 	include_once( 'class-wc-siftscience-options.php' );
 
-    class WC_SiftScience_Hooks_Admin {
+	class WC_SiftScience_Hooks_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
-        private $settings;
+		private $settings;
+		private $options;
 
-        public function __construct()
-        {
-            $this->settings = $this->get_settings();
-        }
+		public function __construct()
+		{
+			$this->settings = $this->get_settings();
+			$this->options = new WC_SiftScience_Options();
+		}
 
 		public function run() {
 			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
@@ -31,12 +33,26 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			add_action( 'admin_notices', array( $this, 'settings_notice' ) );
 		}
 
+		public function check_api() {
+			$comm = new WC_SiftScience_Comm();
+			$response = $comm->get_user_score( 1 );
+			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
+		}
+
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
 		}
 
 		public function save_settings() {
 			WC_Admin_Settings::save_fields( $this->settings );
+
+			$is_api_working = 0;
+			if ( $this->check_api() ) {
+				$is_api_working = 1;
+			}
+
+			error_log('updating the optiom');
+			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
 		}
 
 		public function add_settings_page( $pages ) {
@@ -80,13 +96,18 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			return array( 'title' => $title, 'desc' => $desc, 'desc_tip' => true, 'type' => 'radio', 'options' => $options, 'id' => $id );
 		}
 
-	    public function settings_notice() {
-		    $link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
-		    $here = "<a href='$link'>here</a>";
-		    echo "<div class='notice notice-error is-dismissible'>" .
-		         "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
-		         "</div>";
-	    }
+		public function settings_notice() {
+			error_log('checking the option');
+			if ( $this->options->is_setup() ) {
+				return;
+			}
+
+			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
+			$here = "<a href='$link'>here</a>";
+			echo "<div class='notice notice-error is-dismissible'>" .
+				 "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+				 "</div>";
+		}
 	}
 
 endif;
