@@ -28,6 +28,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
 			add_action( 'woocommerce_settings_siftsci', array( $this, 'output_settings_fields' ) );
 			add_action( 'woocommerce_settings_save_siftsci', array( $this, 'save_settings' ) );
+			add_action( 'admin_notices', array( $this, 'settings_notice' ) );
 		}
 
 		public function output_settings_fields() {
@@ -78,6 +79,14 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		private function get_radio_buttons( $id, $title, $desc, $options ) {
 			return array( 'title' => $title, 'desc' => $desc, 'desc_tip' => true, 'type' => 'radio', 'options' => $options, 'id' => $id );
 		}
+
+	    public function settings_notice() {
+		    $link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
+		    $here = "<a href='$link'>here</a>";
+		    echo "<div class='notice notice-error is-dismissible'>" .
+		         "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+		         "</div>";
+	    }
 	}
 
 endif;
