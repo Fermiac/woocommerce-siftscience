@@ -14,20 +14,29 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 	include_once( 'class-wc-siftscience-options.php' );
 
-    class WC_SiftScience_Hooks_Admin {
+	class WC_SiftScience_Hooks_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
-        private $settings;
+		private $settings;
+		private $options;
 
-        public function __construct()
-        {
-            $this->settings = $this->get_settings();
-        }
+		public function __construct()
+		{
+			$this->settings = $this->get_settings();
+			$this->options = new WC_SiftScience_Options();
+		}
 
 		public function run() {
 			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
 			add_action( 'woocommerce_settings_siftsci', array( $this, 'output_settings_fields' ) );
 			add_action( 'woocommerce_settings_save_siftsci', array( $this, 'save_settings' ) );
+			add_action( 'admin_notices', array( $this, 'settings_notice' ) );
+		}
+
+		public function check_api() {
+			$comm = new WC_SiftScience_Comm();
+			$response = $comm->get_user_score( 1 );
+			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 
 		public function output_settings_fields() {
@@ -36,6 +45,13 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 		public function save_settings() {
 			WC_Admin_Settings::save_fields( $this->settings );
+			$is_api_working = $this->check_api() ? 1 : 0;
+			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
+			if ( $is_api_working === 1 ) {
+				WC_Admin_Settings::add_message( 'API is correctly configured' );
+			} else {
+				WC_Admin_Settings::add_error( 'API settings are broken' );
+			}
 		}
 
 		public function add_settings_page( $pages ) {
@@ -77,6 +93,21 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 		private function get_radio_buttons( $id, $title, $desc, $options ) {
 			return array( 'title' => $title, 'desc' => $desc, 'desc_tip' => true, 'type' => 'radio', 'options' => $options, 'id' => $id );
+		}
+
+		public function settings_notice() {
+			$uri = $_SERVER['REQUEST_URI'];
+			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
+			if ( $is_admin_page || $this->options->is_setup() ) {
+				return;
+			}
+
+
+			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
+			$here = "<a href='$link'>here</a>";
+			echo "<div class='notice notice-error is-dismissible'>" .
+				 "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+				 "</div>";
 		}
 	}
 
