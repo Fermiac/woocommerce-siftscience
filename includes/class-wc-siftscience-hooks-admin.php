@@ -45,14 +45,13 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 		public function save_settings() {
 			WC_Admin_Settings::save_fields( $this->settings );
-
-			$is_api_working = 0;
-			if ( $this->check_api() ) {
-				$is_api_working = 1;
-			}
-
-			error_log('updating the optiom');
+			$is_api_working = $this->check_api() ? 1 : 0;
 			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
+			if ( $is_api_working === 1 ) {
+				WC_Admin_Settings::add_message( 'API is correctly configured' );
+			} else {
+				WC_Admin_Settings::add_error( 'API settings are broken' );
+			}
 		}
 
 		public function add_settings_page( $pages ) {
@@ -97,10 +96,12 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		}
 
 		public function settings_notice() {
-			error_log('checking the option');
-			if ( $this->options->is_setup() ) {
+			$uri = $_SERVER['REQUEST_URI'];
+			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
+			if ( $is_admin_page || $this->options->is_setup() ) {
 				return;
 			}
+
 
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
