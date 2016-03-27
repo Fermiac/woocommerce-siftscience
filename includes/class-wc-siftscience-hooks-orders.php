@@ -19,8 +19,8 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			add_filter( 'manage_edit-shop_order_columns', array( $this, 'create_header' ), 100 );
 			add_action( 'manage_shop_order_posts_custom_column', array( $this, 'create_row' ), 11 );
 
-            add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
-        }
+			add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+		}
 
 		public function create_row( $column ) {
 			if ( $column == 'siftsci' ) {
@@ -47,23 +47,23 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			return $newcolumns;
 		}
 
-        public function add_meta_box() {
-            add_meta_box(
-                'wc_sift_score_meta_box',
-                'SiftScience Fraud score',
-                array( $this, 'display_siftsci_box' ),
-                'shop_order',
-                'side',
-                'high'
-            );
-        }
+		public function add_meta_box() {
+			add_meta_box(
+				'wc_sift_score_meta_box',
+				'SiftScience Fraud score',
+				array( $this, 'display_siftsci_box' ),
+				'shop_order',
+				'side',
+				'high'
+			);
+		}
 
-        public function display_siftsci_box() {
-            WC_SiftScience_Html::score_label_icons( false );
+		public function display_siftsci_box() {
+			WC_SiftScience_Html::score_label_icons( false );
 
-            $js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
-            WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
-        }
+			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
+			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
+		}
 	}
 
 endif;

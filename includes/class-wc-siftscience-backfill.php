@@ -43,6 +43,7 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 		private function create_order( $order_id ) {
 			$order = new WC_Order( $order_id );
 			$ord_arr = $this->create_order_array( $order );
+			$ord_arr = apply_filters( 'woocommerce_siftscience_send_order_data', $ord_arr );
 			$result = $this->comm->post_event( '$create_order', $order->user_id, $ord_arr );
 			return $result;
 		}
