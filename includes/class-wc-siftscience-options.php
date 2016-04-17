@@ -14,26 +14,21 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
 		public static $mode = 'siftsci_reporting_mode';
-		public static $api_sandbox = 'siftsci_api_sandbox';
-		public static $js_sandbox = 'siftsci_js_sandbox';
-		public static $api_production = 'siftsci_api_production';
-		public static $js_production = 'siftsci_js_production';
+		public static $api_key = 'siftsci_api_key';
+		public static $js_key = 'siftsci_js_key';
 		public static $is_api_setup = 'siftsci_is_api_setup';
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 
 		public function get_api_key() {
-			$key = $this->is_production() ? self::$api_production : self::$api_sandbox;
-			return get_option( $key );
+			return get_option( self::$api_key );
 		}
 
 		public function get_backfill_meta_key() {
-			return $this->is_production() ?
-				"_wcsiftsci_isbackfill_prod" : "_wcsiftsci_isbackfill_sand";
+			return '_wcsiftsci_isbackfill';
 		}
 
 		public function get_js_key() {
-			$key = $this->is_production() ? self::$js_production : self::$js_sandbox;
-			return get_option( $key );
+			return get_option( self::$js_key );
 		}
 
 		public function get_user_id() {
@@ -54,10 +49,6 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public function send_on_create_enabled() {
 			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
-		}
-
-		private function is_production() {
-			return get_option( self::$mode ) === 'production';
 		}
 	}
 
