@@ -43,11 +43,12 @@ if ( ! class_exists( 'WC_SiftScience_Score' ) ) :
 		}
 
 		private function process_request( $action, $id ) {
-            if ($action != 'backfill' && ! $this->backfill->is_backfilled( $id ) ) {
-                $result = $this->default_result();
-                $result['backfill']['display'] = 'block';
-                return $result;
-            }
+			if ($action != 'backfill' && ! $this->backfill->is_backfilled( $id ) ) {
+				$result                            = $this->default_result();
+				$result[ 'backfill' ][ 'display' ] = 'block';
+
+				return $result;
+			}
 
 			switch ( $action ) {
 				case 'get':
