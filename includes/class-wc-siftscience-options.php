@@ -19,6 +19,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $api_production = 'siftsci_api_production';
 		public static $js_production = 'siftsci_js_production';
 		public static $is_api_setup = 'siftsci_is_api_setup';
+		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 
 		public function get_api_key() {
 			$key = $this->is_production() ? self::$api_production : self::$api_sandbox;
@@ -48,7 +49,11 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function is_setup() {
-			return ( get_option( WC_SiftScience_Options::$is_api_setup ) === '1' );
+			return ( get_option( self::$is_api_setup ) === '1' );
+		}
+
+		public function send_on_create_enabled() {
+			return ( get_option( self::$send_on_create_enabled ) === '1' );
 		}
 
 		private function is_production() {
