@@ -99,11 +99,9 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
 			$result = wp_remote_request( $url, $args );
 
-			if ( WP_DEBUG === true && WP_DEBUG_LOG == true ) {
-				$this->logger->log( "\nSent request to : $url\n" .
-					'request details : ' . json_encode( $args ) . "\n" .
-					'response details: ' . json_encode( $result ) );
-			}
+			$this->logger->log( "\nSent request to : $url\n" .
+				'request details : ' . json_encode( $args ) . "\n" .
+				'response details: ' . json_encode( $result ) );
 
 			return $result;
 		}
