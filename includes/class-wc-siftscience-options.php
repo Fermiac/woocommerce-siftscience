@@ -53,7 +53,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function send_on_create_enabled() {
-			return ( get_option( self::$send_on_create_enabled ) === '1' );
+			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
 		}
 
 		private function is_production() {

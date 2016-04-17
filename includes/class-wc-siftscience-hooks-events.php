@@ -13,12 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 	include_once( 'class-wc-siftscience-options.php' );
+	include_once( 'class-wc-siftscience-eventdata.php' );
 	include_once( 'class-wc-siftscience-comm.php' );
 	include_once( 'class-wc-siftscience-backfill.php' );
 	include_once( 'class-wc-siftscience-nonce.php' );
 
 	class WC_SiftScience_Hooks_Events {
 		private $posts = null;
+		private $settings;
+		private $comm;
+		private $logger;
+		private $backfill;
+
+		public function __construct( WC_SiftScience_Options $settings,
+			WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger,
+			WC_SiftScience_Backfill $backfill ) {
+			$this->settings = $settings;
+			$this->comm = $comm;
+			$this->logger = $logger;
+			$this->backfill = $backfill;
+		}
 
 		public function run() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'add_script' ) );
@@ -31,6 +45,14 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 			add_action( 'woocommerce_add_to_cart', array( $this, 'add_to_cart' ) );
 			add_action( 'woocommerce_cart_item_removed', array( $this, 'remove_from_cart' ) );
+
+			if ( $this->settings->send_on_create_enabled() ) {
+				add_action( 'woocommerce_new_order', array( $this, 'woocommerce_new_order' ) );
+			}
+		}
+
+		public function woocommerce_new_order( $order_id ) {
+			$this->backfill->backfill( $order_id );
 		}
 
 		public function add_script() {
