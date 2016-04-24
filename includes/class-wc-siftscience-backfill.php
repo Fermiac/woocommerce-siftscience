@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 			return array(
 				'$order_id'         => $order->get_order_number(),
 				'$user_email'       => $order->billing_email,
-				'$time'             => strtotime( $order->order_date ),
+				'$time'             => strtotime( $order->order_date ) * 1000,
 				'$amount'           => $order->get_total() * 1000000,
 				'$currency_code'    => 'USD',
 				'$billing_address'  => $this->create_address( $order, 'billing' ),
