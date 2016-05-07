@@ -1,0 +1,24 @@
+{
+  "name": "woocommerce-siftscience",
+  "version": "1.0.0",
+  "description": "WooCommerce Extension for SiftScience",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fermiac/woocommerce-siftscience.git"
+  },
+  "keywords": [
+    "woo",
+    "woocommerce",
+    "siftscience"
+  ],
+  "author": "Nabeel Sulieman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fermiac/woocommerce-siftscience/issues"
+  },
+  "homepage": "https://github.com/Fermiac/woocommerce-siftscience#readme"
+}
