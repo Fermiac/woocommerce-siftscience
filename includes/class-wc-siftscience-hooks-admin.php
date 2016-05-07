@@ -63,36 +63,18 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			return array(
 				$this->get_title( 'siftsci_title', 'SiftScience Settings' ),
 
-				$this->get_radio_buttons( WC_SiftScience_Options::$mode, 'Reporting Mode',
-					'Select sandbox for testing and production for real live data',
-					array( 'sandbox' => 'Sandbox', 'production' => 'Production' ) ),
+				$this->get_text_input( WC_SiftScience_Options::$api_key,
+					'Rest API Key', 'The API key for production' ),
+
+				$this->get_text_input( WC_SiftScience_Options::$js_key,
+					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
 					'Automatically send data to SiftScience when an order is created'
 				),
 
-				$this->get_section_end( 'sifsci_section_mode' ),
-
-				$this->get_title( 'siftsci_title_sandbox', 'Sandbox Settings' ),
-
-				$this->get_text_input( WC_SiftScience_Options::$api_sandbox,
-					'Rest API Key', 'The API key for sandbox' ),
-
-				$this->get_text_input( WC_SiftScience_Options::$js_sandbox,
-					'Javascript Snippet Key', 'Javascript snippet key for sandbox' ),
-
-				$this->get_section_end( 'sifsci_section_sandbox' ),
-
-				$this->get_title( 'siftsci_title_production', 'Production Settings' ),
-
-				$this->get_text_input( WC_SiftScience_Options::$api_production,
-					'Rest API Key', 'The API key for production' ),
-
-				$this->get_text_input( WC_SiftScience_Options::$js_production,
-					'Javascript Snippet Key', 'Javascript snippet key for production' ),
-
-				$this->get_section_end( 'sifsci_section_production' ),
+				$this->get_section_end( 'sifsci_section_main' ),
 			);
 		}
 
