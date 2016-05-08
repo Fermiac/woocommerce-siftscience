@@ -42,9 +42,13 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
 
-			$jsPath = plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) );
+			$isDev = defined( 'WC_SIFTSCI_DEV' ) && WC_SIFTSCI_DEV;
+			$jsPath = $isDev ?
+				'http://localhost:8085/batch-upload.js' :
+				plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) );
+
 			echo '<div id="batch-upload"></div>';
-			echo "<script src='$jsPath'></script>";
+			wp_enqueue_script( 'wc-siftsci-batch-upload', $jsPath, array(), false, true );
 		}
 
 		public function save_settings() {
@@ -77,7 +81,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 					'Automatically send data',
 					'Automatically send data to SiftScience when an order is created'
 				),
-
+				
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
 		}

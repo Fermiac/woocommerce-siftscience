@@ -2,7 +2,19 @@ import React from 'react';
 
 const component = () => {
 	return (
-		<div>Hello World!!!</div>
+		<table className="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row" class="titledesc">
+						<label>Batch Upload</label>
+					</th>
+					<td class="forminp forminp-text">
+						<button type="button" className="button-primary">Upload</button>
+						<p class="description">Send all your orders to SiftScience</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	);
 };
 
