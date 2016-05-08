@@ -6,6 +6,14 @@
  * License: GPL2
  */
 
+include_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php' );
+
+if ( ! is_super_admin() ) {
+	http_response_code( 401 );
+	echo json_encode( array( 'error' => 'not allowed' ) );
+	die;
+}
+
 if ( ! class_exists( "WC_SiftScience_Event" ) ) :
 
 	include_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php' );
