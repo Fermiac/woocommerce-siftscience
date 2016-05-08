@@ -1,6 +1,8 @@
 import React from 'react';
+import api from '../../lib/api';
 
 const component = () => {
+	api();
 	return (
 		<table className="form-table">
 			<tbody>
