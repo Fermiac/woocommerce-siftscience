@@ -2,7 +2,6 @@ import React from 'react';
 import api from '../../lib/api';
 
 const component = () => {
-	api();
 	return (
 		<table className="form-table">
 			<tbody>
@@ -11,7 +10,12 @@ const component = () => {
 						<label>Batch Upload</label>
 					</th>
 					<td class="forminp forminp-text">
-						<button type="button" className="button-primary" style={ { backgroundColor: 'green' } }>
+						<button
+							type="button"
+							className="button-primary"
+							style={ { backgroundColor: 'green' } }
+						    onClick={ api }
+						>
 							Upload
 						</button>
 						<p class="description">
