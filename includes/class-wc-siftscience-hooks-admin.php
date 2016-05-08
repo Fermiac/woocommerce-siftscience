@@ -41,6 +41,10 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
+
+			$jsPath = plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) );
+			echo '<div id="batch-upload"></div>';
+			echo "<script src='$jsPath'></script>";
 		}
 
 		public function save_settings() {
@@ -123,7 +127,6 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			if ( $is_admin_page || $this->options->is_setup() ) {
 				return;
 			}
-
 
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
