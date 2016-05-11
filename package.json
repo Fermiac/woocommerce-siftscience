@@ -25,7 +25,8 @@
   "homepage": "https://github.com/Fermiac/woocommerce-siftscience#readme",
   "dependencies": {
     "react": "^15.0.2",
-    "react-dom": "^15.0.2"
+    "react-dom": "^15.0.2",
+    "redux": "^3.5.2"
   },
   "devDependencies": {
     "babel": "^6.5.2",

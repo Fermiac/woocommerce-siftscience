@@ -1,0 +1,4 @@
+export default {
+	IS_FETCHING: 'IS_FETCHING',
+	FETCH_COMPLETE: 'FETCH_COMPLETE',
+}
