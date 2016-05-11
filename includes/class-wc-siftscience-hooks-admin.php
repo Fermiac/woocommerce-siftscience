@@ -42,11 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
 
-			$isDev = defined( 'WC_SIFTSCI_DEV' ) && WC_SIFTSCI_DEV;
-			$jsPath = $isDev ?
-				'http://localhost:8085/batch-upload.js' :
-				plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) );
-
+			$jsPath = plugins_url( "dist/app.js", dirname( __FILE__ ) );
 			echo '<div id="batch-upload"></div>';
 			wp_enqueue_script( 'wc-siftsci-batch-upload', $jsPath, array(), false, true );
 		}
