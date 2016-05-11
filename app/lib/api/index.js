@@ -1,6 +1,6 @@
 //import fetch from 'fetch';
 
-const fetchRoot  = () => {
+const fetchRoot = () => {
 	fetch( 'http://localhost/ss/wp-content/plugins/woocommerce-siftscience/api.php', {
 		credentials: 'same-origin',
 	} )

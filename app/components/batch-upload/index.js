@@ -14,7 +14,7 @@ const component = () => {
 							type="button"
 							className="button-primary"
 							style={ { backgroundColor: 'green' } }
-						    onClick={ api }
+							onClick={ api }
 						>
 							Upload
 						</button>

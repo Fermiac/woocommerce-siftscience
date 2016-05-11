@@ -15,7 +15,7 @@ const babelSettings = {
 
 module.exports = {
 	entry: {
-		'batch-upload': [ 'babel-polyfill', './app/batch-upload.js' ],
+		'app': [ 'babel-polyfill', './app/index.js' ],
 	},
 	output: {
 		path: path.join( __dirname, 'dist' ),
@@ -28,7 +28,7 @@ module.exports = {
 				test: /\.js$/,
 				loaders: [
 					'babel?' + JSON.stringify( babelSettings ),
-					//'eslint'
+					'eslint',
 				],
 				include: /app/,
 				exclude: /node_modules/,
