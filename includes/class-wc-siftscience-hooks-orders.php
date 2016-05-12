@@ -24,7 +24,9 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 
 		public function create_row( $column ) {
 			if ( $column == 'siftsci' ) {
-				WC_SiftScience_Html::score_label_icons();
+				global $post;
+				$id = $post->ID;
+				echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'>hello</div>\n";
 			}
 		}
 
@@ -43,6 +45,12 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 
 			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
+
+			$jsPath = plugins_url( "dist/app.js", dirname( __FILE__ ) );
+			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
+			$data = array( 'imgPath' => $imgPath );
+			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
+			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
 
 			return $newcolumns;
 		}
