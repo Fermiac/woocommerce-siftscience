@@ -13,13 +13,11 @@ const tryMount = ( id, component ) => {
 tryMount( 'batch-upload', ( <BatchUpload /> ) );
 
 const orders = [...document.getElementsByClassName( 'siftsci-order' )];
-let imgPath = '';
-if ( _siftsci_app_input_data ) {
-	imgPath = _siftsci_app_input_data.imgPath;
-}
+const data = window._siftsci_app_input_data ? window._siftsci_app_input_data : {};
+const imgPath = data.imgPath;
 
-orders && orders.forEach( order => {
-	const noop = () => {};
+const noop = () => {};
+imgPath && orders && orders.forEach( order => {
 	const props = {
 		status: '',
 		imgPath,

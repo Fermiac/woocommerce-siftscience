@@ -67,8 +67,10 @@ const control = ( { status, imgPath, openSiftSci, setGood, setBad, uploadOrder }
 			);
 		case 'upload':
 			return <Icon imgUrl={ imgPath + 'upload.png' } alt="upload" onClick={ uploadOrder } />;
-		default:
+		case 'error':
 			return 	<Icon imgUrl={ imgPath + 'error.png' } alt="error"/>;
+		default:
+			return 	<Icon imgUrl={ imgPath + 'spinner.gif' } alt="working"/>;
 	};
 };
 
