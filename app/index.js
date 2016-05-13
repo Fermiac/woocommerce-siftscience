@@ -19,7 +19,7 @@ const imgPath = data.imgPath;
 const noop = () => {};
 imgPath && orders && orders.forEach( order => {
 	const props = {
-		status: '',
+		status: 'good',
 		imgPath,
 		openSiftSci: noop,
 		setGood: noop,

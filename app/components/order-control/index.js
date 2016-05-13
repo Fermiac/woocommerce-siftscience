@@ -25,15 +25,15 @@ const scoreStyle = {
 	margin: '0px',
 };
 
-const Score = ( { value, color, onClick } ) => {
+const Score = ( { score, color, onClick } ) => {
 	const style = Object.assign( {}, scoreStyle, {
 		backgroundColor: color,
 	} );
 
 	return (
 		<div style={ divStyle } onClick={ onClick }>
-			<span style="display: block;" class="tips">
-				<div style={ style }>{ value }</div>
+			<span style={ { display: 'block' } } className="tips">
+				<div style={ style }>{ score }</div>
 			</span>
 		</div>
 	);
@@ -44,25 +44,25 @@ const control = ( { status, imgPath, openSiftSci, setGood, setBad, uploadOrder }
 		case 'neutral':
 			return (
 				<div>
-					<Score onClick={ openSiftSci } />
-					<Icon src={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />;
-					<Icon src={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />;
+					<Score score="76" color="red" onClick={ openSiftSci } />
+					<Icon imgUrl={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />
+					<Icon imgUrl={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />
 				</div>
 			);
 		case 'good':
 			return (
 				<div>
-					<Score onClick={ openSiftSci } />
-					<Icon src={ imgPath + 'good.png' } alt="good" onClick={ setGood } />;
-					<Icon src={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />;
+					<Score score="76" color="red" onClick={ openSiftSci } />
+					<Icon imgUrl={ imgPath + 'good.png' } alt="good" onClick={ setGood } />
+					<Icon imgUrl={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />
 				</div>
 			);
 		case 'bad':
 			return (
 				<div>
-					<Score onClick={ openSiftSci } />
-					<Icon src={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />;
-					<Icon src={ imgPath + 'bad.png' } alt="bad" onClick={ setBad } />;
+					<Score score="76" color="red" onClick={ openSiftSci } />
+					<Icon imgUrl={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />
+					<Icon imgUrl={ imgPath + 'bad.png' } alt="bad" onClick={ setBad } />
 				</div>
 			);
 		case 'upload':
