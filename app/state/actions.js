@@ -1,19 +1,37 @@
 import actionTypes from './action-types';
 
-const isFetching = () => {
+const isWorking = ( isWorking ) => {
 	return {
-		type: actionTypes.IS_FETCHING,
+		type: actionTypes.IS_WORKING,
+		isWorking,
 	};
 };
 
-const fetchComplete = ( summary ) => {
+const setScore = ( score ) => {
 	return {
-		type: actionTypes.FETCH_COMPLETE,
-		summary,
+		type: actionTypes.SET_SCORE,
+		score,
+	};
+};
+
+const setError = ( error ) => {
+	return {
+		type: actionTypes.SET_ERROR,
+		error,
+	};
+};
+
+const setLabel = ( label ) => {
+	return {
+		type: actionTypes.SET_LABEL,
+		label,
 	};
 };
 
 export default {
-	isFetching,
-	fetchComplete,
+	setId,
+	isWorking,
+	setScore,
+	setLabel,
+	setError,
 };  

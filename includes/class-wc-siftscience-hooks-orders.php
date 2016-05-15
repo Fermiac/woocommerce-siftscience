@@ -46,9 +46,13 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
 
-			$jsPath = plugins_url( "dist/app.js", dirname( __FILE__ ) );
+			//$jsPath = plugins_url( "dist/app.js", dirname( __FILE__ ) );
+			$jsPath = 'http://localhost:8085/app.js';
 			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
-			$data = array( 'imgPath' => $imgPath );
+			$data = array(
+				'imgPath' => $imgPath,
+				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
+			);
 			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
 			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
 

@@ -6,10 +6,10 @@ const divStyle = {
 	float: 'none',
 };
 
-const Icon = ( { imgUrl, alt, onClick } ) => {
+const Icon = ( { imgUrl, alt, text, onClick } ) => {
 	return (
-		<div style={ divStyle } onClick={ onClick } >
-			<span style={ { display: 'block' } } class="tips">
+		<div id="siftsci_icon" className="siftsci_icon" style={ divStyle } onClick={ onClick } >
+			<span style={ { display: 'block' } } className="tips" data-tip={ text }>
 				<img src={ imgUrl } alt={ alt } width="20px" height="20px" />
 			</span>
 		</div>
@@ -25,61 +25,69 @@ const scoreStyle = {
 	margin: '0px',
 };
 
-const Score = ( { score, color, onClick } ) => {
+const getColor = ( score ) => {
+	if ( 90 < score ) {
+		return 'green';
+	}
+
+	if ( 50 < score ) {
+		return 'orange';
+	}
+
+	return 'red';
+};
+
+const Score = ( { score, onClick } ) => {
 	const style = Object.assign( {}, scoreStyle, {
-		backgroundColor: color,
+		backgroundColor: getColor( score ),
 	} );
 
 	return (
-		<div style={ divStyle } onClick={ onClick }>
-			<span style={ { display: 'block' } } className="tips">
+		<div id="siftsci_score" className="siftsci_score" style={ divStyle } onClick={ onClick }>
+			<span style={ { display: 'block' } } className="tips" data-tip="click to view details in SiftScience">
 				<div style={ style }>{ score }</div>
 			</span>
 		</div>
 	);
 };
 
-const control = ( { status, imgPath, openSiftSci, setGood, setBad, uploadOrder } ) => {
-	switch ( status ) {
-		case 'neutral':
-			return (
-				<div>
-					<Score score="76" color="red" onClick={ openSiftSci } />
-					<Icon imgUrl={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />
-					<Icon imgUrl={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />
-				</div>
-			);
-		case 'good':
-			return (
-				<div>
-					<Score score="76" color="red" onClick={ openSiftSci } />
-					<Icon imgUrl={ imgPath + 'good.png' } alt="good" onClick={ setGood } />
-					<Icon imgUrl={ imgPath + 'bad-gray.png' } alt="bad" onClick={ setBad } />
-				</div>
-			);
-		case 'bad':
-			return (
-				<div>
-					<Score score="76" color="red" onClick={ openSiftSci } />
-					<Icon imgUrl={ imgPath + 'good-gray.png' } alt="good" onClick={ setGood } />
-					<Icon imgUrl={ imgPath + 'bad.png' } alt="bad" onClick={ setBad } />
-				</div>
-			);
-		case 'upload':
-			return <Icon imgUrl={ imgPath + 'upload.png' } alt="upload" onClick={ uploadOrder } />;
-		case 'error':
-			return 	<Icon imgUrl={ imgPath + 'error.png' } alt="error"/>;
-		default:
-			return 	<Icon imgUrl={ imgPath + 'spinner.gif' } alt="working"/>;
-	};
+const LabelButton = ( { type, label, imgPath, setLabel } ) => {
+	const isSet = type === label
+	const image = type + ( isSet ? '-gray.png' : '.png' );
+	const callback = () => setLabel( isSet ? null : type );
+	return (
+		<Icon imgUrl={ imgPath + image } alt={ type } onClick={ callback } />
+	);
+};
+
+const control = ( props ) => {
+	if ( props.error ) {
+		return <Icon imgUrl={ props.imgPath + 'error.png' } alt="error" text={ props.error }/>;
+	}
+
+	if ( props.isWorking ) {
+		return <Icon imgUrl={ props.imgPath + 'spinner.gif' } alt="working" text="working..."/>;
+	}
+
+	if ( null !== props.score ) {
+		return (
+			<div>
+				<Score score={ props.score } onClick={ props.openSiftSci } />
+				<LabelButton { ...props } type="good" />
+				<LabelButton { ...props } type="bad" />
+			</div>
+		);
+	}
+
+	return <Icon imgUrl={ props.imgPath + 'upload.png' } alt="upload" onClick={ props.uploadOrder } />;
 };
 
 control.propTypes = {
-	status: PropTypes.string.isRequired,
+	score: PropTypes.number,
+	label: PropTypes.string,
 	imgPath: PropTypes.string.isRequired,
 	openSiftSci: PropTypes.func.isRequired,
-	setGood: PropTypes.func.isRequired,
-	setBad: PropTypes.func.isRequired,
+	setLabel: PropTypes.func.isRequired,
 	uploadOrder: PropTypes.func.isRequired,
 };
 

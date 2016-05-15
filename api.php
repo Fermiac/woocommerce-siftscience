@@ -7,10 +7,21 @@ This is the new API endpoint. Eventually I'd like to move all functionality here
 
 include_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php' );
 
-if ( ! is_super_admin() ) {
-	http_response_code( 401 );
-	echo json_encode( array( 'error' => 'not allowed' ) );
-	die;
+require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
+require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-backfill.php' );
+require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
+
+$id = filter_input( INPUT_GET, 'id' );
+$action = filter_input( INPUT_GET, 'action' );
+
+$comm = new WC_SiftScience_Comm();
+$backfill = new WC_SiftScience_Backfill();
+
+$api = new WC_SiftScience_Api( $comm, $backfill );
+$result = $api->handleRequest( $action, $id );
+
+if ( isset( $result['status'] ) ) {
+	http_response_code( $result['status'] );
 }
 
-echo json_encode( array( 'message' => 'hello world' ) );
+echo json_encode( $result );
