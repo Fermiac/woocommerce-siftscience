@@ -13,7 +13,9 @@ const tryMount = ( id, component ) => {
 	}
 };
 
-tryMount( 'batch-upload', ( <BatchUpload /> ) );
+tryMount( 'batch-upload', (
+	<BatchUpload />
+) );
 
 const orders = [...document.getElementsByClassName( 'siftsci-order' )];
 
