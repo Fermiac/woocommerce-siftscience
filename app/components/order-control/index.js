@@ -52,37 +52,39 @@ const Score = ( { score, onClick } ) => {
 };
 
 const LabelButton = ( { type, label, imgPath, setLabel } ) => {
-	const isSet = type === label
-	const image = type + ( isSet ? '-gray.png' : '.png' );
+	const isSet = type === label;
+	const image = type + ( isSet ? '.png' : '-gray.png' );
 	const callback = () => setLabel( isSet ? null : type );
 	return (
 		<Icon imgUrl={ imgPath + image } alt={ type } onClick={ callback } />
 	);
 };
 
-const control = ( props ) => {
-	if ( props.error ) {
-		return <Icon imgUrl={ props.imgPath + 'error.png' } alt="error" text={ props.error }/>;
+const control = ( { error, isWorking, score, imgPath, openSiftSci, label, setLabel, uploadOrder } ) => {
+	if ( error ) {
+		return <Icon imgUrl={ imgPath + 'error.png' } alt="error" text={ error }/>;
 	}
 
-	if ( props.isWorking ) {
-		return <Icon imgUrl={ props.imgPath + 'spinner.gif' } alt="working" text="working..."/>;
+	if ( isWorking ) {
+		return <Icon imgUrl={ imgPath + 'spinner.gif' } alt="working" text="working..."/>;
 	}
 
-	if ( null !== props.score ) {
+	if ( score ) {
 		return (
 			<div>
-				<Score score={ props.score } onClick={ props.openSiftSci } />
-				<LabelButton { ...props } type="good" />
-				<LabelButton { ...props } type="bad" />
+				<Score score={ score } onClick={ openSiftSci } />
+				<LabelButton label={ label } imgPath={ imgPath } setLabel={ setLabel } type="good" />
+				<LabelButton label={ label } imgPath={ imgPath } setLabel={ setLabel } type="bad" />
 			</div>
 		);
 	}
 
-	return <Icon imgUrl={ props.imgPath + 'upload.png' } alt="upload" onClick={ props.uploadOrder } />;
+	return <Icon imgUrl={ imgPath + 'upload.png' } alt="upload" onClick={ uploadOrder } />;
 };
 
 control.propTypes = {
+	error: PropTypes.string,
+	isWorking: PropTypes.bool.isRequired,
 	score: PropTypes.number,
 	label: PropTypes.string,
 	imgPath: PropTypes.string.isRequired,

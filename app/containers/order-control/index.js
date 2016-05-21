@@ -1,32 +1,20 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import OrderControl from '../../components/order-control';
-import actions from '../../state/actions';
+import reduxActions from '../../state/actions';
 import settings from '../../lib/settings';
-const orderOps = {};
+import orderOps from '../../lib/order-ops';
 
-const setLabel = ( orderId, value ) => {
-
-}
-
-const container = ( { orderId, isWorking, error, score, label, setLabel, setScore, setError } ) => {
+const container = ( { orderId, state, actions } ) => {
 	const props = {
-		score, label, error, isWorking,
 		imgPath: settings.imgPath,
-		openSiftSci: () => orderOps.openInSift( orderId ),
-		setLabel: ( value ) => {
-			orderOps.setLabel( orderId, value, ( error, data ) => {
-				if ( error ) {
-					return setError( error );
-				}
-
-				setScore( data.score );
-				setLabel( data.label );
-			} );
-		},
-		uploadOrder: () => {
-			orderOps.backfill( orderId );
-		},
+		openSiftSci: () => orderOps.openSiftSci( orderId ),
+		setLabel: ( value ) => orderOps.setLabel( orderId, value, actions ),
+		uploadOrder: () => orderOps.backfill( orderId, actions ),
+		isWorking: state.isWorking,
+		score: state.score,
+		label: state.label,
 	};
 
 	return (
@@ -34,12 +22,22 @@ const container = ( { orderId, isWorking, error, score, label, setLabel, setScor
 	);
 };
 
+container.propTypes = {
+	orderId: PropTypes.string.isRequired,
+	state: PropTypes.object.isRequired,
+	actions: PropTypes.object.isRequired,
+};
+
 function mapStateToProps( state ) {
-	return state;
+	return {
+		state: state,
+	};
 }
 
 function mapDispatchToProps( dispatch ) {
-	return bindActionCreators( actions, dispatch );
+	return {
+		actions: bindActionCreators( reduxActions, dispatch ),
+	};
 }
 
 export default connect(

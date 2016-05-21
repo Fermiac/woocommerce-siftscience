@@ -4,7 +4,22 @@ const openInSift = ( id ) => {
 	window.open( 'https://siftscience.com/console/users/' + id );
 };
 
-const setLabel = ( id, value, callback ) => {
+const handleApiResponse = ( actions, error, data ) => {
+	if ( error ) {
+		return actions.setError( error );
+	}
+
+	if ( data ) {
+		console.log( 'setting data', data );
+		actions.setScore( data.score );
+		actions.setLabel( data.label );
+	}
+
+	actions.isWorking( false );
+};
+
+const setLabel = ( id, value, actions ) => {
+	actions.isWorking( true );
 	let action = 'unset';
 	if ( 'bad' === value ) {
 		action = 'set_bad';
@@ -14,15 +29,25 @@ const setLabel = ( id, value, callback ) => {
 		action = 'set_good';
 	}
 
-	api( action, id, callback );
+	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+	api( action, id, handler );
 };
 
-const backfill = ( id, callback ) => {
-	api( 'backfill', id, callback );
+const backfill = ( id, actions ) => {
+	actions.isWorking( true );
+	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+	api( 'backfill', id, handler );
+};
+
+const getLabel = ( id, actions ) => {
+	actions.isWorking( true );
+	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+	api( 'get', id, handler );
 };
 
 export default {
 	openInSift,
 	setLabel,
 	backfill,
+	getLabel,
 };

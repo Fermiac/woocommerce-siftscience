@@ -1,9 +1,9 @@
 import actionTypes from './action-types';
 
-const isWorking = ( isWorking ) => {
+const isWorking = ( value ) => {
 	return {
 		type: actionTypes.IS_WORKING,
-		isWorking,
+		isWorking: value,
 	};
 };
 
@@ -29,9 +29,8 @@ const setLabel = ( label ) => {
 };
 
 export default {
-	setId,
 	isWorking,
 	setScore,
 	setLabel,
 	setError,
-};  
+};

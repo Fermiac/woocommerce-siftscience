@@ -2,7 +2,7 @@ import settings from '../settings';
 
 const fetchApi = ( action, id, callback ) => {
 	const url = settings.apiUrl + '?action=' + action + '&id=' + id;
-	console.log( 'url', url );
+	console.log( 'fetch url', url );
 	let isError = false;
 	fetch( url, {
 		credentials: 'same-origin',
@@ -14,13 +14,16 @@ const fetchApi = ( action, id, callback ) => {
 		return res.json();
 	} ).then( json => {
 		if ( ! isError ) {
-			callback( null, json );
+			console.log( 'fetch json: ', json );
+			return callback( null, json );
 		}
 
 		const error = new Error( 'Server Error' );
 		error.text = json.error;
+		console.log( 'fetch error: ', error );
 		callback( error );
 	} ).catch( error => {
+		console.log( 'fetch error2: ', error );
 		callback( error );
 	} );
 };
