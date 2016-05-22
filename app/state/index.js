@@ -1,15 +1,15 @@
 import { createStore } from 'redux';
 import reducer from './reducer';
+import actions from './actions';
+import actionTypes from './action-types';
 
-const configureStore = () => {
-	const store = createStore( reducer, {} );
-
-	store.dispatch( {
-		type: 'IS_WORKING',
-		isWorking: true,
-	} );
-
-	return store;
+const init = () => {
+	return createStore( reducer, {} );
 };
 
-export default configureStore;
+export default {
+	init,
+	reducer,
+	actions,
+	actionTypes,
+};

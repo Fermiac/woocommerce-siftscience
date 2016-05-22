@@ -70,6 +70,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				case 'backfill':
 					$this->backfill->backfill( $id );
 					break;
+				case 'order_stats':
+					return $this->list_stats();
 				default:
 					return array(
 						'status' => 400,
@@ -78,6 +80,13 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			}
 
 			return $this->get_score( $user_id );
+		}
+
+		private function list_stats() {
+			return array(
+				'backfilled' => 10,
+				'not_backfilled' => 20,
+			);
 		}
 
 		private function get_score( $user_id ) {

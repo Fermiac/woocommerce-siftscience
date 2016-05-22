@@ -4,22 +4,26 @@ const openInSift = ( id ) => {
 	window.open( 'https://siftscience.com/console/users/' + id );
 };
 
-const handleApiResponse = ( actions, error, data ) => {
+const handleApiResponse = ( updateOrder, error, data ) => {
 	if ( error ) {
-		return actions.setError( error );
+		return updateOrder( { error } );
 	}
 
 	if ( data ) {
-		console.log( 'setting data', data );
-		actions.setScore( data.score );
-		actions.setLabel( data.label );
+		updateOrder( {
+			score: data.score,
+			label: data.label,
+		} );
 	}
 
-	actions.isWorking( false );
+	updateOrder( {
+		error: null,
+		isWorking: false,
+	} );
 };
 
-const setLabel = ( id, value, actions ) => {
-	actions.isWorking( true );
+const setLabel = ( id, value, updateOrder ) => {
+	updateOrder( { isWorking: true } );
 	let action = 'unset';
 	if ( 'bad' === value ) {
 		action = 'set_bad';
@@ -29,19 +33,19 @@ const setLabel = ( id, value, actions ) => {
 		action = 'set_good';
 	}
 
-	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
 	api( action, id, handler );
 };
 
-const backfill = ( id, actions ) => {
-	actions.isWorking( true );
-	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+const backfill = ( id, updateOrder ) => {
+	updateOrder( { isWorking: true } );
+	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
 	api( 'backfill', id, handler );
 };
 
-const getLabel = ( id, actions ) => {
-	actions.isWorking( true );
-	const handler = ( error, data ) => handleApiResponse( actions, error, data );
+const getLabel = ( id, updateOrder ) => {
+	updateOrder( { isWorking: true } );
+	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
 	api( 'get', id, handler );
 };
 

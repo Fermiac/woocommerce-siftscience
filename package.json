@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Fermiac/woocommerce-siftscience#readme",
   "dependencies": {
+    "lodash": "^4.12.0",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
     "react-redux": "^4.4.5",
