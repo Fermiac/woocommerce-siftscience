@@ -5,9 +5,10 @@ const openInSift = ( id ) => {
 };
 
 const handleApiResponse = ( updateOrder, error, data ) => {
-	if ( error ) {
-		return updateOrder( { error } );
-	}
+	updateOrder( {
+		error,
+		isWorking: false,
+	} );
 
 	if ( data ) {
 		updateOrder( {
@@ -15,11 +16,6 @@ const handleApiResponse = ( updateOrder, error, data ) => {
 			label: data.label,
 		} );
 	}
-
-	updateOrder( {
-		error: null,
-		isWorking: false,
-	} );
 };
 
 const setLabel = ( id, value, updateOrder ) => {
@@ -46,7 +42,28 @@ const backfill = ( id, updateOrder ) => {
 const getLabel = ( id, updateOrder ) => {
 	updateOrder( { isWorking: true } );
 	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
-	api( 'get', id, handler );
+	api( 'score', id, handler );
+};
+
+const initOrder = ( updateOrder ) => {
+	updateOrder( {
+		isWorking: true,
+	} );
+};
+
+const orderStats = ( updateBatch ) => {
+	updateBatch( { isWorking: true } );
+	api( 'order_stats', null, ( error, data ) => {
+		updateBatch( {
+			error,
+			isWorking: false,
+		} );
+
+		if ( data ) {
+			console.log( 'stats', data );
+			updateBatch( data );
+		}
+	} );
 };
 
 export default {
@@ -54,4 +71,6 @@ export default {
 	setLabel,
 	backfill,
 	getLabel,
+	orderStats,
+	initOrder,
 };

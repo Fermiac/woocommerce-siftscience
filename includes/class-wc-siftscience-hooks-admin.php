@@ -42,9 +42,14 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
 
-			$jsPath = plugins_url( "dist/app.js", dirname( __FILE__ ) );
-			echo '<div id="batch-upload"></div>';
-			wp_enqueue_script( 'wc-siftsci-batch-upload', $jsPath, array(), false, true );
+			$jsPath = 'http://localhost:8085/app.js';
+			//$jsPath =  plugins_url( "dist/app.js", dirname( __FILE__ ) );
+			echo $this->batch_upload();
+			$data = array(
+				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
+			);
+			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
+			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
 		}
 
 		public function save_settings() {
@@ -133,6 +138,22 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			echo "<div class='notice notice-error is-dismissible'>" .
 				 "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
 				 "</div>";
+		}
+
+		public function batch_upload() {
+			return "
+<table class='form-table'>
+<tbody>
+	<tr valign='top'>
+		<th scope='row' class='titledesc'>
+			<label>Batch Upload</label>
+		</th>
+		<td class='forminp forminp-text'>
+			<div id='batch-upload'></div>
+		</tr>
+	</tbody>
+</table>
+";
 		}
 	}
 

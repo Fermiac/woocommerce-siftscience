@@ -1,42 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BatchUpload from './components/batch-upload';
+import BatchUpload from './containers/batch-upload';
 import OrderControl from './containers/order-control';
 import { Provider } from 'react-redux'
 import state from './state';
-import api from './lib/api';
+import orderOps from './lib/order-ops';
 
 const store = state.init();
 
-const tryMount = ( id, component ) => {
-	const element = document.getElementById( id );
-	if ( element ) {
-		ReactDOM.render( component, element );
-	}
-};
+const batchElement = document.getElementById( 'batch-upload' );
+if ( batchElement ) {
+	const update = ( value ) => store.dispatch( state.actions.updateBatch( value ) );
+	update( {
+		isWorking: true,
+		total: 0,
+		backfilled: 0,
+	} );
 
-tryMount( 'batch-upload', (
-	<BatchUpload />
-) );
+	orderOps.orderStats( update );
 
+	ReactDOM.render( (
+		<Provider store={ store } >
+			<BatchUpload />
+		</Provider>
+	), batchElement );
+}
+
+const updateOrder = ( id, value ) => store.dispatch( state.actions.updateOrder( id, value ) );
 const orders = [...document.getElementsByClassName( 'siftsci-order' )];
-
 orders && orders.forEach( order => {
 	const id = order.attributes['data-id'].value;
 
-	store.dispatch( state.actions.updateOrder( id, { isWorking: true } ) );
-	api( 'score', id, ( error, data ) => {
-		if ( data ) {
-			store.dispatch( state.actions.updateOrder( id, { label: data.label } ) );
-			store.dispatch( state.actions.updateOrder( id, { score: data.score } ) );
-		}
+	const updateThisOrder = ( value ) => updateOrder( id, value );
+	orderOps.initOrder( updateThisOrder );
+	orderOps.getLabel( id, updateThisOrder );
 
-		store.dispatch( state.actions.updateOrder( id, { isWorking: false } ) );
-	} );
-
-	tryMount( order.id, (
+	ReactDOM.render( (
 		<Provider store={ store } >
 			<OrderControl orderId={ id } />
 		</Provider>
-	) );
+	), document.getElementById( order.id ) );
 } );

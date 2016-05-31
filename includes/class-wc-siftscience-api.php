@@ -31,29 +31,34 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				);
 			}
 
-			if ( null === $id || null === $action ) {
+			if ( null === $action ) {
 				return array(
 					'status' => 400,
 					'error' => 'invalid request',
 				);
 			}
 
-			$meta = get_post_meta( $id );
-			if ( false === $meta ) {
-				return array(
-					'status' => 400,
-					'error' => 'order id not found: ' . $id,
-				);
+			$user_id = 0;
+			if ( $id ) {
+				$meta = get_post_meta($id);
+
+				if (false === $meta) {
+					return array(
+						'status' => 400,
+						'error' => 'order id not found: ' . $id,
+					);
+				}
+
+				if ( ! isset( $meta['_customer_user'] ) ) {
+					return array(
+						'status' => 400,
+						'error' => 'customer info not found in order: ' . $id,
+					);
+				}
+
+				$user_id = $meta['_customer_user'][0];
 			}
 
-			if ( ! isset( $meta['_customer_user'] ) ) {
-				return array(
-					'status' => 400,
-					'error' => 'customer info not found in order: ' . $id,
-				);
-			}
-
-			$user_id = $meta['_customer_user'][0];
 
 			switch ( $action ) {
 				case 'score':
@@ -72,6 +77,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					break;
 				case 'order_stats':
 					return $this->list_stats();
+				case 'next_backfill':
+					return $this->next_backfill();
 				default:
 					return array(
 						'status' => 400,
@@ -82,10 +89,25 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return $this->get_score( $user_id );
 		}
 
+		public function get_order( $post ) {
+			return wc_get_order( $post->ID );
+		}
+
 		private function list_stats() {
+			$customer_orders = get_posts( array(
+				'numberposts' => -1,
+				'meta_key'    => '_customer_user',
+				'meta_value'  => get_current_user_id(),
+				'post_type'   => wc_get_order_types(),
+				'post_status' => array_keys( wc_get_order_statuses() ),
+			) );
+
+			$customer_orders = array_map( array( $this, 'get_order' ), $customer_orders );
+
 			return array(
-				'backfilled' => 10,
-				'not_backfilled' => 20,
+				'total' => 20,
+				'backfilled' => 5,
+				'orders' => $customer_orders,
 			);
 		}
 

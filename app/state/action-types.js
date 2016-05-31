@@ -1,3 +1,4 @@
 export default {
 	UPDATE_ORDER: 'UPDATE_ORDER',
+	UPDATE_BATCH: 'UPDATE_BATCH',
 }

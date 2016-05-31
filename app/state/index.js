@@ -4,7 +4,10 @@ import actions from './actions';
 import actionTypes from './action-types';
 
 const init = () => {
-	return createStore( reducer, {} );
+	return createStore( reducer, {
+		orders: {},
+		batch: {},
+	} );
 };
 
 export default {

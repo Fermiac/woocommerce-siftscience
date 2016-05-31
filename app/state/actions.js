@@ -7,6 +7,14 @@ const updateOrder = ( id, value ) => {
 	};
 };
 
+const updateBatch = ( value ) => {
+	return {
+		type: actionTypes.UPDATE_BATCH,
+		value,
+	};
+};
+
 export default {
 	updateOrder,
+	updateBatch,
 };

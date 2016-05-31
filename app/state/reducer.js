@@ -9,7 +9,11 @@ actionMap[actionTypes.UPDATE_ORDER] = ( state, action ) => {
 	return Object.assign( {}, state, { orders: newOrders } );
 };
 
-// Main reducer method
+actionMap[actionTypes.UPDATE_BATCH] = ( state, action ) => {
+	const oldBatch = state.batch || {};
+	const newBatch = Object.assign( {}, oldBatch, action.value )
+	return Object.assign( {}, state, { batch: newBatch } );
+};
 
 const reducer = ( state, action ) => {
 	const method = actionMap[action.type];
