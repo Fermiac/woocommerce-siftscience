@@ -4,23 +4,29 @@ import { connect } from 'react-redux';
 import BatchUpload from '../../components/batch-upload';
 import appState from '../../state';
 import orderOps from '../../lib/order-ops';
+import Async from 'async';
 
 const container = ( { state, updateBatch } ) => {
-	const refresh = () => {
-		orderOps.orderStats( updateBatch );
+	const handleResult = ( error, data ) => {
+		if ( error ) {
+			return updateBatch( { error } );
+		}
+
+		updateBatch( data );
 	};
 
-	const backfill = () => {
-		orderOps.orderStats( updateBatch )
-	};
+	const refresh = () => orderOps.orderStats( handleResult );
+	const clearAll = () => orderOps.clearAll( handleResult );
 
-	const clearAll = () => {
-		orderOps.clearAll( ( error ) => {
+	const backfill = ( id, callback ) => orderOps.backfill( id, callback );
+	const backfillAll = () => {
+		Async.eachSeries( state.notBackfilled, backfill, ( error ) => {
 			if ( error ) {
 				return updateBatch( { error } );
-				refresh();
 			}
-		} );
+
+			refresh();
+		} )
 	};
 
 	return (
@@ -29,7 +35,7 @@ const container = ( { state, updateBatch } ) => {
 			backfilledOrders={ state.backfilled }
 			notBackfilledOrders={ state.notBackfilled }
 			refresh={ refresh }
-			backfill={ backfill }
+			backfill={ backfillAll }
 			clearAll={ clearAll }
 		/>
 	);

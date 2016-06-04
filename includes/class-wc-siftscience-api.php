@@ -117,6 +117,16 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			);
 		}
 
+		private function clear_all() {
+			$meta_key = $this->options->get_backfill_meta_key();
+			$posts = $this->get_order_posts();
+			foreach( $posts as $post ) {
+				delete_post_meta( $post->ID, $meta_key );
+			}
+
+			return $this->list_stats();
+		}
+
 		private function get_score( $user_id ) {
 			$sift = $this->comm->get_user_score( $user_id );
 
