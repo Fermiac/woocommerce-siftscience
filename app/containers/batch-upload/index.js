@@ -12,15 +12,31 @@ const container = ( { state, updateBatch } ) => {
 			return updateBatch( { error } );
 		}
 
-		updateBatch( data );
+		updateBatch( Object.assign( {}, data, { status: 'stats' } ) );
 	};
 
-	const refresh = () => orderOps.orderStats( handleResult );
-	const clearAll = () => orderOps.clearAll( handleResult );
+	const refresh = () => {
+		updateBatch( { status: 'loading' } );
+		orderOps.orderStats( handleResult );
+	};
 
-	const backfill = ( id, callback ) => orderOps.backfill( id, callback );
-	const backfillAll = () => {
-		Async.eachSeries( state.notBackfilled, backfill, ( error ) => {
+	const clearAll = () => {
+		updateBatch( { status: 'loading' } );
+		orderOps.clearAll( handleResult );
+	};
+
+	const backfillOrder = ( orderId, callback ) => {
+		updateBatch( {
+			status: 'backfill',
+			orderId,
+		} );
+
+		orderOps.backfill( orderId, callback );
+	};
+
+	const backfill = () => {
+		updateBatch( { status: 'loading' } );
+		Async.eachSeries( state.notBackfilled, backfillOrder, ( error ) => {
 			if ( error ) {
 				return updateBatch( { error } );
 			}
@@ -29,16 +45,7 @@ const container = ( { state, updateBatch } ) => {
 		} )
 	};
 
-	return (
-		<BatchUpload
-			error={ state.error }
-			backfilledOrders={ state.backfilled }
-			notBackfilledOrders={ state.notBackfilled }
-			refresh={ refresh }
-			backfill={ backfillAll }
-			clearAll={ clearAll }
-		/>
-	);
+	return <BatchUpload { ...state } { ...{ refresh, clearAll, backfill } }/>;
 };
 
 container.propTypes = {

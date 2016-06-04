@@ -12,7 +12,7 @@ const batchElement = document.getElementById( 'batch-upload' );
 if ( batchElement ) {
 	const update = ( value ) => store.dispatch( state.actions.updateBatch( value ) );
 	update( {
-		isWorking: true,
+		status: 'loading',
 		backfilled: [],
 		notBackfilled: [],
 	} );
@@ -22,7 +22,7 @@ if ( batchElement ) {
 			return update( { error } );
 		}
 
-		update( data );
+		update( Object.assign( {}, data, { status: 'stats' } ) );
 	} );
 
 	ReactDOM.render( (

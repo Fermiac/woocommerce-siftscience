@@ -1,9 +1,47 @@
 import React, { PropTypes } from 'react';
 
-const component = ( { backfilledOrders, notBackfilledOrders, refresh, backfill, clearAll } ) => {
-	const backfilled = backfilledOrders.length;
-	const notBackfilled = notBackfilledOrders.length;
-	const total = backfilled + notBackfilled;
+const StatView = ( { backfilled, notBackfilled } ) => {
+	return (
+		<p>
+			Orders: { notBackfilled.length + backfilled.length } <br />
+			Backfilled: { backfilled.length } <br />
+			Not Backfilled: { notBackfilled.length }
+		</p>
+	);
+};
+
+StatView.propTypes = {
+	backfilled: PropTypes.array.isRequired,
+	notBackfilled: PropTypes.array.isRequired,
+};
+
+const View = ( props ) => {
+	const { error, status, orderId } = props;
+
+	if ( error ) {
+		return <p>Error: { error.toString() }</p>;
+	}
+
+	switch ( status ) {
+		case 'loading':
+			return <p>Loading...</p>;
+		case 'stats':
+			return <StatView { ...props } />;
+		case 'backfill':
+			return <p>Backfilling order #{ orderId }</p>
+		default:
+			return <p>Error: unknown status [ { status } ]</p>
+	}
+};
+
+View.propTypes = {
+	error: PropTypes.object,
+	status: PropTypes.string.isRequired,
+	orderId: PropTypes.number,
+};
+
+const component = ( props ) => {
+	const { clearAll, backfill, refresh } = props;
 	return (
 		<div>
 			<button
@@ -27,25 +65,12 @@ const component = ( { backfilledOrders, notBackfilledOrders, refresh, backfill, 
 			>
 				Refresh
 			</button>
-
-			<p>
-				Orders: { total }
-			</p>
-
-			<p>
-				Backfilled: { backfilled }
-			</p>
-
-			<p>
-				Not Backfilled: { notBackfilled }
-			</p>
+			<View { ...props }/>
 		</div>
 	);
 };
 
 component.propTypes = {
-	backfilledOrders: PropTypes.array.isRequired,
-	notBackfilledOrders: PropTypes.array.isRequired,
 	refresh: PropTypes.func.isRequired,
 	backfill: PropTypes.func.isRequired,
 	clearAll: PropTypes.func.isRequired,
