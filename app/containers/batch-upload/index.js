@@ -3,14 +3,34 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import BatchUpload from '../../components/batch-upload';
 import appState from '../../state';
+import orderOps from '../../lib/order-ops';
 
 const container = ( { state, updateBatch } ) => {
+	const refresh = () => {
+		orderOps.orderStats( updateBatch );
+	};
+
+	const backfill = () => {
+		orderOps.orderStats( updateBatch )
+	};
+
+	const clearAll = () => {
+		orderOps.clearAll( ( error ) => {
+			if ( error ) {
+				return updateBatch( { error } );
+				refresh();
+			}
+		} );
+	};
+
 	return (
 		<BatchUpload
+			error={ state.error }
 			backfilledOrders={ state.backfilled }
 			notBackfilledOrders={ state.notBackfilled }
-			isWorking={ state.isWorking }
-			update={ updateBatch }
+			refresh={ refresh }
+			backfill={ backfill }
+			clearAll={ clearAll }
 		/>
 	);
 };

@@ -17,7 +17,13 @@ if ( batchElement ) {
 		notBackfilled: [],
 	} );
 
-	orderOps.orderStats( update );
+	orderOps.orderStats( ( error, data ) => {
+		if ( error ) {
+			return update( { error } );
+		}
+
+		update( data );
+	} );
 
 	ReactDOM.render( (
 		<Provider store={ store } >
@@ -31,9 +37,15 @@ const orders = [...document.getElementsByClassName( 'siftsci-order' )];
 orders && orders.forEach( order => {
 	const id = order.attributes['data-id'].value;
 
-	const updateThisOrder = ( value ) => updateOrder( id, value );
-	orderOps.initOrder( updateThisOrder );
-	orderOps.getLabel( id, updateThisOrder );
+	updateOrder( id, { isWorking: true } );
+	orderOps.getLabel( id, ( error, data ) => {
+		updateOrder( id, { isWorking: false } );
+		if ( error ) {
+			return updateOrder( id, { error } );
+		}
+
+		updateOrder( id, data );
+	} );
 
 	ReactDOM.render( (
 		<Provider store={ store } >

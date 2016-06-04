@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
-import api from '../../lib/api';
 
-const component = ( { backfilledOrders, notBackfilledOrders } ) => {
+const component = ( { backfilledOrders, notBackfilledOrders, refresh, backfill, clearAll } ) => {
 	const backfilled = backfilledOrders.length;
 	const notBackfilled = notBackfilledOrders.length;
 	const total = backfilled + notBackfilled;
@@ -10,10 +9,23 @@ const component = ( { backfilledOrders, notBackfilledOrders } ) => {
 			<button
 				type="button"
 				className="button-primary"
-				style={ { backgroundColor: 'green' } }
-				onClick={ api }
+				onClick={ clearAll }
 			>
-				Upload
+				Clear Data
+			</button>
+			<button
+				type="button"
+				className="button-primary"
+				onClick={ backfill }
+			>
+				Back-Fill
+			</button>
+			<button
+				type="button"
+				className="button-primary"
+				onClick={ refresh }
+			>
+				Refresh
 			</button>
 
 			<p>
@@ -27,10 +39,6 @@ const component = ( { backfilledOrders, notBackfilledOrders } ) => {
 			<p>
 				Not Backfilled: { notBackfilled }
 			</p>
-
-			<p class="description">
-				Send all your orders to SiftScience
-			</p>
 		</div>
 	);
 };
@@ -38,8 +46,9 @@ const component = ( { backfilledOrders, notBackfilledOrders } ) => {
 component.propTypes = {
 	backfilledOrders: PropTypes.array.isRequired,
 	notBackfilledOrders: PropTypes.array.isRequired,
-	isWorking: PropTypes.bool.isRequired,
-	update: PropTypes.func.isRequired,
+	refresh: PropTypes.func.isRequired,
+	backfill: PropTypes.func.isRequired,
+	clearAll: PropTypes.func.isRequired,
 };
 
 export default component;

@@ -4,22 +4,7 @@ const openInSift = ( id ) => {
 	window.open( 'https://siftscience.com/console/users/' + id );
 };
 
-const handleApiResponse = ( updateOrder, error, data ) => {
-	updateOrder( {
-		error,
-		isWorking: false,
-	} );
-
-	if ( data ) {
-		updateOrder( {
-			score: data.score,
-			label: data.label,
-		} );
-	}
-};
-
-const setLabel = ( id, value, updateOrder ) => {
-	updateOrder( { isWorking: true } );
+const setLabel = ( id, value, callback ) => {
 	let action = 'unset';
 	if ( 'bad' === value ) {
 		action = 'set_bad';
@@ -29,40 +14,23 @@ const setLabel = ( id, value, updateOrder ) => {
 		action = 'set_good';
 	}
 
-	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
-	api( action, id, handler );
+	api( action, id, callback );
 };
 
-const backfill = ( id, updateOrder ) => {
-	updateOrder( { isWorking: true } );
-	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
-	api( 'backfill', id, handler );
+const backfill = ( id, callback ) => {
+	api( 'backfill', id, callback );
 };
 
-const getLabel = ( id, updateOrder ) => {
-	updateOrder( { isWorking: true } );
-	const handler = ( error, data ) => handleApiResponse( updateOrder, error, data );
-	api( 'score', id, handler );
+const getLabel = ( id, callback ) => {
+	api( 'score', id, callback );
 };
 
-const initOrder = ( updateOrder ) => {
-	updateOrder( {
-		isWorking: true,
-	} );
+const orderStats = ( callback ) => {
+	api( 'order_stats', null, callback );
 };
 
-const orderStats = ( updateBatch ) => {
-	updateBatch( { isWorking: true } );
-	api( 'order_stats', null, ( error, data ) => {
-		updateBatch( {
-			error,
-			isWorking: false,
-		} );
-
-		if ( data ) {
-			updateBatch( data );
-		}
-	} );
+const clearAll = ( callback ) => {
+	api( 'clear_all', null, callback );
 };
 
 export default {
@@ -71,5 +39,5 @@ export default {
 	backfill,
 	getLabel,
 	orderStats,
-	initOrder,
+	clearAll,
 };

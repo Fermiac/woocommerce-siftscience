@@ -78,6 +78,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					break;
 				case 'order_stats':
 					return $this->list_stats();
+				case 'clear_all':
+					return $this->clear_all();
 				default:
 					return array(
 						'status' => 400,
