@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 import api from '../../lib/api';
 
-const component = ( { totalOrders, backfilledOrders } ) => {
+const component = ( { backfilledOrders, notBackfilledOrders } ) => {
+	const backfilled = backfilledOrders.length;
+	const notBackfilled = notBackfilledOrders.length;
+	const total = backfilled + notBackfilled;
 	return (
 		<div>
 			<button
@@ -14,15 +17,15 @@ const component = ( { totalOrders, backfilledOrders } ) => {
 			</button>
 
 			<p>
-				Orders: { totalOrders }
+				Orders: { total }
 			</p>
 
 			<p>
-				Backfilled: { backfilledOrders }
+				Backfilled: { backfilled }
 			</p>
 
 			<p>
-				Not Backfilled: { totalOrders - backfilledOrders }
+				Not Backfilled: { notBackfilled }
 			</p>
 
 			<p class="description">
@@ -33,8 +36,8 @@ const component = ( { totalOrders, backfilledOrders } ) => {
 };
 
 component.propTypes = {
-	totalOrders: PropTypes.number.isRequired,
-	backfilledOrders: PropTypes.number.isRequired,
+	backfilledOrders: PropTypes.array.isRequired,
+	notBackfilledOrders: PropTypes.array.isRequired,
 	isWorking: PropTypes.bool.isRequired,
 	update: PropTypes.func.isRequired,
 };

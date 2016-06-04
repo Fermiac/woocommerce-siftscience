@@ -13,8 +13,8 @@ if ( batchElement ) {
 	const update = ( value ) => store.dispatch( state.actions.updateBatch( value ) );
 	update( {
 		isWorking: true,
-		total: 0,
-		backfilled: 0,
+		backfilled: [],
+		notBackfilled: [],
 	} );
 
 	orderOps.orderStats( update );

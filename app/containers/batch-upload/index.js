@@ -7,8 +7,8 @@ import appState from '../../state';
 const container = ( { state, updateBatch } ) => {
 	return (
 		<BatchUpload
-			totalOrders={ state.total }
 			backfilledOrders={ state.backfilled }
+			notBackfilledOrders={ state.notBackfilled }
 			isWorking={ state.isWorking }
 			update={ updateBatch }
 		/>

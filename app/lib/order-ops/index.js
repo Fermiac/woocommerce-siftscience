@@ -60,7 +60,6 @@ const orderStats = ( updateBatch ) => {
 		} );
 
 		if ( data ) {
-			console.log( 'stats', data );
 			updateBatch( data );
 		}
 	} );

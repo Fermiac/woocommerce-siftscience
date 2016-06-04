@@ -17,10 +17,12 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 	class WC_SiftScience_Api {
 		private $comm;
 		private $backfill;
+		private $options;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Backfill $backfill ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
 			$this->comm = $comm;
 			$this->backfill = $backfill;
+			$this->options = $options;
 		}
 
 		public function handleRequest( $action, $id ) {
@@ -59,7 +61,6 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				$user_id = $meta['_customer_user'][0];
 			}
 
-
 			switch ( $action ) {
 				case 'score':
 					break;
@@ -77,8 +78,6 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					break;
 				case 'order_stats':
 					return $this->list_stats();
-				case 'next_backfill':
-					return $this->next_backfill();
 				default:
 					return array(
 						'status' => 400,
@@ -89,25 +88,30 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return $this->get_score( $user_id );
 		}
 
-		public function get_order( $post ) {
-			return wc_get_order( $post->ID );
-		}
-
-		private function list_stats() {
-			$customer_orders = get_posts( array(
+		private function get_order_posts() {
+			return get_posts( array(
 				'numberposts' => -1,
-				'meta_key'    => '_customer_user',
-				'meta_value'  => get_current_user_id(),
 				'post_type'   => wc_get_order_types(),
 				'post_status' => array_keys( wc_get_order_statuses() ),
 			) );
+		}
 
-			$customer_orders = array_map( array( $this, 'get_order' ), $customer_orders );
+		private function list_stats() {
+			$backfilled = array();
+			$not_backfilled = array();
+			$meta_key = $this->options->get_backfill_meta_key();
+			$posts = $this->get_order_posts();
+			foreach( $posts as $post ) {
+				if ( '1' === get_post_meta( $post->ID, $meta_key, true ) ) {
+					$backfilled[] = $post->ID;
+				} else {
+					$not_backfilled[] = $post->ID;
+				}
+			}
 
 			return array(
-				'total' => 20,
-				'backfilled' => 5,
-				'orders' => $customer_orders,
+				'backfilled' => $backfilled,
+				'notBackfilled' => $not_backfilled,
 			);
 		}
 

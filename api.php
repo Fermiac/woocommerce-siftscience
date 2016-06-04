@@ -7,6 +7,7 @@ This is the new API endpoint. Eventually I'd like to move all functionality here
 
 include_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php' );
 
+require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-backfill.php' );
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
@@ -16,8 +17,9 @@ $action = filter_input( INPUT_GET, 'action' );
 
 $comm = new WC_SiftScience_Comm();
 $backfill = new WC_SiftScience_Backfill();
+$options = new WC_SiftScience_Options();
 
-$api = new WC_SiftScience_Api( $comm, $backfill );
+$api = new WC_SiftScience_Api( $comm, $backfill, $options );
 $result = $api->handleRequest( $action, $id );
 
 if ( isset( $result['status'] ) ) {
