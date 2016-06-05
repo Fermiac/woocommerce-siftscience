@@ -24,14 +24,16 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		private $comm;
 		private $logger;
 		private $backfill;
+		private $options;
 
 		public function __construct( WC_SiftScience_Options $settings,
 			WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger,
-			WC_SiftScience_Backfill $backfill ) {
+			WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
 			$this->settings = $settings;
 			$this->comm = $comm;
 			$this->logger = $logger;
 			$this->backfill = $backfill;
+			$this->options = $options;
 		}
 
 		public function run() {
@@ -49,10 +51,20 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			if ( $this->settings->send_on_create_enabled() ) {
 				add_action( 'woocommerce_new_order', array( $this, 'woocommerce_new_order' ) );
 			}
+
+			add_action( 'woocommerce_new_order', array( $this, 'add_session_info' ) );
 		}
 
 		public function woocommerce_new_order( $order_id ) {
 			$this->backfill->backfill( $order_id );
+		}
+
+		public function add_session_info( $order_id ) {
+			$order = wc_get_order( $order_id );
+			$post_id = $order->post->ID;
+			$meta_key = $this->options->get_session_meta_key();
+			$session_id = $this->options->get_session_id();
+			update_post_meta( $post_id, $meta_key, $session_id );
 		}
 
 		public function add_script() {
@@ -104,7 +116,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			$user = get_user_by( 'id', $user_id );
 			if ( $user === null || $user === false || $old_user_data === null )
 				return false;
-			return ( isset( $old_user_data['user_pass'] ) && $user->user_pass !== $old_user_data['user_pass'] );
+			return ( isset( $old_user_data->user_pass ) && $user->user_pass !== $old_user_data->user_pass );
 		}
 
 		public function create_order( $order_id ) {

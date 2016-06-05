@@ -27,6 +27,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return '_wcsiftsci_isbackfill';
 		}
 
+		public function get_session_meta_key() {
+			return '_wcsiftsci_session';
+		}
+
 		public function get_js_key() {
 			return get_option( self::$js_key );
 		}
@@ -49,6 +53,12 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public function send_on_create_enabled() {
 			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
+		}
+
+		public function get_react_app_path() {
+			return defined( 'WP_SIFTSCI_DEV' ) && WP_SIFTSCI_DEV
+				? 'http://localhost:8085/app.js'
+				: plugins_url( "dist/app.js", dirname( __FILE__ ) );
 		}
 	}
 
