@@ -28,15 +28,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Runs all the needed code that sets up the hooks
 		 */
 		public function run() {
-			$settings = new WC_SiftScience_Options();
-			$comm = new WC_SiftScience_Comm();
 			$logger = new WC_SiftScience_Logger();
-			$backfill = new WC_SiftScience_Backfill();
 			$options = new WC_SiftScience_Options();
+			$comm = new WC_SiftScience_Comm( $options, $logger );
+			$backfill = new WC_SiftScience_Backfill( $options, $comm );
 
-			(new WC_SiftScience_Hooks_Admin)->run();
-			(new WC_SiftScience_Hooks_Orders( $options ) )->run();
-			(new WC_SiftScience_Hooks_Events( $settings, $comm, $logger, $backfill, $options ) )->run();
+			$admin = new WC_SiftScience_Hooks_Admin( $options, $comm );
+			$order = new WC_SiftScience_Hooks_Orders( $options );
+			$events = new WC_SiftScience_Hooks_Events( $comm, $logger, $backfill, $options );
+
+			$admin->run();
+			$order->run();
+			$events->run();
 		}
 	}
 

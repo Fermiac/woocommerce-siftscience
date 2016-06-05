@@ -20,10 +20,11 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		private $settings;
 		private $options;
 
-		public function __construct()
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm )
 		{
 			$this->settings = $this->get_settings();
-			$this->options = new WC_SiftScience_Options();
+			$this->options = $options;
+			$this->comm = $comm;
 		}
 
 		public function run() {
@@ -34,8 +35,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		}
 
 		public function check_api() {
-			$comm = new WC_SiftScience_Comm();
-			$response = $comm->get_user_score( 1 );
+			$response = $this->comm->get_user_score( 1 );
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 

@@ -17,9 +17,8 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 		private $comm;
 		private $meta_key;
 
-		public function __construct() {
-			$this->comm = new WC_SiftScience_Comm;
-			$options = new WC_SiftScience_Options();
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm ) {
+			$this->comm = $comm;
 			$this->meta_key = $options->get_backfill_meta_key();
 		}
 

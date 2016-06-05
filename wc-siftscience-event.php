@@ -26,10 +26,13 @@ if ( ! class_exists( "WC_SiftScience_Event" ) ) :
 	class WC_SiftScience_Event {
 		private $comm;
 		private $log;
+		private $options;
 
 		public function __construct() {
-			$this->comm = new WC_SiftScience_Comm();
+			$options = new WC_SiftScience_Options();
+			$this->options = $options;
 			$this->log = new WC_SiftScience_Logger();
+			$this->comm = new WC_SiftScience_Comm( $options, $this->log );
 		}
 
 		public function process_request() {
@@ -61,7 +64,7 @@ if ( ! class_exists( "WC_SiftScience_Event" ) ) :
 		}
 
 		private function handle_request( $data ) {
-			$event_data = new WC_SiftScience_EventData( $data );
+			$event_data = new WC_SiftScience_EventData( $data, $this->options );
 			$result = $event_data->get( $data );
 			if ( $result === false ) {
 				http_response_code( 403 );

@@ -27,9 +27,9 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			'Content-Type' => 'application/json',
 		);
 
-		public function __construct() {
-			$this->logger = new WC_SiftScience_Logger;
-			$this->options = new WC_SiftScience_Options;
+		public function __construct( $options, $logger ) {
+			$this->logger = $logger;
+			$this->options = $options;
 		}
 
 		public function post_event( $type, $userId, $data = array() ) {

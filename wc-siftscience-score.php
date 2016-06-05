@@ -23,8 +23,10 @@ if ( ! class_exists( 'WC_SiftScience_Score' ) ) :
 		private $backfill;
 
 		public function __construct() {
-			$this->comm = new WC_SiftScience_Comm;
-			$this->backfill = new WC_SiftScience_Backfill;
+			$options = new WC_SiftScience_Options();
+			$logger = new WC_SiftScience_Logger();
+			$this->comm = new WC_SiftScience_Comm( $options, $logger );
+			$this->backfill = new WC_SiftScience_Backfill( $options, $this->comm );
 		}
 
 		public function execute() {
