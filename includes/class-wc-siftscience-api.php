@@ -25,7 +25,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$this->options = $options;
 		}
 
-		public function handleRequest( $action, $id ) {
+		public function handleRequest($action, $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
 					'status' => 401,
@@ -33,32 +33,20 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				);
 			}
 
-			if ( null === $action ) {
-				return array(
-					'status' => 400,
-					'error' => 'invalid request',
-				);
-			}
-
 			$user_id = 0;
-			if ( $id ) {
-				$meta = get_post_meta($id);
+			if ( $order_id ) {
+				$meta = get_post_meta( $order_id, '_customer_user', true );
 
-				if (false === $meta) {
+				if ( false === $meta ) {
 					return array(
 						'status' => 400,
-						'error' => 'order id not found: ' . $id,
+						'error' => 'order id not found: ' . $order_id,
 					);
 				}
 
-				if ( ! isset( $meta['_customer_user'] ) ) {
-					return array(
-						'status' => 400,
-						'error' => 'customer info not found in order: ' . $id,
-					);
-				}
-
-				$user_id = $meta['_customer_user'][0];
+				$user_id = $meta === '0'
+					? 'SINGLE_ORDER_' . $order_id
+					: 'REGISTERED_USER_' . $meta;
 			}
 
 			switch ( $action ) {
@@ -74,7 +62,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					$this->comm->delete_label( $user_id );
 					break;
 				case 'backfill':
-					$this->backfill->backfill( $id );
+					$this->backfill->backfill( $order_id );
 					break;
 				case 'order_stats':
 					return $this->list_stats();
@@ -128,6 +116,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		}
 
 		private function get_score( $user_id ) {
+			error_log( 'getting score for: ' . $user_id );
 			$sift = $this->comm->get_user_score( $user_id );
 
 			if ( ! isset( $sift->score ) ) {

@@ -19,7 +19,7 @@ if ( ! class_exists( 'WC_SiftScience_EventData' ) ) :
 		private $product = null;
 		private $options;
 
-		public function __construct( $data, $options ) {
+		public function __construct( $data, WC_SiftScience_Options $options ) {
 			$this->data = $data;
 			$this->options = $options;
 

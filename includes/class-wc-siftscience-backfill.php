@@ -26,8 +26,8 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 			if ( $this->is_backfilled( $post_id ) ) return false;
 
 			$this->create_order( $post_id );
-
 			update_post_meta( $post_id, $this->meta_key, '1' );
+			return true;
 		}
 
 		public function is_backfilled( $post_id ) {
@@ -43,12 +43,21 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 			$order = new WC_Order( $order_id );
 			$ord_arr = $this->create_order_array( $order );
 			$ord_arr = apply_filters( 'woocommerce_siftscience_send_order_data', $ord_arr );
-			$result = $this->comm->post_event( '$create_order', $order->user_id, $ord_arr );
+			$result = $this->comm->post_event( '$create_order', $ord_arr );
 			return $result;
+		}
+
+		private function get_user_id( WC_Order $order ) {
+			if ( $order->get_user_id() === 0 ) {
+				return 'SINGLE_ORDER_' . $order->post->ID;
+			}
+
+			return 'REGISTERED_USER_' . $order->get_user_id();
 		}
 
 		private function create_order_array( $order ) {
 			return array(
+				'$user_id'          => $this->get_user_id( $order ),
 				'$order_id'         => $order->get_order_number(),
 				'$user_email'       => $order->billing_email,
 				'$time'             => strtotime( $order->order_date ) * 1000,
