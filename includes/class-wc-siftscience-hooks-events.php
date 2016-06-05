@@ -116,7 +116,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			$user = get_user_by( 'id', $user_id );
 			if ( $user === null || $user === false || $old_user_data === null )
 				return false;
-			return ( isset( $old_user_data['user_pass'] ) && $user->user_pass !== $old_user_data['user_pass'] );
+			return ( isset( $old_user_data->user_pass ) && $user->user_pass !== $old_user_data->user_pass );
 		}
 
 		public function create_order( $order_id ) {
