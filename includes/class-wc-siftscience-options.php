@@ -27,6 +27,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return '_wcsiftsci_isbackfill';
 		}
 
+		public function get_session_meta_key() {
+			return '_wcsiftsci_session';
+		}
+
 		public function get_js_key() {
 			return get_option( self::$js_key );
 		}
