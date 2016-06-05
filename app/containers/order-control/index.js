@@ -9,20 +9,30 @@ import appState from '../../state';
 const container = ( { orderId, state, actions } ) => {
 	const order = state.orders[orderId];
 	const updateOrder = value => actions.updateOrder( orderId, value );
-
-	const props = {
-		imgPath: settings.imgPath,
-		openSiftSci: () => orderOps.openSiftSci( orderId ),
-		setLabel: ( value ) => orderOps.setLabel( orderId, value, updateOrder ),
-		uploadOrder: () => orderOps.backfill( orderId, updateOrder ),
-		isWorking: order.isWorking,
-		score: order.score,
-		label: order.label,
+	const openSiftSci = () => {
+		orderOps.openInSift( orderId );
 	};
 
-	return (
-		<OrderControl { ...props } />
-	);
+	const handleResponse = ( error, data ) => {
+		updateOrder( { isWorking: false } );
+		if ( error ) {
+			return updateOrder( { error } );
+		}
+
+		updateOrder( data );
+	};
+
+	const uploadOrder = () => {
+		updateOrder( { isWorking: true } );
+		orderOps.backfill( orderId, handleResponse );
+	};
+
+	const setLabel = ( value ) => {
+		updateOrder( { isWorking: true } );
+		orderOps.setLabel( orderId, value, handleResponse );
+	};
+
+	return <OrderControl { ...settings } { ...order } { ...{ openSiftSci, setLabel, uploadOrder } } />;
 };
 
 container.propTypes = {
