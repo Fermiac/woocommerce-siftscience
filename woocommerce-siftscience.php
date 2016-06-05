@@ -32,10 +32,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$comm = new WC_SiftScience_Comm();
 			$logger = new WC_SiftScience_Logger();
 			$backfill = new WC_SiftScience_Backfill();
+			$options = new WC_SiftScience_Options();
 
 			(new WC_SiftScience_Hooks_Admin)->run();
 			(new WC_SiftScience_Hooks_Orders)->run();
-			(new WC_SiftScience_Hooks_Events( $settings, $comm, $logger, $backfill ) )->run();
+			(new WC_SiftScience_Hooks_Events( $settings, $comm, $logger, $backfill, $options ) )->run();
 		}
 	}
 
