@@ -32,9 +32,7 @@ container.propTypes = {
 };
 
 function mapStateToProps( state ) {
-	return {
-		state: state,
-	};
+	return { state };
 }
 
 function mapDispatchToProps( dispatch ) {

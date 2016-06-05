@@ -6,12 +6,10 @@ const divStyle = {
 	float: 'none',
 };
 
-const Icon = ( { imgUrl, alt, text, onClick } ) => {
+const Icon = ( { imgUrl, alt, onClick } ) => {
 	return (
 		<div id="siftsci_icon" className="siftsci_icon" style={ divStyle } onClick={ onClick } >
-			<span style={ { display: 'block' } } className="tips" data-tip={ text }>
-				<img src={ imgUrl } alt={ alt } width="20px" height="20px" />
-			</span>
+			<img src={ imgUrl } alt={ alt } width="20px" height="20px" />
 		</div>
 	);
 };
@@ -37,16 +35,14 @@ const getColor = ( score ) => {
 	return 'red';
 };
 
-const Score = ( { score, onClick } ) => {
+const Score = ( { score, openSiftSci } ) => {
 	const style = Object.assign( {}, scoreStyle, {
 		backgroundColor: getColor( score ),
 	} );
 
 	return (
-		<div id="siftsci_score" className="siftsci_score" style={ divStyle } onClick={ onClick }>
-			<span style={ { display: 'block' } } className="tips" data-tip="click to view details in SiftScience">
-				<div style={ style }>{ score }</div>
-			</span>
+		<div id="siftsci_score" className="siftsci_score" style={ divStyle } onClick={ openSiftSci }>
+			<div style={ style }>{ score }</div>
 		</div>
 	);
 };
@@ -60,21 +56,22 @@ const LabelButton = ( { type, label, imgPath, setLabel } ) => {
 	);
 };
 
-const control = ( { error, isWorking, score, imgPath, openSiftSci, label, setLabel, uploadOrder } ) => {
+const control = ( props ) => {
+	const { error, isWorking, score, imgPath, uploadOrder } = props;
 	if ( error ) {
-		return <Icon imgUrl={ imgPath + 'error.png' } alt="error" text={ error }/>;
+		return <Icon imgUrl={ imgPath + 'error.png' } alt="error" />;
 	}
 
 	if ( isWorking ) {
-		return <Icon imgUrl={ imgPath + 'spinner.gif' } alt="working" text="working..."/>;
+		return <Icon imgUrl={ imgPath + 'spinner.gif' } alt="working" />;
 	}
 
 	if ( score ) {
 		return (
 			<div>
-				<Score score={ score } onClick={ openSiftSci } />
-				<LabelButton label={ label } imgPath={ imgPath } setLabel={ setLabel } type="good" />
-				<LabelButton label={ label } imgPath={ imgPath } setLabel={ setLabel } type="bad" />
+				<Score { ...props } />
+				<LabelButton { ...props } type="good" />
+				<LabelButton { ...props } type="bad" />
 			</div>
 		);
 	}
