@@ -42,8 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		public function output_settings_fields() {
 			WC_Admin_Settings::output_fields( $this->settings );
 
-			$jsPath = 'http://localhost:8085/app.js';
-			//$jsPath =  plugins_url( "dist/app.js", dirname( __FILE__ ) );
+			$jsPath = $this->options->get_react_app_path();
 			echo $this->batch_upload();
 			$data = array(
 				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
