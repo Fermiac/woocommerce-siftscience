@@ -4,6 +4,7 @@
  * https://siftscience.com/developers/docs/javascript/javascript-api
  */
 
+var _wc_siftsci_js_input_data = window._wc_siftsci_js_input_data || [];
 var _sift = window._sift = window._sift || [];
 _sift.push( [ '_setAccount', _wc_siftsci_js_input_data.js_key  ]);
 _sift.push( [ '_setUserId', _wc_siftsci_js_input_data.user_id ] );
