@@ -27,14 +27,13 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			'Content-Type' => 'application/json',
 		);
 
-		public function __construct() {
-			$this->logger = new WC_SiftScience_Logger;
-			$this->options = new WC_SiftScience_Options;
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+			$this->logger = $logger;
+			$this->options = $options;
 		}
 
-		public function post_event( $type, $userId, $data = array() ) {
+		public function post_event( $type, $data = array() ) {
 			$data['$type'] = $type;
-			$data['$user_id'] = $userId;
 			return $this->post( $data );
 		}
 

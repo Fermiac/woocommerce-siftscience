@@ -17,9 +17,11 @@ if ( ! class_exists( 'WC_SiftScience_EventData' ) ) :
 		private $data = null;
 		private $item = null;
 		private $product = null;
+		private $options;
 
-		public function __construct( $data ) {
+		public function __construct( $data, WC_SiftScience_Options $options ) {
 			$this->data = $data;
+			$this->options = $options;
 
 			if ( isset( $data['order_id'] ) ) {
 				$this->order = new WC_Order( $data['order_id'] );
@@ -117,7 +119,7 @@ if ( ! class_exists( 'WC_SiftScience_EventData' ) ) :
 				//case '$reviewed_user_id':
 				//case '$seller_user_id':
 				case '$session_id':
-					return ( new WC_SiftScience_Options() )->get_session_id();
+					return $this->options->get_session_id();
 				case '$shipping_address':
 					return $this->get_shipping_address();
 				//case '$social_sign_on_type':

@@ -15,9 +15,10 @@ require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
 $id = filter_input( INPUT_GET, 'id' );
 $action = filter_input( INPUT_GET, 'action' );
 
-$comm = new WC_SiftScience_Comm();
-$backfill = new WC_SiftScience_Backfill();
 $options = new WC_SiftScience_Options();
+$logger = new WC_SiftScience_Logger();
+$comm = new WC_SiftScience_Comm( $options, $logger );
+$backfill = new WC_SiftScience_Backfill( $options, $comm );
 
 $api = new WC_SiftScience_Api( $comm, $backfill, $options );
 $result = $api->handleRequest( $action, $id );

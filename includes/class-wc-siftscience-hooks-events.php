@@ -20,16 +20,12 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 	class WC_SiftScience_Hooks_Events {
 		private $posts = null;
-		private $settings;
 		private $comm;
 		private $logger;
 		private $backfill;
 		private $options;
 
-		public function __construct( WC_SiftScience_Options $settings,
-			WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger,
-			WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
-			$this->settings = $settings;
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger, WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
 			$this->comm = $comm;
 			$this->logger = $logger;
 			$this->backfill = $backfill;
@@ -48,7 +44,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			add_action( 'woocommerce_add_to_cart', array( $this, 'add_to_cart' ) );
 			add_action( 'woocommerce_cart_item_removed', array( $this, 'remove_from_cart' ) );
 
-			if ( $this->settings->send_on_create_enabled() ) {
+			if ( $this->options->send_on_create_enabled() ) {
 				add_action( 'woocommerce_new_order', array( $this, 'woocommerce_new_order' ) );
 			}
 
@@ -68,7 +64,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		}
 
 		public function add_script() {
-			$options = new WC_SiftScience_Options;
+			$options = $this->options;
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', array(
 					'session_id' => $options->get_session_id(),
 					'user_id'    => $options->get_user_id(),
