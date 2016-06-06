@@ -15,28 +15,28 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 
 	class WC_SiftScience_Backfill {
 		private $comm;
-		private $meta_key;
+		private $options;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm ) {
 			$this->comm = $comm;
-			$this->meta_key = $options->get_backfill_meta_key();
+			$this->options = $options;
 		}
 
 		public function backfill( $post_id ) {
 			if ( $this->is_backfilled( $post_id ) ) return false;
 
 			$this->create_order( $post_id );
-			update_post_meta( $post_id, $this->meta_key, '1' );
+			update_post_meta( $post_id, $this->options->get_backfill_meta_key(), '1' );
 			return true;
 		}
 
 		public function is_backfilled( $post_id ) {
-			$is_backfilled = get_post_meta( $post_id, $this->meta_key, true );
+			$is_backfilled = get_post_meta( $post_id, $this->options->get_backfill_meta_key(), true );
 			return $is_backfilled === '1';
 		}
 
 		public function unset_backfill( $post_id ) {
-			delete_post_meta( $post_id, $this->meta_key );
+			delete_post_meta( $post_id, $this->options->get_backfill_meta_key() );
 		}
 
 		private function create_order( $order_id ) {
@@ -55,8 +55,8 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 			return 'REGISTERED_USER_' . $order->get_user_id();
 		}
 
-		private function create_order_array( $order ) {
-			return array(
+		private function create_order_array( WC_Order $order ) {
+			$data = array(
 				'$user_id'          => $this->get_user_id( $order ),
 				'$order_id'         => $order->get_order_number(),
 				'$user_email'       => $order->billing_email,
@@ -67,6 +67,14 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->create_item_array( $order ),
 			);
+
+			$session_id = get_post_meta( $order->post->ID, $this->options->get_session_meta_key(), true );
+			if ( false === $session_id ) {
+				$session_id = $this->options->get_session_id();
+			}
+
+			$data['$session_id'] = $session_id;
+			return $data;
 		}
 
 		private function create_address( $order, $type = 'shipping' ) {
