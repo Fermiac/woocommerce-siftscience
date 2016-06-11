@@ -75,7 +75,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					);
 			}
 
-			return $this->get_score( $user_id );
+			return $this->get_score( $order_id, $user_id );
 		}
 
 		private function get_order_posts() {
@@ -115,8 +115,9 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return $this->list_stats();
 		}
 
-		private function get_score( $user_id ) {
-			error_log( 'getting score for: ' . $user_id );
+		private function get_score( $order_id, $user_id ) {
+			$is_backfilled = get_post_meta( $order_id, '_customer_user', true ) === '1';
+
 			$sift = $this->comm->get_user_score( $user_id );
 
 			if ( ! isset( $sift->score ) ) {
@@ -131,6 +132,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			}
 
 			return array(
+				'order_id' => $order_id,
+				'backfilled' => $is_backfilled,
 				'user_id' => $user_id,
 				'score' => $score,
 				'label' => $label,
