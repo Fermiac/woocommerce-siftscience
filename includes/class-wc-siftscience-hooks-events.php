@@ -21,13 +21,11 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 	class WC_SiftScience_Hooks_Events {
 		private $posts = null;
 		private $comm;
-		private $logger;
 		private $backfill;
 		private $options;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger, WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
 			$this->comm = $comm;
-			$this->logger = $logger;
 			$this->backfill = $backfill;
 			$this->options = $options;
 		}

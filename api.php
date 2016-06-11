@@ -16,8 +16,7 @@ $id = filter_input( INPUT_GET, 'id' );
 $action = filter_input( INPUT_GET, 'action' );
 
 $options = new WC_SiftScience_Options();
-$logger = new WC_SiftScience_Logger();
-$comm = new WC_SiftScience_Comm( $options, $logger );
+$comm = new WC_SiftScience_Comm( $options );
 $backfill = new WC_SiftScience_Backfill( $options, $comm );
 
 $api = new WC_SiftScience_Api( $comm, $backfill, $options );

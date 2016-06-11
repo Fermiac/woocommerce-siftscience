@@ -120,23 +120,13 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$is_backfilled = get_post_meta( $order_id, $backfill_meta_key, true ) === '1';
 			$sift = $this->comm->get_user_score( $user_id );
 
-			if ( ! isset( $sift->score ) ) {
-				return null;
-			}
-
-			$score = round( $sift->score * 100 );
-
-			$label = null;
-			if ( isset( $sift->latest_label ) && isset( $sift->latest_label->is_bad ) ) {
-				$label = $sift->latest_label->is_bad == true ? 'bad' : 'good';
-			}
+			error_log( 'sift return: ' . json_encode( $sift ) );
 
 			return array(
 				'order_id' => $order_id,
-				'backfilled' => $is_backfilled,
 				'user_id' => $user_id,
-				'score' => $score,
-				'label' => $label,
+				'is_backfilled' => $is_backfilled,
+				'sift' => $sift,
 			);
 		}
 	}

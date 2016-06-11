@@ -59,6 +59,7 @@ const LabelButton = ( { type, label, imgPath, setLabel } ) => {
 const control = ( props ) => {
 	const { error, isWorking, score, imgPath, uploadOrder } = props;
 	if ( error ) {
+		console.log( 'error: ', error );
 		return <Icon imgUrl={ imgPath + 'error.png' } alt="error" />;
 	}
 

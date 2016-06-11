@@ -33,6 +33,25 @@ const clearAll = ( callback ) => {
 	api( 'clear_all', null, callback );
 };
 
+const getUserData = ( sift ) => {
+	if ( ! sift ) {
+		return null;
+	};
+
+	const result = {};
+
+	if ( sift.score ) {
+		result.score = Math.round( sift.score * 100 );
+	}
+
+	result.label = 'none';
+	if ( sift.latest_label ) {
+		result.label = sift.latest_label.is_bad ? 'bad' : 'good';
+	}
+
+	return result;
+};
+
 export default {
 	openInSift,
 	setLabel,
@@ -40,4 +59,5 @@ export default {
 	getLabel,
 	orderStats,
 	clearAll,
+	getUserData,
 };

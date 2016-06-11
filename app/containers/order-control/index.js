@@ -8,7 +8,9 @@ import appState from '../../state';
 
 const container = ( { orderId, state, actions } ) => {
 	const order = state.orders[orderId];
+	const user = ( order && order.userId && state.users ) ? state.users[order.userId] : null;
 	const updateOrder = value => actions.updateOrder( orderId, value );
+	const updateUser = value => actions.updateUser( order.userId, value );
 	const openSiftSci = () => {
 		orderOps.openInSift( orderId );
 	};
@@ -16,10 +18,15 @@ const container = ( { orderId, state, actions } ) => {
 	const handleResponse = ( error, data ) => {
 		updateOrder( { isWorking: false } );
 		if ( error ) {
-			return updateOrder( { error } );
+			return updateOrder( { error: error.toString() } );
 		}
 
-		updateOrder( data );
+		updateOrder( {
+			userId: data.user_id,
+			isBackfilled: data.is_backfilled,
+		} );
+
+		updateUser( orderOps.getUserData( data.sift ) );
 	};
 
 	const uploadOrder = () => {
@@ -32,7 +39,7 @@ const container = ( { orderId, state, actions } ) => {
 		orderOps.setLabel( orderId, value, handleResponse );
 	};
 
-	return <OrderControl { ...settings } { ...order } { ...{ openSiftSci, setLabel, uploadOrder } } />;
+	return <OrderControl { ...settings } { ...order } { ...user } { ...{ openSiftSci, setLabel, uploadOrder } } />;
 };
 
 container.propTypes = {

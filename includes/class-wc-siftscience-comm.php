@@ -12,11 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 	include_once( 'class-wc-siftscience-options.php' );
-	include_once( 'class-wc-siftscience-logger.php' );
 
     class WC_SiftScience_Comm {
 		private $options;
-		private $logger;
 		private $event_url = 'https://api.siftscience.com/v203/events';
 		private $labels_url = 'https://api.siftscience.com/v203/users/{user}/labels';
 		private $delete_url = 'https://api.siftscience.com/v203/users/{user}/labels/?api_key={api}';
@@ -27,8 +25,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			'Content-Type' => 'application/json',
 		);
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->logger = $logger;
+		public function __construct( WC_SiftScience_Options $options ) {
 			$this->options = $options;
 		}
 
@@ -96,13 +93,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				$args['body'] = json_encode( $args['body'] );
 			}
 
-			$result = wp_remote_request( $url, $args );
-
-			$this->logger->log( "\nSent request to : $url\n" .
-				'request details : ' . json_encode( $args ) . "\n" .
-				'response details: ' . json_encode( $result ) );
-
-			return $result;
+			return wp_remote_request( $url, $args );
 		}
 	}
 
