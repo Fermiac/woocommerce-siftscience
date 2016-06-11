@@ -116,8 +116,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		}
 
 		private function get_score( $order_id, $user_id ) {
-			$is_backfilled = get_post_meta( $order_id, '_customer_user', true ) === '1';
-
+			$backfill_meta_key = $this->options->get_backfill_meta_key();
+			$is_backfilled = get_post_meta( $order_id, $backfill_meta_key, true ) === '1';
 			$sift = $this->comm->get_user_score( $user_id );
 
 			if ( ! isset( $sift->score ) ) {
