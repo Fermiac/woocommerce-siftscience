@@ -7,6 +7,27 @@ const updateOrder = ( id, value ) => {
 	};
 };
 
+const deleteOrder = ( id ) => {
+	return {
+		type: actionTypes.DELETE_ORDER,
+		id,
+	};
+};
+
+const updateUser = ( id, value ) => {
+	return {
+		type: actionTypes.UPDATE_USER,
+		id, value,
+	};
+};
+
+const deleteUser = ( id ) => {
+	return {
+		type: actionTypes.DELETE_USER,
+		id,
+	};
+};
+
 const updateBatch = ( value ) => {
 	return {
 		type: actionTypes.UPDATE_BATCH,
@@ -16,5 +37,8 @@ const updateBatch = ( value ) => {
 
 export default {
 	updateOrder,
+	deleteOrder,
+	updateUser,
+	deleteUser,
 	updateBatch,
 };
