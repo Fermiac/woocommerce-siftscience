@@ -33,6 +33,7 @@ if ( batchElement ) {
 }
 
 const updateOrder = ( id, value ) => store.dispatch( state.actions.updateOrder( id, value ) );
+const updateUser = ( id, value ) => store.dispatch( state.actions.updateUser( id, value ) );
 const orders = [...document.getElementsByClassName( 'siftsci-order' )];
 orders && orders.forEach( order => {
 	const id = order.attributes['data-id'].value;
@@ -41,10 +42,20 @@ orders && orders.forEach( order => {
 	orderOps.getLabel( id, ( error, data ) => {
 		updateOrder( id, { isWorking: false } );
 		if ( error ) {
-			return updateOrder( id, { error } );
+			return updateOrder( id, { error: error.toString() } );
 		}
 
-		updateOrder( id, data );
+		console.log( data );
+		if ( id !== data.order_id ) {
+			console.log( 'Strange: request order id ' + id + ' but got order_id ' + data.order_id );
+		}
+
+		updateOrder( id, {
+			userId: data.user_id,
+			isBackfilled: data.is_backfilled,
+		} );
+
+		updateUser( data.user_id, orderOps.getUserData( data.sift ) );
 	} );
 
 	ReactDOM.render( (

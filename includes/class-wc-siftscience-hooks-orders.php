@@ -50,9 +50,6 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 				}
 			}
 
-			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
-			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
-
 			$jsPath = $this->options->get_react_app_path();
 			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
 			$data = array(
