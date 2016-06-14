@@ -6,9 +6,9 @@ const divStyle = {
 	float: 'none',
 };
 
-const Icon = ( { imgUrl, alt, onClick } ) => {
+const Icon = ( { imgUrl, alt, onClick, title } ) => {
 	return (
-		<div id="siftsci_icon" className="siftsci_icon" style={ divStyle } onClick={ onClick } >
+		<div title={ title } id="siftsci_icon" className="siftsci_icon" style={ divStyle } onClick={ onClick } >
 			<img src={ imgUrl } alt={ alt } width="20px" height="20px" />
 		</div>
 	);
@@ -40,8 +40,10 @@ const Score = ( { score, openSiftSci } ) => {
 		backgroundColor: getColor( score ),
 	} );
 
+	const title = "The user's SiftScience score";
+
 	return (
-		<div id="siftsci_score" className="siftsci_score" style={ divStyle } onClick={ openSiftSci }>
+		<div title={ title } id="siftsci_score" className="siftsci_score" style={ divStyle } onClick={ openSiftSci }>
 			<div style={ style }>{ score }</div>
 		</div>
 	);
@@ -49,10 +51,11 @@ const Score = ( { score, openSiftSci } ) => {
 
 const LabelButton = ( { type, label, imgPath, setLabel } ) => {
 	const isSet = type === label;
+	const title = isSet ? 'Click to remove this label' : 'Click to set this label';
 	const image = type + ( isSet ? '.png' : '-gray.png' );
 	const callback = () => setLabel( isSet ? null : type );
 	return (
-		<Icon imgUrl={ imgPath + image } alt={ type } onClick={ callback } />
+		<Icon title={ title } imgUrl={ imgPath + image } alt={ type } onClick={ callback } />
 	);
 };
 

@@ -33,7 +33,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			if ( $column == 'siftsci' ) {
 				global $post;
 				$id = $post->ID;
-				echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'>hello</div>\n";
+				echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'></div>\n";
 			}
 		}
 

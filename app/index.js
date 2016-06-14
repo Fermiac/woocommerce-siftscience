@@ -45,7 +45,6 @@ orders && orders.forEach( order => {
 			return updateOrder( id, { error: error.toString() } );
 		}
 
-		console.log( data );
 		if ( id !== data.order_id ) {
 			console.log( 'Strange: request order id ' + id + ' but got order_id ' + data.order_id );
 		}
