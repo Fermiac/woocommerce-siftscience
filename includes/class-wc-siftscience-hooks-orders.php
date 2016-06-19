@@ -37,6 +37,17 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			}
 		}
 
+		private function add_react_app() {
+			$jsPath = $this->options->get_react_app_path();
+			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
+			$data = array(
+				'imgPath' => $imgPath,
+				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
+			);
+			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
+			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
+		}
+
 		public function create_header( $columns ) {
 			$icon = 'Sift Sci';
 			$header = WC_SiftScience_Html::tool_tip( $icon, 'SiftScience' );
@@ -50,14 +61,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 				}
 			}
 
-			$jsPath = $this->options->get_react_app_path();
-			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
-			$data = array(
-				'imgPath' => $imgPath,
-				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
-			);
-			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
-			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
+			$this->add_react_app();
 
 			return $newcolumns;
 		}
@@ -74,10 +78,10 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 		}
 
 		public function display_siftsci_box() {
-			WC_SiftScience_Html::score_label_icons( false );
-
-			$js_vars = array( 'url' => plugins_url( 'woocommerce-siftscience/wc-siftscience-score.php' ) );
-			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-order', $js_vars );
+			global $post;
+			$id = $post->ID;
+			echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'></div>\n";
+			$this->add_react_app();
 		}
 	}
 
