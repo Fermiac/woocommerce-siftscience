@@ -39,7 +39,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			add_action( 'profile_update', array( $this, 'update_account' ), 10, 2 );
 
 			add_action( 'woocommerce_add_to_cart', array( $this, 'add_to_cart' ) );
-			add_action( 'woocommerce_cart_item_removed', array( $this, 'remove_from_cart' ) );
+			add_action( 'woocommerce_remove_cart_item', array( $this, 'remove_from_cart' ) );
 
 			if ( $this->options->send_on_create_enabled() ) {
 				add_action( 'woocommerce_new_order', array( $this, 'woocommerce_new_order' ) );
@@ -61,12 +61,13 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		}
 
 		public function add_script() {
-			$options = $this->options;
-			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', array(
-				'session_id' => $options->get_session_id(),
-				'user_id'    => $options->get_user_id(),
-				'js_key'     => $options->get_js_key()
-			) );
+			$data = array(
+				'session_id' => $this->options->get_session_id(),
+				'user_id'    => $this->options->get_user_id(),
+				'js_key'     => $this->options->get_js_key(),
+			);
+			error_log( 'add_script()' . json_encode( $data ) );
+			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data );
 		}
 
 		public function login_success( $username, $user ) {
@@ -122,12 +123,22 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		private function add_api_callback( $data ) {
 			if ( ! isset( $_SESSION[ 'WooCommerce_SiftScience_Events' ] ) ) {
 				$_SESSION[ 'WooCommerce_SiftScience_Events' ] = array();
-				$nonce = wp_create_nonce();
-				$url = plugins_url( 'woocommerce-siftscience/wc-siftscience-event.php', dirname( __FILE__ ) );
+				$nonce                                        = wp_create_nonce();
+				$url                                          = plugins_url( 'woocommerce-siftscience/wc-siftscience-event.php', dirname( __FILE__ ) );
 				WC_SiftScience_Html::enqueue_script( 'wc-siftsci-events', array(
-					'url' => $url,
+					'url'   => $url,
 					'nonce' => $nonce,
 				) );
+			}
+
+			error_log( 'add_api_callback(): ' . json_encode( $data ) );
+			$jsData = $data;
+			$jsData['nonce'] = wp_create_nonce( WC_SiftScience_Nonce::action( $data ) );
+			$jsData['url'] = plugins_url( "woocommerce-siftscience/wc-siftscience-event.php", dirname( __FILE__ ) );
+
+			if ( $this->posts === null ) {
+				$this->posts = array();
+				WC_SiftScience_Html::enqueue_script( 'wc-siftsci-events' );
 			}
 
 			$_SESSION[ 'WooCommerce_SiftScience_Events' ][] = $data;
@@ -140,7 +151,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			) );
 		}
 
-		public function remove_from_cart( $cart_item_key, $cart ) {
+		public function remove_from_cart( $cart_item_key ) {
 			$this->add_api_callback( array(
 				'event'   => '$remove_item_from_cart',
 				'item_id' => $cart_item_key,
