@@ -19,7 +19,6 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 	include_once( 'class-wc-siftscience-nonce.php' );
 
 	class WC_SiftScience_Hooks_Events {
-		private $posts = null;
 		private $comm;
 		private $backfill;
 		private $options;
@@ -121,22 +120,17 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		}
 
 		private function add_api_callback( $data ) {
-			$jsData = $data;
-			$jsData[ 'nonce' ] = wp_create_nonce( WC_SiftScience_Nonce::action( $data ) );
-			$jsData[ 'url' ] = plugins_url( 'woocommerce-siftscience/wc-siftscience-event.php', dirname( __FILE__ ) );
-
-			if ( null === $this->posts ) {
-				$this->posts = array();
-				WC_SiftScience_Html::enqueue_script( 'wc-siftsci-events' );
+			if ( ! isset( $_SESSION[ 'WooCommerce_SiftScience_Events' ] ) ) {
+				$_SESSION[ 'WooCommerce_SiftScience_Events' ] = array();
+				$nonce = wp_create_nonce();
+				$url = plugins_url( 'woocommerce-siftscience/wc-siftscience-event.php', dirname( __FILE__ ) );
+				WC_SiftScience_Html::enqueue_script( 'wc-siftsci-events', array(
+					'url' => $url,
+					'nonce' => $nonce,
+				) );
 			}
 
-			$this->posts[] = $jsData;
-
-			// need to access the script class directly to override added script data.
-			global $wp_scripts;
-			$code = wp_json_encode( array( 'posts' => $this->posts ) );
-			$cmd = "var _wc_siftsci_events_input_data = $code;";
-			$wp_scripts->add_data( 'wc_siftsci_events', 'data', $cmd );
+			$_SESSION[ 'WooCommerce_SiftScience_Events' ][] = $data;
 		}
 
 		public function add_to_cart( $cart_item_key ) {

@@ -4,6 +4,7 @@
  * License: GPL2
  */
 
+/*
 function sendEventData( i, post ){
 	jQuery.ajax( {
 		url: post.url,
@@ -13,3 +14,9 @@ function sendEventData( i, post ){
 }
 
 jQuery.each( _wc_siftsci_events_input_data.posts, sendEventData );
+*/
+
+jQuery.ajax( {
+	url: _wc_siftsci_events_input_data.url + '?nonce=' + _wc_siftsci_events_input_data.nonce,
+	method: "GET",
+} );
