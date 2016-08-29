@@ -22,8 +22,8 @@ $backfill = new WC_SiftScience_Backfill( $options, $comm );
 $api = new WC_SiftScience_Api( $comm, $backfill, $options );
 $result = $api->handleRequest( $action, $id );
 
-if ( isset( $result['status'] ) ) {
-	http_response_code( $result['status'] );
+if ( isset( $result[ 'status' ] ) ) {
+	http_response_code( $result[ 'status' ] );
 }
 
 echo json_encode( $result );

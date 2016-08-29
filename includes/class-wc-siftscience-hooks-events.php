@@ -64,10 +64,10 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 		public function add_script() {
 			$options = $this->options;
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', array(
-					'session_id' => $options->get_session_id(),
-					'user_id'    => $options->get_user_id(),
-					'js_key'     => $options->get_js_key() )
-			);
+				'session_id' => $options->get_session_id(),
+				'user_id'    => $options->get_user_id(),
+				'js_key'     => $options->get_js_key()
+			) );
 		}
 
 		public function login_success( $username, $user ) {
@@ -82,7 +82,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 		public function login_failure( $username ) {
 			$user = get_user_by( 'login', $username );
-			if ( $user !== false ) {
+			if ( false !== $user ) {
 				$this->add_api_callback( array(
 					'event'        => '$login',
 					'user_id'      => $user->ID,
@@ -122,10 +122,10 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 		private function add_api_callback( $data ) {
 			$jsData = $data;
-			$jsData['nonce'] = wp_create_nonce( WC_SiftScience_Nonce::action( $data ) );
-			$jsData['url'] = plugins_url( "woocommerce-siftscience/wc-siftscience-event.php", dirname( __FILE__ ) );
+			$jsData[ 'nonce' ] = wp_create_nonce( WC_SiftScience_Nonce::action( $data ) );
+			$jsData[ 'url' ] = plugins_url( 'woocommerce-siftscience/wc-siftscience-event.php', dirname( __FILE__ ) );
 
-			if ( $this->posts === null ) {
+			if ( null === $this->posts ) {
 				$this->posts = array();
 				WC_SiftScience_Html::enqueue_script( 'wc-siftsci-events' );
 			}
@@ -159,7 +159,6 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 				'user_id' => $userId,
 			) );
 		}
-
 	}
 
 endif;
