@@ -31,6 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 		public function run() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'add_script' ) );
+			add_action( 'login_enqueue_scripts', array( $this, 'add_script' ) );
 			add_action( 'woocommerce_checkout_order_processed', array( $this, 'create_order' ), 10, 1 );   //new order created
 
 			add_action( 'wp_login', array( $this, 'login_success' ), 10, 2 );
@@ -142,6 +143,15 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			}
 
 			$_SESSION[ 'WooCommerce_SiftScience_Events' ][] = $data;
+			$this->posts[] = $jsData;
+
+			// need to access the script class directly to override added script data.
+			global $wp_scripts;
+			$code = wp_json_encode( array( 'posts' => $this->posts ) );
+			$cmd = "var _wc_siftsci_events_input_data = $code;";
+			if ( ! $wp_scripts->add_data( 'wc_siftsci_events', 'data', $cmd ) ) {
+				error_log( 'Failed to add wc_siftsci_events action' );
+			}
 		}
 
 		public function add_to_cart( $cart_item_key ) {
