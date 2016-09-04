@@ -23,7 +23,10 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 		}
 
 		public function backfill( $post_id ) {
-			if ( $this->is_backfilled( $post_id ) ) return false;
+			if ( $this->is_backfilled( $post_id ) ) {
+				error_log( 'already backfilled' );
+				return false;
+			}
 
 			$this->create_order( $post_id );
 			update_post_meta( $post_id, $this->options->get_backfill_meta_key(), '1' );
@@ -43,8 +46,7 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 			$order = new WC_Order( $order_id );
 			$ord_arr = $this->create_order_array( $order );
 			$ord_arr = apply_filters( 'woocommerce_siftscience_send_order_data', $ord_arr );
-			$result = $this->comm->post_event( '$create_order', $ord_arr );
-			return $result;
+			return $this->comm->post_event( $ord_arr );
 		}
 
 		private function get_user_id( WC_Order $order ) {
@@ -57,6 +59,7 @@ if ( ! class_exists( 'WC_SiftScience_Backfill' ) ) :
 
 		private function create_order_array( WC_Order $order ) {
 			$data = array(
+				'$type'             => '$create_order',
 				'$user_id'          => $this->get_user_id( $order ),
 				'$order_id'         => $order->get_order_number(),
 				'$user_email'       => $order->billing_email,
