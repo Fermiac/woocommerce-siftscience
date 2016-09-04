@@ -40,7 +40,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			);
 
 			$result = $this->send_request( $this->event_url, $args );
-			error_log( 'result: ' . $result->body );
+			error_log( 'result: ' . $result[ 'body' ] );
 			return $result;
 		}
 
