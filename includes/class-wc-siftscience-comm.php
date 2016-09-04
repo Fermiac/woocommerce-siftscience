@@ -29,9 +29,19 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			$this->options = $options;
 		}
 
-		public function post_event( $type, $data = array() ) {
-			$data['$type'] = $type;
-			return $this->post( $data );
+		public function post_event( $data ) {
+			error_log( 'posting: ' . json_encode( $data, JSON_PRETTY_PRINT ) );
+			$data['$api_key'] = $this->options->get_api_key();
+
+			$args = array(
+				'headers' => $this->headers,
+				'method'  => 'POST',
+				'body'    => $data
+			);
+
+			$result = $this->send_request( $this->event_url, $args );
+			error_log( 'result: ' . $result->body );
+			return $result;
 		}
 
 		public function post_label( $user_id, $isBad ) {
@@ -67,20 +77,6 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			$response = $this->send_request( $url );
 
 			return json_decode( $response['body'] );
-		}
-
-		private function post( $data ) {
-			$body = $data;
-			$body['$api_key'] = $this->options->get_api_key();
-			$body['$session_id'] = $this->options->get_session_id();
-
-			$args = array(
-				'headers' => $this->headers,
-				'method'  => 'POST',
-				'body'    => $body
-			);
-
-			return $this->send_request( $this->event_url, $args );
 		}
 
 		private function send_request( $url, $args = array() ) {
