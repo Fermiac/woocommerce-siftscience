@@ -9,7 +9,7 @@ include_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.p
 
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
-require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-backfill.php' );
+require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
 require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
 
 $id = filter_input( INPUT_GET, 'id' );
@@ -17,8 +17,8 @@ $action = filter_input( INPUT_GET, 'action' );
 
 $options = new WC_SiftScience_Options();
 $comm = new WC_SiftScience_Comm( $options );
-$backfill = new WC_SiftScience_Backfill( $options, $comm );
-$api = new WC_SiftScience_Api( $comm, $backfill, $options );
+$events = new WC_SiftScience_events( $comm, $options);
+$api = new WC_SiftScience_Api( $comm, $events, $options );
 
 error_log( "Executing action $action id $id" );
 $result = $api->handleRequest( $action, $id );

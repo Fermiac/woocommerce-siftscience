@@ -12,16 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 	include_once( 'class-wc-siftscience-comm.php' );
-	include_once( 'class-wc-siftscience-backfill.php' );
+	include_once( 'class-wc-siftscience-events.php' );
+	include_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Api {
 		private $comm;
-		private $backfill;
+		private $events;
 		private $options;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Backfill $backfill, WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events, WC_SiftScience_Options $options ) {
 			$this->comm = $comm;
-			$this->backfill = $backfill;
+			$this->events = $events;
 			$this->options = $options;
 		}
 
@@ -62,7 +63,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					$this->comm->delete_label( $user_id );
 					break;
 				case 'backfill':
-					$this->backfill->backfill( $order_id );
+					$this->events->create_order( $order_id );
 					break;
 				case 'order_stats':
 					return $this->list_stats();
