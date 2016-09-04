@@ -85,16 +85,19 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/login
 		public function login_failure( $username ) {
+			$data = array(
+				'$type'         => '$login',
+				'$login_status' => '$failure',
+			);
+
 			$user = get_user_by( 'login', $username );
 			if ( false !== $user ) {
-				$data = array(
-					'$type'         => '$login',
-					'$user_id'      => $user->ID,
-					'$login_status' => '$failure',
-				);
-
-				$this->comm->post_event( $data );
+				$data[ '$user_id' ] = $user->ID;
+			} else {
+				$data[ '$session_id' ] = $this->options->get_session_id();
 			}
+
+			$this->comm->post_event( $data );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-account
@@ -162,6 +165,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			);
 			
 			$this->comm->post_event( $data );
+			$this->link_session_to_user( $user->ID );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-account
