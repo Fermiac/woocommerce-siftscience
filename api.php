@@ -18,12 +18,15 @@ $action = filter_input( INPUT_GET, 'action' );
 $options = new WC_SiftScience_Options();
 $comm = new WC_SiftScience_Comm( $options );
 $backfill = new WC_SiftScience_Backfill( $options, $comm );
-
 $api = new WC_SiftScience_Api( $comm, $backfill, $options );
+
+error_log( "Executing action $action id $id" );
 $result = $api->handleRequest( $action, $id );
 
 if ( isset( $result[ 'status' ] ) ) {
 	http_response_code( $result[ 'status' ] );
 }
 
-echo json_encode( $result );
+$result = json_encode( $result, JSON_PRETTY_PRINT );
+error_log( "result: $result" );
+echo $result;
