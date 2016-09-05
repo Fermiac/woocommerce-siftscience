@@ -44,25 +44,13 @@ const component = ( props ) => {
 	const { clearAll, backfill, refresh } = props;
 	return (
 		<div>
-			<button
-				type="button"
-				className="button-primary"
-				onClick={ clearAll }
-			>
+			<button type="button" className="button-primary" onClick={ clearAll } >
 				Clear Data
 			</button>
-			<button
-				type="button"
-				className="button-primary"
-				onClick={ backfill }
-			>
+			<button type="button" className="button-primary" onClick={ backfill }>
 				Back-Fill
 			</button>
-			<button
-				type="button"
-				className="button-primary"
-				onClick={ refresh }
-			>
+			<button type="button" className="button-primary" onClick={ refresh }>
 				Refresh
 			</button>
 			<View { ...props }/>
