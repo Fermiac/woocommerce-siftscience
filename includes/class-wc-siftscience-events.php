@@ -63,6 +63,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$login_status' => '$success'
 			);
 
+			$data = apply_filters( 'wc_siftscience_login_success', $data );
 			$this->comm->post_event( $data );
 			$this->link_session_to_user( $user->ID );
 		}
@@ -81,12 +82,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$data[ '$session_id' ] = $this->options->get_session_id();
 			}
 
+			$data = apply_filters( 'wc_siftscience_login_failure', $data );
 			$this->comm->post_event( $data );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-account
 		public function create_account( $user_id ) {
-
+			$user = get_userdata( $user_id );
 			$data = array(
 				// Required Fields
 				'$type'       => '$create_account',
@@ -94,9 +96,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 				// Supported Fields
 				'$session_id'       => $this->options->get_session_id(),
-				//'$user_email'       => 'bill@gmail.com',
-				//'$name'             => 'Bill Jones',
-				//'$phone'            => '1-415-555-6040',
+				'$user_email'       => $user->billing_email,
+				'$name'             => $user->billing_first_name . ' ' . $user->billing_last_name,
+				'$phone'            => $user->billing_phone,
 				//'$referrer_user_id' => 'janejane101',
 				//'$payment_methods'  => array(
 				//array(
@@ -105,16 +107,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'$card_last4'      => '4444'
 				//)
 				//),
-				//'$billing_address'  => array(
-				//'$name'         => 'Bill Jones',
-				//'$phone'        => '1-415-555-6040',
-				//'$address_1'    => '2100 Main Street',
-				//'$address_2'    => 'Apt 3B',
-				//'$city'         => 'New London',
-				//'$region'       => 'New Hampshire',
-				//'$country'      => 'US',
-				//'$zipcode'      => '03257'
-				//),
+				'$billing_address'  => $this->create_address( $user, 'billing' ),
 				//'$shipping_address'  => array(
 				//'$name'          => 'Bill Jones',
 				//'$phone'         => '1-415-555-6041',
@@ -148,12 +141,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				// 'phone_confirmed_status'  => '$pending'
 			);
 
+			$data = apply_filters( 'wc_siftscience_create_account', $data );
 			$this->comm->post_event( $data );
 			$this->link_session_to_user( $user->ID );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-account
 		public function update_account( $user_id, $old_user_data ) {
+			$user = get_userdata( $user_id );
 			$data = array(
 				// Required Fields
 				'$type'       => '$update_account',
@@ -161,9 +156,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 				// Supported Fields
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
-				//'$user_email'       => 'bill@gmail.com',
-				//'$name'             => 'Bill Jones',
-				//'$phone'            => '1-415-555-6040',
+				'$user_email'       => $user->billing_email,
+				'$name'             => $user->billing_first_name . ' ' . $user->billing_last_name,
+				'$phone'            => $user->billing_phone,
 				//'$referrer_user_id' => 'janejane102',
 				//'$payment_methods'  => array(
 				//array(
@@ -172,17 +167,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'$card_last4'      => '4444'
 				//)
 				//),
-				//'$billing_address'  =>
-				//array(
-				//'$name'         => 'Bill Jones',
-				//'$phone'        => '1-415-555-6041',
-				//'$address_1'    => '2100 Main Street',
-				//'$address_2'    => 'Apt 3B',
-				//'$city'         => 'New London',
-				//'$region'       => 'New Hampshire',
-				//'$country'      => 'US',
-				//'$zipcode'      => '03257'
-				//),
+				'$billing_address'  => $this->create_address( $user, 'billing' ),
 				//'$shipping_address' => array(
 				//'$name'         => 'Bill Jones',
 				//'$phone'        => '1-415-555-6041',
@@ -201,6 +186,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'phone_confirmed_status'   => '$success'
 			);
 
+			$data = apply_filters( 'wc_siftscience_update_account', $data );
 			$this->comm->post_event( $data );
 		}
 
@@ -250,6 +236,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
+			$data = apply_filters( 'wc_siftscience_create_order', $data );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
 		}
@@ -276,6 +263,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				)
 			);
 
+			$data = apply_filters( 'wc_siftscience_add_to_cart', $data );
 			$this->comm->post_event( $data );
 		}
 
@@ -302,6 +290,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				)
 			);
 
+			$data = apply_filters( 'wc_siftscience_remove_from_cart', $data );
 			$this->comm->post_event( $data );
 		}
 
@@ -313,6 +302,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$session_id' => $this->options->get_session_id(),
 			);
 
+			$data = apply_filters( 'wc_siftscience_link_session_to_user', $data );
 			$this->comm->post_event( $data );
 		}
 
@@ -355,7 +345,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return array(
 				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
 				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
-				'$phone'     => '',
+				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
 				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
 				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
 				'$city'      => $this->get_order_param( $order, $type, '_city' ),
