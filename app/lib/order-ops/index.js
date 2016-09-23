@@ -1,7 +1,7 @@
 import api from '../api';
 
-const openInSift = ( id ) => {
-	window.open( 'https://siftscience.com/console/users/' + id );
+const openInSift = ( user ) => {
+	window.open( 'https://siftscience.com/console/users/' + user );
 };
 
 const setLabel = ( id, value, callback ) => {
@@ -36,17 +36,17 @@ const clearAll = ( callback ) => {
 const getUserData = ( sift ) => {
 	if ( ! sift ) {
 		return null;
-	};
+	}
 
 	const result = {};
 
-	if ( sift.score ) {
-		result.score = Math.round( sift.score * 100 );
+	if ( sift.scores && sift.scores.payment_abuse ) {
+		result.score = Math.round( sift.scores.payment_abuse.score * 100 );
 	}
 
 	result.label = 'none';
-	if ( sift.latest_label ) {
-		result.label = sift.latest_label.is_bad ? 'bad' : 'good';
+	if ( sift.latest_labels && sift.latest_labels.payment_abuse ) {
+		result.label = sift.latest_labels.payment_abuse.is_bad ? 'bad' : 'good';
 	}
 
 	return result;

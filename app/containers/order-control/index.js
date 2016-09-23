@@ -12,7 +12,7 @@ const container = ( { orderId, state, actions } ) => {
 	const updateOrder = value => actions.updateOrder( orderId, value );
 	const updateUser = value => actions.updateUser( order.userId, value );
 	const openSiftSci = () => {
-		orderOps.openInSift( orderId );
+		orderOps.openInSift( order.userId );
 	};
 
 	const handleResponse = ( error, data ) => {
