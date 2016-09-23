@@ -15,10 +15,10 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
     class WC_SiftScience_Comm {
 		private $options;
-		private $event_url = 'https://api.siftscience.com/v203/events';
-		private $labels_url = 'https://api.siftscience.com/v203/users/{user}/labels';
-		private $delete_url = 'https://api.siftscience.com/v203/users/{user}/labels/?api_key={api}';
-		private $score_url = 'https://api.siftscience.com/v203/score/{user}/?api_key={api}';
+		private $event_url = 'https://api.siftscience.com/v204/events';
+		private $labels_url = 'https://api.siftscience.com/v204/users/{user}/labels';
+		private $delete_url = 'https://api.siftscience.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
+		private $score_url = 'https://api.siftscience.com/v204/score/{user}/?api_key={api}';
 
 		private $headers = array(
 			'Accept'       => 'application/json',
@@ -46,8 +46,9 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
 		public function post_label( $user_id, $isBad ) {
 			$data = array(
-				'$api_key' => $this->options->get_api_key(),
-				'$is_bad'  => ( $isBad ? 'true' : 'false' ),
+				'$api_key'    => $this->options->get_api_key(),
+				'$is_bad'     => ( $isBad ? 'true' : 'false' ),
+				'$abuse_type' => 'payment_abuse',
 			);
 
 			$url = str_replace( '{user}', urlencode( $user_id ), $this->labels_url );
