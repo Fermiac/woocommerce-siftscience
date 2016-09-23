@@ -81,3 +81,5 @@ crashlytics-build.properties
 fabric.properties
 
 dist
+
+.svn

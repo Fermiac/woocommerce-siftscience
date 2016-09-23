@@ -3,7 +3,7 @@ Contributors: nabsul
 Tags: sift science, woocommerce, fraud
 Requires at least: 4.6.1
 Tested up to: 4.6.1
-Stable tag: 4.6.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,10 +11,10 @@ This plugin integrates Sift Science fraud detection with your WooCommerce accoun
 
 == Description ==
 
-Install this plugin on your WooCommerce shop to add Sift Science fraud detection. Features:
-- Sending login, logout, cart actions event data to Sift Science
-- Sending order details to Sift Science via the orders page
-- Flagging users as good/bad to train Sift Science and improve accuracy
+Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Features:
+* Sending login, logout, cart actions event data to Sift Science
+* Sending order details to Sift Science via the orders page
+* Flagging users as good/bad to train Sift Science and improve accuracy
 
 == Installation ==
 
