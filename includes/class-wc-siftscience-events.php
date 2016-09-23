@@ -205,6 +205,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$billing_address'  => $this->create_address( $order, 'billing' ),
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->create_item_array( $order ),
+				'$ip'               => $order->customer_ip_address,
 				//'$payment_methods'  => array(
 				//array(
 				//'$payment_type'    => '$credit_card',
