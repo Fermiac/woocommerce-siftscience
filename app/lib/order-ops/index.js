@@ -1,7 +1,7 @@
 import api from '../api';
 
-const openInSift = ( id ) => {
-	window.open( 'https://siftscience.com/console/users/' + id );
+const openInSift = ( user ) => {
+	window.open( 'https://siftscience.com/console/users/' + user );
 };
 
 const setLabel = ( id, value, callback ) => {
