@@ -392,7 +392,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return array(
 				'$item_id'       => $wc_item['product_id'],
 				'$product_title' => $wc_item['name'],
-				'$price'         => $wc_item['line_subtotal'],
+                '$price'         => $wc_item['line_subtotal'] * 1000000,
 				'$quantity'      => $wc_item['qty'],
 			);
 		}
