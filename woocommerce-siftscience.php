@@ -3,8 +3,8 @@
 Plugin Name: Sift Science for WooCommerce
 Plugin URI: https://github.com/Fermiac/woocommerce-siftscience
 Description: Get a handle on fraud with Sift Science - a modern approach to fraud prevention that uses machine learning.
-Author: Lukas Svec, Nabeel Sulieman
-Version: 0.3.3
+Author: Nabeel Sulieman, Lukas Svec
+Version: 0.3.4
 Author URI: https://github.com/Fermiac/woocommerce-siftscience/wiki
 License: GPL2
 */
