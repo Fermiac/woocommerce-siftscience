@@ -20,13 +20,10 @@ $comm = new WC_SiftScience_Comm( $options );
 $events = new WC_SiftScience_events( $comm, $options);
 $api = new WC_SiftScience_Api( $comm, $events, $options );
 
-error_log( "Executing action $action id $id" );
 $result = $api->handleRequest( $action, $id );
 
 if ( isset( $result[ 'status' ] ) ) {
 	http_response_code( $result[ 'status' ] );
 }
 
-$result = json_encode( $result, JSON_PRETTY_PRINT );
-error_log( "result: $result" );
-echo $result;
+echo json_encode( $result, JSON_PRETTY_PRINT );

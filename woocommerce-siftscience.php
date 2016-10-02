@@ -28,7 +28,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Runs all the needed code that sets up the hooks
 		 */
 		public function run() {
-			error_log( 'plugin loaded' );
 			$options = new WC_SiftScience_Options();
 			$comm = new WC_SiftScience_Comm( $options );
 			$events = new WC_SiftScience_Events( $comm, $options );

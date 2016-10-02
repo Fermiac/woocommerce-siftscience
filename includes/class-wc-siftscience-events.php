@@ -51,7 +51,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'user_id'    => $this->options->get_user_id(),
 				'js_key'     => $this->options->get_js_key(),
 			);
-			error_log( 'WC_SiftScience_Hooks_Events::add_script()' );
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data );
 		}
 
@@ -192,7 +191,10 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-order
 		public function create_order( $order_id ) {
-			$order = new WC_Order( $order_id );
+			$order = wc_get_order( $order_id );
+			if ( false === $order ) {
+				return;
+			}
 
 			$data = array(
 				'$type'             => '$create_order',
@@ -240,6 +242,81 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$data = apply_filters( 'wc_siftscience_create_order', $data );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
+		}
+
+		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
+		public function update_order( $order_id ) {
+			$order = wc_get_order( $order_id );
+			if ( false === $order ) {
+				return;
+			}
+
+			$data = array(
+				'$type'             => '$update_order',
+				'$user_id'          => $this->get_user_id( $order ),
+				'$session_id'       => $this->get_session_id( $order ),
+				'$order_id'         => $order->get_order_number(),
+				'$user_email'       => $order->billing_email,
+				'$amount'           => $order->get_total() * 1000000,
+				'$currency_code'    => $order->get_order_currency(),
+				'$billing_address'  => $this->create_address( $order, 'billing' ),
+				'$shipping_address' => $this->create_address( $order, 'shipping' ),
+				'$items'            => $this->create_item_array( $order ),
+				'$ip'               => $order->customer_ip_address,
+				//'$payment_methods'  => array(
+				//array(
+				//'$payment_type'    => '$credit_card',
+				//'$payment_gateway' => '$braintree',
+				//'$card_bin'        => '542486',
+				//'$card_last4'      => '4444'
+				//)
+				//),
+				//'$expedited_shipping' => true,
+				//'$shipping_method'    => '$physical',
+				// For marketplaces, use $seller_user_id to identify the seller
+				//'$seller_user_id'     => 'slinkys_emporium',
+				//'$promotions'         => array(
+				//array(
+				//'$promotion_id' => 'FirstTimeBuyer',
+				//'$status'       => '$success',
+				//'$description'  => '$5 off',
+				//'$discount'     => array(
+				//'$amount'                   => 5000000,  // $5.00
+				//'$currency_code'            => 'USD',
+				//'$minimum_purchase_amount'  => 25000000  // $25.00
+				//)
+				//)
+				//),
+				// Sample Custom Fields
+				//'digital_wallet'      => 'apple_pay', // 'google_wallet', etc.
+				//'coupon_code'         => 'dollarMadness',
+				//'shipping_choice'     => 'FedEx Ground Courier',
+				//'is_first_time_buyer' => false
+			);
+
+			$data = apply_filters( 'wc_siftscience_update_order', $data );
+			$this->comm->post_event( $data );
+			$this->set_backfill( $order_id );
+		}
+
+		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
+		public function update_order_status( $order_id ) {
+			$order = new WC_Order( $order_id );
+			$data = array(
+				'$type'             => '$order_status',
+				'$user_id'          => $this->get_user_id( $order ),
+				'$session_id'       => $this->get_session_id( $order ),
+				'$order_id'         => $order->get_order_number(),
+				'$description'      => 'woo status: ' . $order->get_status(),
+			);
+
+			$data[ '$order_status' ] = $this->convert_order_status( $order );
+			$data = apply_filters( 'wc_siftscience_update_order_status', $data );
+			if ( null === $data[ '$order_status' ] ) {
+				return;
+			}
+
+			$this->comm->post_event( $data );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
@@ -397,6 +474,25 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			);
 		}
 
+		private function convert_order_status( WC_Order $order ) {
+			$status = $order->get_status();
+			switch( $status ) {
+				case 'completed':
+					return '$fulfilled';
+				case 'cancelled':
+					return '$canceled';
+				case 'on-hold':
+					return '$held';
+				case 'refunded';
+					return '$returned';
+				case 'processing':
+					return '$approved';
+				case 'pending':
+				case 'failed':
+				default:
+					return null;
+			}
+		}
 	}
 
 endif;
