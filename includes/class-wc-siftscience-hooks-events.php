@@ -41,6 +41,8 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			}
 
 			add_action( 'woocommerce_new_order', array( $this->events, 'add_session_info' ) );
+			add_action( 'woocommerce_order_status_changed', array( $this->events, 'update_order_status' ) );
+			add_action( 'post_updated', array( $this->events, 'update_order' ) );
 		}
 	}
 
