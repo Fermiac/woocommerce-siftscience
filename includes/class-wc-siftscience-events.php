@@ -319,6 +319,26 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->comm->post_event( $data );
 		}
 
+		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
+		public function send_transaction( $order_id, array $details = array() ) {
+			$order = new WC_Order( $order_id );
+			$data = array(
+				'$type'              => '$transaction',
+				'$user_id'          => $this->get_user_id( $order ),
+				'$session_id'       => $this->get_session_id( $order ),
+				'$order_id'         => $order->get_order_number(),
+				'$amount'           => $order->get_total() * 1000000,
+				'$currency_code'    => $order->get_order_currency(),
+			);
+
+			foreach( $details as $k => $v ) {
+				$data[ $k ] = $v;
+			}
+
+			$data = apply_filters( 'wc_siftscience_send_transaction', $data );
+			$this->comm->post_event( $data );
+		}
+
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
 			$data = array(
