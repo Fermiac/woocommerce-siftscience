@@ -3,7 +3,7 @@ Contributors: nabsul
 Tags: sift science, woocommerce, fraud
 Requires at least: 4.6.1
 Tested up to: 4.6.1
-Stable tag: 0.3.4
+Stable tag: 0.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,9 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 3. Use the WooCommerce->Settings->SiftScience screen to configure the plugin
 
 == Changelog ==
+
+= 0.3.5 Beta =
+* Fix calls to plugins_url() to get the right path to images and js scripts
 
 = 0.3.4 Beta =
 * Added update_order and order_status events

@@ -14,7 +14,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	class WC_SiftScience_Html {
 
 		public static function icon( $img, $alt ) {
-			$img_path = plugins_url( "woocommerce-siftscience/images/$img" );
+			$img_path = plugins_url( "images/$img", dirname( __FILE__ ) );
 			return "<img src='$img_path' alt='$alt' width='20px' height='20px' />";
 		}
 
@@ -37,7 +37,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 		public static function enqueue_script( $scriptName, $data = null ) {
 			wp_enqueue_script( $scriptName,
-				plugins_url( "woocommerce-siftscience/tools/$scriptName.js" ),
+				plugins_url( "tools/$scriptName.js", dirname( __FILE__ ) ),
 				array( 'jquery' ), false, true );
 
 			$varname = str_replace('-', '_', $scriptName);
