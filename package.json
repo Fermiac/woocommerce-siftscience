@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --watch --content-base dist --port 8085",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "./node_modules/.bin/webpack",
+    "dist": "cross-env NODE_ENV=production webpack --config webpack.production.config.js",
     "dev": "./node_modules/.bin/webpack-dev-server"
   },
   "repository": {
