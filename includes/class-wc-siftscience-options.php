@@ -16,6 +16,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $mode = 'siftsci_reporting_mode';
 		public static $api_key = 'siftsci_api_key';
 		public static $js_key = 'siftsci_js_key';
+		public static $name_prefix = 'siftsci_name_prefix';
 		public static $is_api_setup = 'siftsci_is_api_setup';
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 
