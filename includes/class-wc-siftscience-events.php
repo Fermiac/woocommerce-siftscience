@@ -85,6 +85,17 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->comm->post_event( $data );
 		}
 
+		//https://siftscience.com/developers/docs/curl/events-api/reserved-events/logout
+		public function logout( $user_id ) {
+			$data = array(
+				'$type'         => '$logout',
+				'$user_id'      => $user_id,
+			);
+
+			$data = apply_filters( 'wc_siftscience_logout', $data );
+			$this->comm->post_event( $data );
+		}
+
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-account
 		public function create_account( $user_id ) {
 			$user = get_userdata( $user_id );
