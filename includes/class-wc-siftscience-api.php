@@ -46,8 +46,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				}
 
 				$user_id = $meta === '0'
-					? 'SINGLE_ORDER_' . $order_id
-					: 'REGISTERED_USER_' . $meta;
+					? $this->events->get_user_id_from_order_id( $order_id )
+					: $this->events->get_user_id_from_user_id( $meta );
 			}
 
 			switch ( $action ) {
