@@ -78,7 +78,9 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
-					'User & Order Name Prefix', 'Prefix to give order and user names. Useful when you have have multiple stores and one Sift Science account.' ),
+					'User & Order Name Prefix',
+					'Prefix to give order and user names. '
+					. 'Useful when you have have multiple stores and one Sift Science account.' ),
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
