@@ -36,8 +36,12 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return get_option( self::$js_key );
 		}
 
+		public function get_name_prefix() {
+			return get_option( self::$name_prefix, '' );
+		}
+
 		public function get_user_id() {
-			return is_user_logged_in() ? wp_get_current_user()->ID : '';
+			return is_user_logged_in() ? wp_get_current_user()->ID : null;
 		}
 
 		public function get_session_id() {
