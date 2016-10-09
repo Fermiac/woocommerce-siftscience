@@ -27,6 +27,14 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 
 == Changelog ==
 
+= 0.3.6 Beta =
+2016-10-09
+* Implement a logout method (not plugged into wpcom though)
+* Improve webpack to make a smaller React App
+* Add prefix to user_name field (support multiple stores for one Sift Science account)
+* Add more filters and actions
+* Disable $update_order and $order_status if order is not backfilled
+
 = 0.3.5 Beta =
 * Fix calls to plugins_url() to get the right path to images and js scripts
 

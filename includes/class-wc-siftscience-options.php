@@ -16,6 +16,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $mode = 'siftsci_reporting_mode';
 		public static $api_key = 'siftsci_api_key';
 		public static $js_key = 'siftsci_js_key';
+		public static $name_prefix = 'siftsci_name_prefix';
 		public static $is_api_setup = 'siftsci_is_api_setup';
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 
@@ -35,8 +36,12 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return get_option( self::$js_key );
 		}
 
+		public function get_name_prefix() {
+			return get_option( self::$name_prefix, '' );
+		}
+
 		public function get_user_id() {
-			return is_user_logged_in() ? wp_get_current_user()->ID : '';
+			return is_user_logged_in() ? wp_get_current_user()->ID : null;
 		}
 
 		public function get_session_id() {

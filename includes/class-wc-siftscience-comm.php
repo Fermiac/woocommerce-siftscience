@@ -30,6 +30,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		}
 
 		public function post_event( $data ) {
+			error_log( 'posting: ' . json_encode( $data, JSON_PRETTY_PRINT ) );
 			$data[ '$api_key' ] = $this->options->get_api_key();
 
 			$args = array(
