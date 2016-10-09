@@ -42,6 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$post_id = $order->post->ID;
 			$meta_key = $this->options->get_session_meta_key();
 			$session_id = $this->options->get_session_id();
+			do_action( 'wp_siftscience_save_session_info', $post_id, $session_id );
 			update_post_meta( $post_id, $meta_key, $session_id );
 		}
 
@@ -51,6 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'user_id'    => $this->options->get_user_id(),
 				'js_key'     => $this->options->get_js_key(),
 			);
+			$data = apply_filters( 'wc_siftscience_js_script_data', $data );
 			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data );
 		}
 
@@ -257,6 +259,10 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
 		public function update_order( $order_id ) {
+			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+				return;
+			}
+
 			$order = wc_get_order( $order_id );
 			if ( false === $order ) {
 				return;
@@ -312,6 +318,10 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
+			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+				return;
+			}
+
 			$order = new WC_Order( $order_id );
 			$data = array(
 				'$type'             => '$order_status',
@@ -332,6 +342,10 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
 		public function send_transaction( $order_id, array $details = array() ) {
+			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+				return;
+			}
+
 			$order = new WC_Order( $order_id );
 			$data = array(
 				'$type'              => '$transaction',
@@ -451,7 +465,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @return array
 		 */
 		private function create_address( $order, $type = 'shipping' ) {
-			return array(
+			$address_object = array(
 				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
 				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
 				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
@@ -462,6 +476,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$country'   => $this->get_order_param( $order, $type, '_country' ),
 				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
 			);
+
+			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
+			return $address_object;
 		}
 
 		private function get_order_param( $order, $type, $param ) {
@@ -497,12 +514,15 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @return array
 		 */
 		private function create_item( $wc_item ) {
-			return array(
+			$order_item = array(
 				'$item_id'       => $wc_item['product_id'],
 				'$product_title' => $wc_item['name'],
                 '$price'         => $wc_item['line_subtotal'] * 1000000,
 				'$quantity'      => $wc_item['qty'],
 			);
+
+			$order_item = apply_filters( 'wc_siftscience_create_address', $order_item, $wc_item );
+			return $order_item;
 		}
 
 		private function convert_order_status( WC_Order $order ) {
