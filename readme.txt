@@ -27,8 +27,13 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 
 == Changelog ==
 
+= 0.3.7 Beta =
+* 2016-10-16
+* Added the logout event
+* Fixed a bug where WC_Order_Refund was causing the API to crash
+
 = 0.3.6 Beta =
-2016-10-09
+* 2016-10-09
 * Implement a logout method (not plugged into wpcom though)
 * Improve webpack to make a smaller React App
 * Add prefix to user_name field (support multiple stores for one Sift Science account)
