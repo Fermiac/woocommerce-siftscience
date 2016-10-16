@@ -42,6 +42,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
 	}
 
-	( new WC_SiftScience_Plugin )->run();
+	$wc_siftscience_plugin = new WC_SiftScience_Plugin();
+	add_action( 'init', array( $wc_siftscience_plugin, 'run' ) );
 
 endif;

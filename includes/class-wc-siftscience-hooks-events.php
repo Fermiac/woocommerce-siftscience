@@ -28,6 +28,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Events' ) ) :
 			add_action( 'wp_enqueue_scripts', array( $this->events, 'add_script' ) );
 			add_action( 'login_enqueue_scripts', array( $this->events, 'add_script' ) );
 
+			add_action( 'wp_logout', array( $this->events, 'logout' ), 10, 2 );
 			add_action( 'wp_login', array( $this->events, 'login_success' ), 10, 2 );
 			add_action( 'wp_login_failed', array( $this->events, 'login_failure' ) );
 			add_action( 'user_register', array( $this->events, 'create_account' ) );

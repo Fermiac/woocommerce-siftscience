@@ -18,10 +18,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 	class WC_SiftScience_Events {
 		private $comm;
 		private $options;
+		private $saved_user_id = null;
 
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options ) {
 			$this->comm = $comm;
 			$this->options = $options;
+			$this->saved_user_id = get_current_user_id();
 		}
 
 		public function is_backfilled( $post_id ) {
@@ -93,7 +95,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		}
 
 		//https://siftscience.com/developers/docs/curl/events-api/reserved-events/logout
-		public function logout( $user_id ) {
+		public function logout() {
+			$user_id = $this->saved_user_id;
+			if ( null === $user_id || 0 === $user_id ) {
+				return;
+			}
+
 			$data = array(
 				'$type'         => '$logout',
 				'$user_id'      => $this->get_user_id_from_user_id( $user_id ),
