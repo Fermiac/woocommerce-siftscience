@@ -140,8 +140,8 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
 			echo "<div class='notice notice-error is-dismissible'>" .
-				 "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
-				 "</div>";
+			     "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+			     "</div>";
 		}
 
 		public function batch_upload() {
