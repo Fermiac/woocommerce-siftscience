@@ -24,15 +24,15 @@ const scoreStyle = {
 };
 
 const getColor = ( score ) => {
-	if ( 90 < score ) {
-		return 'green';
+	if ( 80 < score ) {
+		return 'red';
 	}
 
-	if ( 50 < score ) {
+	if ( 65 < score ) {
 		return 'orange';
 	}
 
-	return 'red';
+	return 'green';
 };
 
 const Score = ( { score, openSiftSci } ) => {

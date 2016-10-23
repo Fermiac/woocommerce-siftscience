@@ -77,6 +77,12 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 				$this->get_text_input( WC_SiftScience_Options::$js_key,
 					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
+				$this->get_number_input( WC_SiftScience_Options::$threshold_good,
+					'Good Score Threshold', 'Scores below this value are considered good and shown in green' ),
+
+				$this->get_number_input( WC_SiftScience_Options::$threshold_bad,
+					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red' ),
+
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
@@ -105,19 +111,18 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			);
 		}
 
-		private function get_section_end( $id ) {
-			return array( 'type' => 'sectionend', 'id' => $id );
-		}
-
-		private function get_radio_buttons( $id, $title, $desc, $options ) {
+		private function get_number_input( $id, $title, $desc ) {
 			return array(
 				'title' => $title,
 				'desc' => $desc,
 				'desc_tip' => true,
-				'type' => 'radio',
-				'options' => $options,
+				'type' => 'number',
 				'id' => $id,
 			);
+		}
+
+		private function get_section_end( $id ) {
+			return array( 'type' => 'sectionend', 'id' => $id );
 		}
 
 		private function get_check_box( $id, $title, $desc ) {
