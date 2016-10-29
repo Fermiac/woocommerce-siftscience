@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import settings from '../../lib/settings';
 
 const divStyle = {
 	width: '24px',
@@ -24,15 +25,17 @@ const scoreStyle = {
 };
 
 const getColor = ( score ) => {
-	if ( 80 < score ) {
+	const thresholdBad = settings.thresholdBad || 60;
+	if ( thresholdBad <= score ) {
 		return 'red';
 	}
 
-	if ( 65 < score ) {
-		return 'orange';
+	const thresholdGood = settings.thresholdGood || 30;
+	if ( thresholdGood >= score ) {
+		return 'green';
 	}
 
-	return 'green';
+	return 'orange';
 };
 
 const Score = ( { score, openSiftSci } ) => {
