@@ -19,6 +19,8 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $name_prefix = 'siftsci_name_prefix';
 		public static $is_api_setup = 'siftsci_is_api_setup';
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
+		public static $threshold_good = 'siftsci_threshold_good';
+		public static $threshold_bad = 'siftsci_threshold_bad';
 
 		public function get_api_key() {
 			return get_option( self::$api_key );
@@ -38,6 +40,14 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public function get_name_prefix() {
 			return get_option( self::$name_prefix, '' );
+		}
+
+		public function get_threshold_good() {
+			return get_option( self::$threshold_good, 30 );
+		}
+
+		public function get_threshold_bad() {
+			return get_option( self::$threshold_bad, 60 );
 		}
 
 		public function get_user_id() {

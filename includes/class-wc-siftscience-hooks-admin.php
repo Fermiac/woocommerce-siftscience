@@ -35,7 +35,8 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 		}
 
 		public function check_api() {
-			$response = $this->comm->get_user_score( 1 );
+			// try requesting a non-existent user score and see that the response isn't a permission fail
+			$response = $this->comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 
@@ -77,6 +78,12 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 				$this->get_text_input( WC_SiftScience_Options::$js_key,
 					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
+				$this->get_number_input( WC_SiftScience_Options::$threshold_good,
+					'Good Score Threshold', 'Scores below this value are considered good and shown in green', 30),
+
+				$this->get_number_input( WC_SiftScience_Options::$threshold_bad,
+					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red', 60 ),
+
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
@@ -105,19 +112,19 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			);
 		}
 
-		private function get_section_end( $id ) {
-			return array( 'type' => 'sectionend', 'id' => $id );
-		}
-
-		private function get_radio_buttons( $id, $title, $desc, $options ) {
+		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
 				'title' => $title,
 				'desc' => $desc,
 				'desc_tip' => true,
-				'type' => 'radio',
-				'options' => $options,
+				'type' => 'number',
 				'id' => $id,
+				'default' => $default,
 			);
+		}
+
+		private function get_section_end( $id ) {
+			return array( 'type' => 'sectionend', 'id' => $id );
 		}
 
 		private function get_check_box( $id, $title, $desc ) {
