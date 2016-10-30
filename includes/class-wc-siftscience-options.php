@@ -43,11 +43,11 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_threshold_good() {
-			return get_option( self::$threshold_good, 25 );
+			return get_option( self::$threshold_good, 30 );
 		}
 
 		public function get_threshold_bad() {
-			return get_option( self::$threshold_bad, 75 );
+			return get_option( self::$threshold_bad, 60 );
 		}
 
 		public function get_user_id() {
