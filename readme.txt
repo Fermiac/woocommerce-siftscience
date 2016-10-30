@@ -3,7 +3,7 @@ Contributors: nabsul
 Tags: sift science, woocommerce, fraud
 Requires at least: 4.6.1
 Tested up to: 4.6.1
-Stable tag: 0.3.5
+Stable tag: 0.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,11 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 3. Use the WooCommerce->Settings->SiftScience screen to configure the plugin
 
 == Changelog ==
+
+= 0.3.8 Beta =
+* 2016-10-30
+* Bug fix: Score colors should be red for high value and green for low value
+* Add settings fields to make score colors customizable to different levels
 
 = 0.3.7 Beta =
 * 2016-10-16
