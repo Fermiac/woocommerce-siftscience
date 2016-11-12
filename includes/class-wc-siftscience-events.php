@@ -267,6 +267,11 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$data = apply_filters( 'wc_siftscience_create_order', $data );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
+			$this->send_transaction( $order_id, array(
+				'$transaction_type' => '$sale',
+				'$transaction_status' => '$success',
+				'$payment_method' => array( '$payment_type' => '$cash' ),
+			) );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
@@ -360,7 +365,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$order = new WC_Order( $order_id );
 			$data = array(
-				'$type'              => '$transaction',
+				'$type'             => '$transaction',
 				'$user_id'          => $this->get_user_id( $order ),
 				'$session_id'       => $this->get_session_id( $order ),
 				'$order_id'         => $order->get_order_number(),
