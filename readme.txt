@@ -28,9 +28,10 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 == Changelog ==
 
 = 0.3.8 Beta =
-* 2016-10-30
+* 2016-11-12
 * Bug fix: Score colors should be red for high value and green for low value
 * Add settings fields to make score colors customizable to different levels
+* Move call to session_start() so that it doesn't get triggered too late
 
 = 0.3.7 Beta =
 * 2016-10-16
