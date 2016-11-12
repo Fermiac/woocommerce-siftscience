@@ -55,10 +55,6 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_session_id() {
-			if ( session_status() != PHP_SESSION_ACTIVE ) {
-				session_start();
-			}
-
 			return session_id();
 		}
 

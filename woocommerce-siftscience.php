@@ -47,4 +47,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	$wc_siftscience_plugin = new WC_SiftScience_Plugin();
 	add_action( 'init', array( $wc_siftscience_plugin, 'run' ) );
 
+	// make sure session is started as soon as possible
+	if ( session_status() != PHP_SESSION_ACTIVE ) {
+		session_start();
+	}
+
 endif;
