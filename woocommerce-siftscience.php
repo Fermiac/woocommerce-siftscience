@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) )
 	&& ! class_exists( 'WCSiftScience' ) ) :
 
+	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
@@ -28,8 +29,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Runs all the needed code that sets up the hooks
 		 */
 		public function run() {
+			$logger = new WC_SiftScience_Logger();
 			$options = new WC_SiftScience_Options();
-			$comm = new WC_SiftScience_Comm( $options );
+			$comm = new WC_SiftScience_Comm( $options, $logger );
 			$events = new WC_SiftScience_Events( $comm, $options );
 
 			$admin = new WC_SiftScience_Hooks_Admin( $options, $comm );

@@ -15,6 +15,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
     class WC_SiftScience_Comm {
 		private $options;
+	    private $logger;
 		private $event_url = 'https://api.siftscience.com/v204/events';
 		private $labels_url = 'https://api.siftscience.com/v204/users/{user}/labels';
 		private $delete_url = 'https://api.siftscience.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
@@ -25,12 +26,12 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			'Content-Type' => 'application/json',
 		);
 
-		public function __construct( WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->options = $options;
+			$this->logger = $logger;
 		}
 
 		public function post_event( $data ) {
-			error_log( 'posting: ' . json_encode( $data, JSON_PRETTY_PRINT ) );
 			$data[ '$api_key' ] = $this->options->get_api_key();
 
 			$args = array(
@@ -39,8 +40,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				'body'    => $data
 			);
 
-			$result = $this->send_request( $this->event_url, $args );
-			return $result;
+			return $this->send_request( $this->event_url, $args );
 		}
 
 		public function post_label( $user_id, $isBad ) {
@@ -80,6 +80,8 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		}
 
 		private function send_request( $url, $args = array() ) {
+			$this->logger->log_info( "Sending Request to SiftScience API: $url" );
+			$this->logger->log_info( $args );
 			if ( ! isset( $args['method'] ) )
 				$args['method'] = 'GET';
 
@@ -89,7 +91,9 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				$args['body'] = json_encode( $args['body'] );
 			}
 
-			return wp_remote_request( $url, $args );
+			$result = wp_remote_request( $url, $args );
+			$this->logger->log_info( $result );
+			return $result;
 		}
 	}
 
