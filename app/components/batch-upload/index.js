@@ -19,7 +19,7 @@ const View = ( props ) => {
 	const { error, status, orderId } = props;
 
 	if ( error ) {
-		return <p>Error: { error.toString() }</p>;
+		return <p>{ error.toString() }:{ error.text }</p>;
 	}
 
 	switch ( status ) {
