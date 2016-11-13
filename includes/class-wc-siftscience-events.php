@@ -326,6 +326,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$data = apply_filters( 'wc_siftscience_update_order', $data );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
+			$this->send_transaction( $order_id );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
@@ -360,20 +361,105 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$order = new WC_Order( $order_id );
 			$data = array(
-				'$type'              => '$transaction',
-				'$user_id'          => $this->get_user_id( $order ),
-				'$session_id'       => $this->get_session_id( $order ),
-				'$order_id'         => $order->get_order_number(),
-				'$amount'           => $order->get_total() * 1000000,
-				'$currency_code'    => $order->get_order_currency(),
+				'$type'               => '$transaction',
+				'$user_id'            => $this->get_user_id( $order ),
+				'$session_id'         => $this->get_session_id( $order ),
+				'$order_id'           => $order->get_order_number(),
+				'$amount'             => $order->get_total() * 1000000,
+				'$currency_code'      => $order->get_order_currency(),
+				'$transaction_type'   => '$sale',
 			);
+
+			$data = $this->add_transaction_type( $order, $data );
+			$data = $this->add_transaction_status( $order, $data );
+			$data = $this->add_payment_method( $order, $data );
 
 			foreach( $details as $k => $v ) {
 				$data[ $k ] = $v;
 			}
 
-			$data = apply_filters( 'wc_siftscience_send_transaction', $data );
+			$data = apply_filters( 'wc_siftscience_send_transaction', $data, $order );
+
 			$this->comm->post_event( $data );
+		}
+
+		private static $transaction_type_map = array(
+			'completed' => '$sale',
+			'cancelled' => '$sale',
+			'on-hold' => '$sale',
+			'refunded' => '$refund',
+			'processing' => '$sale',
+			'pending' => '$sale',
+			'failed' => '$sale',
+		);
+
+		private function add_transaction_type( WC_Order $order, $data ) {
+			$lookup = apply_filters( 'wc_siftscience_transaction_type_lookup', self::$transaction_type_map, $order );
+			$wc_status = $order->get_status();
+			$type = null;
+			if ( isset( $lookup[ $wc_status ] ) ) {
+				$type = $lookup[ $wc_status ];
+			}
+
+			$type = apply_filters( 'wc_siftscience_transaction_type', $type, $order );
+
+			if ( null !== $type ) {
+				$data[ '$transaction_type' ] = $type;
+			}
+
+			return $data;
+		}
+
+		private static $transaction_status_map = array(
+			'completed' => '$success',
+			'cancelled' => '$failure',
+			'on-hold' => '$pending',
+			'refunded' => '$success',
+			'processing' => '$pending',
+			'pending' => '$pending',
+			'failed' => '$failure',
+		);
+
+		private function add_transaction_status( WC_Order $order, $data ) {
+			$lookup = apply_filters( 'wc_siftscience_transaction_status_lookup', self::$transaction_status_map, $order );
+			$wc_status = $order->get_status();
+			$status = null;
+			if ( isset( $lookup[ $wc_status ] ) ) {
+				$status = $lookup[ $wc_status ];
+			}
+
+			$status = apply_filters( 'wc_siftscience_transaction_status', $status, $order );
+
+			if ( null !== $status ) {
+				$data[ '$transaction_status' ] = $status;
+			}
+
+			return $data;
+		}
+
+		private static $payment_method_map = array(
+			'cod' => array( '$payment_type' => '$cash' ),
+			'bacs' => array( '$payment_type' => '$electronic_fund_transfer' ),
+			'cheque' => array( '$payment_type' => '$check' ),
+			'paypal' => array( '$payment_type' => '$third_party_processor', '$' => '$paypal' ),
+		);
+
+		private function add_payment_method( WC_Order $order, $data ) {
+			$payment_method_id = $order->payment_method;
+			$lookup = apply_filters( 'wc_siftscience_payment_method_lookup', self::$payment_method_map, $order );
+
+			$method = null;
+			if ( isset( $lookup[ $payment_method_id ] ) ) {
+				$method = $lookup[ $payment_method_id ];
+			}
+
+			$method = apply_filters( 'wc_siftscience_payment_method', $method, $order );
+
+			if ( null !== $method ) {
+				$data[ '$payment_method' ] = $method;
+			}
+
+			return $data;
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
@@ -552,24 +638,25 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return $order_item;
 		}
 
+		private static $order_status_map = array(
+			'completed' => '$fulfilled',
+			'cancelled' => '$canceled',
+			'on-hold' => '$held',
+			'refunded' => '$returned',
+			'processing' => '$approved',
+			'pending' => null,
+			'failed' => null,
+		);
+
 		private function convert_order_status( WC_Order $order ) {
 			$status = $order->get_status();
-			switch( $status ) {
-				case 'completed':
-					return '$fulfilled';
-				case 'cancelled':
-					return '$canceled';
-				case 'on-hold':
-					return '$held';
-				case 'refunded';
-					return '$returned';
-				case 'processing':
-					return '$approved';
-				case 'pending':
-				case 'failed':
-				default:
-					return null;
+			$lookup = apply_filters( 'wc_siftscience_order_status_lookup', self::$order_status_map, $order );
+			if ( ! isset( $lookup[ $status ] ) ) {
+				return null;
 			}
+
+			$status = $lookup[ $status ];
+			return apply_filters( 'wc_siftscience_order_status', $status, $order );
 		}
 	}
 
