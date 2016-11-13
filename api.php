@@ -22,10 +22,24 @@ $comm = new WC_SiftScience_Comm( $options, $logger );
 $events = new WC_SiftScience_events( $comm, $options);
 $api = new WC_SiftScience_Api( $comm, $events, $options );
 
-$result = $api->handleRequest( $action, $id );
+try {
 
-if ( isset( $result[ 'status' ] ) ) {
-	http_response_code( $result[ 'status' ] );
+	$result = $api->handleRequest( $action, $id );
+
+	if ( isset( $result[ 'status' ] ) ) {
+		http_response_code( $result[ 'status' ] );
+	}
+
+	echo json_encode( $result, JSON_PRETTY_PRINT );
+
+} catch ( Exception $error ) {
+	http_response_code( 500 );
+	echo json_encode( array(
+		'error' => true,
+		'code' => $error->getCode(),
+		'message' => $error->getMessage(),
+		'file' => $error->getFile(),
+		'line' => $error->getLine(),
+	) );
+
 }
-
-echo json_encode( $result, JSON_PRETTY_PRINT );
