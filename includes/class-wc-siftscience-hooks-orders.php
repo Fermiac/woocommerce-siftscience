@@ -46,7 +46,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 				'thresholdGood' => $this->options->get_threshold_good(),
 				'thresholdBad' => $this->options->get_threshold_bad(),
 			);
-			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
+			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), $this->options->get_version(), true );
 			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
 		}
 

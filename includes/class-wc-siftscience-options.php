@@ -21,6 +21,15 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 		public static $threshold_good = 'siftsci_threshold_good';
 		public static $threshold_bad = 'siftsci_threshold_bad';
+		public static $version = false;
+
+		public function __construct( $version = false ) {
+			self::$version = $version;
+		}
+
+		public function get_version() {
+			return self::$version;
+		}
 
 		public function get_api_key() {
 			return get_option( self::$api_key );

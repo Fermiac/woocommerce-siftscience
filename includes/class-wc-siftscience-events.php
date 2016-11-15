@@ -60,7 +60,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			$data = apply_filters( 'wc_siftscience_js_script_data', $data );
-			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data );
+			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data, array(), $this->options->get_version() );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/login

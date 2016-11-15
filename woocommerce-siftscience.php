@@ -31,7 +31,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 */
 		public function run() {
 			$logger = new WC_SiftScience_Logger();
-			$options = new WC_SiftScience_Options();
+			$options = new WC_SiftScience_Options( '0.4.2' );
 			$comm = new WC_SiftScience_Comm( $options, $logger );
 			$events = new WC_SiftScience_Events( $comm, $options );
 
