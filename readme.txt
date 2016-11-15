@@ -27,7 +27,7 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 
 == Changelog ==
 
-= 0.4.0 Beta =
+= 0.4.1 Beta =
 * 2016-11-14
 * Switch to WordPress's built in Ajax handler
 
