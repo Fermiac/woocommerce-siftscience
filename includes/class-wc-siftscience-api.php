@@ -26,7 +26,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$this->options = $options;
 		}
 
-		public function run() {
+		public function add_hooks() {
 			add_action( 'wp_ajax_wc_siftscience_action', array( $this, 'handle_ajax' ) );
 		}
 

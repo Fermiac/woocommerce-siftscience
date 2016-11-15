@@ -21,9 +21,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
 	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-hooks-admin.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-hooks-orders.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-hooks-events.php' );
+	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
+	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
 
 	class WC_SiftScience_Plugin {
 		/**
@@ -33,17 +32,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$logger = new WC_SiftScience_Logger();
 			$options = new WC_SiftScience_Options( '0.4.2' );
 			$comm = new WC_SiftScience_Comm( $options, $logger );
+
 			$events = new WC_SiftScience_Events( $comm, $options );
-
+			$order = new WC_SiftScience_Orders( $options );
+			$admin = new WC_SiftScience_Admin( $options, $comm );
 			$api = new WC_SiftScience_Api( $comm, $events, $options );
-			$admin = new WC_SiftScience_Hooks_Admin( $options, $comm );
-			$order = new WC_SiftScience_Hooks_Orders( $options );
-			$events = new WC_SiftScience_Hooks_Events( $events, $options );
 
-			$admin->run();
-			$order->run();
-			$events->run();
-			$api->run();
+			$admin->add_hooks();
+			$order->add_hooks();
+			$events->add_hooks();
+			$api->add_hooks();
 		}
 	}
 

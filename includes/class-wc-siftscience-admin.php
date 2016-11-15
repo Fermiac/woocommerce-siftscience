@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	include_once( 'class-wc-siftscience-options.php' );
 
-	class WC_SiftScience_Hooks_Admin {
+	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
 		private $settings;
@@ -27,7 +27,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			$this->comm = $comm;
 		}
 
-		public function run() {
+		public function add_hooks() {
 			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
 			add_action( 'woocommerce_settings_siftsci', array( $this, 'output_settings_fields' ) );
 			add_action( 'woocommerce_settings_save_siftsci', array( $this, 'save_settings' ) );

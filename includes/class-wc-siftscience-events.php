@@ -26,6 +26,28 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->saved_user_id = get_current_user_id();
 		}
 
+		public function add_hooks() {
+			add_action( 'wp_enqueue_scripts', array( $this, 'add_script' ) );
+			add_action( 'login_enqueue_scripts', array( $this, 'add_script' ) );
+
+			add_action( 'wp_logout', array( $this, 'logout' ), 10, 2 );
+			add_action( 'wp_login', array( $this, 'login_success' ), 10, 2 );
+			add_action( 'wp_login_failed', array( $this, 'login_failure' ) );
+			add_action( 'user_register', array( $this, 'create_account' ) );
+			add_action( 'profile_update', array( $this, 'update_account' ), 10, 2 );
+
+			add_action( 'woocommerce_add_to_cart', array( $this, 'add_to_cart' ) );
+			add_action( 'woocommerce_remove_cart_item', array( $this, 'remove_from_cart' ) );
+
+			if ( $this->options->send_on_create_enabled() ) {
+				add_action( 'woocommerce_new_order', array( $this, 'create_order' ) );
+			}
+
+			add_action( 'woocommerce_new_order', array( $this, 'add_session_info' ) );
+			add_action( 'woocommerce_order_status_changed', array( $this, 'update_order_status' ) );
+			add_action( 'post_updated', array( $this, 'update_order' ) );
+		}
+
 		public function is_backfilled( $post_id ) {
 			$is_backfilled = get_post_meta( $post_id, $this->options->get_backfill_meta_key(), true );
 			return $is_backfilled === '1';

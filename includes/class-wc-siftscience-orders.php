@@ -10,19 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 
 	include_once( 'class-wc-siftscience-html.php' );
 	include_once( 'class-wc-siftscience-options.php' );
 
-	class WC_SiftScience_Hooks_Orders {
+	class WC_SiftScience_Orders {
 		private $options;
 
 		public function __construct( WC_SiftScience_Options $options ) {
 			$this->options = $options;
 		}
 
-		public function run() {
+		public function add_hooks() {
 			add_filter( 'manage_edit-shop_order_columns', array( $this, 'create_header' ), 100 );
 			add_action( 'manage_shop_order_posts_custom_column', array( $this, 'create_row' ), 11 );
 
