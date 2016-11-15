@@ -2,7 +2,7 @@ import settings from '../settings';
 
 const fetchApi = ( action, id, callback ) => {
 	const idString = id ? '&id=' + id : '';
-	const url = settings.apiUrl + '?action=' + action + idString;
+	const url = settings.apiUrl + '?action=wc_siftscience_action&wcss_action=' + action + idString;
 	fetch( url, { credentials: 'same-origin' } )
 		.then( ( res ) => {
 			if ( 200 > res.status || 300 < res.status ) {
