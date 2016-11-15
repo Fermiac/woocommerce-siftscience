@@ -621,7 +621,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return $order->$key;
 		}
 
-		private function create_item_array( $order ) {
+		private function create_item_array( WC_Order $order ) {
 			$item_arr = array();
 			foreach ( $order->get_items() as $wc_item ) {
 				array_push( $item_arr, $this->create_item( $wc_item ) );

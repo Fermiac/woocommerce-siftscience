@@ -40,10 +40,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				plugins_url( "tools/$scriptName.js", dirname( __FILE__ ) ),
 				array( 'jquery' ), $version, true );
 
-			$varname = str_replace('-', '_', $scriptName);
+			$var_name = str_replace('-', '_', $scriptName);
 
 			if ( $data !== null ) {
-				wp_localize_script( $scriptName, "_${varname}_input_data", $data );
+				wp_localize_script( $scriptName, "_${$var_name}_input_data", $data );
 			}
 		}
 	}
