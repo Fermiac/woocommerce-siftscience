@@ -46,7 +46,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Admin' ) ) :
 			$jsPath = $this->options->get_react_app_path();
 			echo $this->batch_upload();
 			$data = array(
-				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
+				'apiUrl' => admin_url( 'admin-ajax.php' ),
 			);
 			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), false, true );
 			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );

@@ -42,7 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Hooks_Orders' ) ) :
 			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
 			$data = array(
 				'imgPath' => $imgPath,
-				'apiUrl' => plugins_url( 'api.php', dirname( __FILE__ ) ),
+				'apiUrl' => admin_url( 'admin-ajax.php' ),
 				'thresholdGood' => $this->options->get_threshold_good(),
 				'thresholdBad' => $this->options->get_threshold_bad(),
 			);

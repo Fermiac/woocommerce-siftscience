@@ -26,6 +26,35 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$this->options = $options;
 		}
 
+		public function run() {
+			add_action( 'wp_ajax_wc_siftscience_action', array( $this, 'handle_ajax' ) );
+		}
+
+		public function handle_ajax() {
+			try {
+				$id = filter_input( INPUT_GET, 'id' );
+				$action = filter_input( INPUT_GET, 'wcss_action' );
+				$result = $this->handleRequest( $action, $id );
+
+				if ( isset( $result[ 'status' ] ) ) {
+					http_response_code( $result[ 'status' ] );
+				}
+
+				echo json_encode( $result, JSON_PRETTY_PRINT );
+			} catch ( Exception $error ) {
+				http_response_code( 500 );
+				echo json_encode( array(
+					'error' => true,
+					'code' => $error->getCode(),
+					'message' => $error->getMessage(),
+					'file' => $error->getFile(),
+					'line' => $error->getLine(),
+				) );
+			}
+
+			wp_die();
+		}
+
 		public function handleRequest($action, $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
