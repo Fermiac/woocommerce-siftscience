@@ -38,7 +38,7 @@ const deleteUser = ( state, action ) => {
 
 const updateBatch = ( state, action ) => {
 	const oldBatch = state.batch || {};
-	const newBatch = Object.assign( {}, oldBatch, action.value )
+	const newBatch = Object.assign( {}, oldBatch, action.value );
 	return Object.assign( {}, state, { batch: newBatch } );
 };
 

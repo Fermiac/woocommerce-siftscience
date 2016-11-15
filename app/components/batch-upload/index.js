@@ -28,9 +28,9 @@ const View = ( props ) => {
 		case 'stats':
 			return <StatView { ...props } />;
 		case 'backfill':
-			return <p>Backfilling order #{ orderId }</p>
+			return <p>Backfilling order #{ orderId }</p>;
 		default:
-			return <p>Error: unknown status [ { status } ]</p>
+			return <p>Error: unknown status [ { status } ]</p>;
 	}
 };
 
