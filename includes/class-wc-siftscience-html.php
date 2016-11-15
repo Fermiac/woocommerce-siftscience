@@ -27,23 +27,23 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			return "<div$divTags>$content</div>";
 		}
 
-		private static function tag_params( $params, $strEnclose = '"' ) {
+		private static function tag_params( $params, $str_enclose = '"' ) {
 			$result = '';
 			foreach ( $params as $k => $v ) {
-				$result .= " $k=$strEnclose$v$strEnclose";
+				$result .= " $k=$str_enclose$v$str_enclose";
 			}
 			return $result;
 		}
 
-		public static function enqueue_script( $scriptName, $data = null, $version = false ) {
-			wp_enqueue_script( $scriptName,
-				plugins_url( "tools/$scriptName.js", dirname( __FILE__ ) ),
+		public static function enqueue_script( $script_name, $data = null, $version = false ) {
+			wp_enqueue_script( $script_name,
+				plugins_url( "tools/$script_name.js", dirname( __FILE__ ) ),
 				array( 'jquery' ), $version, true );
 
-			$var_name = str_replace('-', '_', $scriptName);
+			$var_name = str_replace('-', '_', $script_name);
 
 			if ( $data !== null ) {
-				wp_localize_script( $scriptName, "_${$var_name}_input_data", $data );
+				wp_localize_script( $script_name, "_${var_name}_input_data", $data );
 			}
 		}
 	}
