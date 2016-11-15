@@ -34,6 +34,7 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 = 0.4.2 Beta =
 * 2016-11-15
 * Add JavaScript version to avoid caching issues
+* Send out transaction information only on order status change (reduces # in SS attempts field)
 * Refactored some code for better readability
 
 = 0.4.0 Beta =
