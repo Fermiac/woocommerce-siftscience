@@ -35,10 +35,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			return $result;
 		}
 
-		public static function enqueue_script( $scriptName, $data = null ) {
+		public static function enqueue_script( $scriptName, $data = null, $version = false ) {
 			wp_enqueue_script( $scriptName,
 				plugins_url( "tools/$scriptName.js", dirname( __FILE__ ) ),
-				array( 'jquery' ), false, true );
+				array( 'jquery' ), $version, true );
 
 			$varname = str_replace('-', '_', $scriptName);
 
