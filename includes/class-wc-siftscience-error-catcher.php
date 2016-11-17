@@ -12,20 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( "WC_SiftScience_Error_Catcher" ) ) :
 
+	include_once 'class-wc-siftscience-logger.php';
+
 	class WC_SiftScience_Error_Catcher {
 		private $subject;
-		private $error_handler;
+		private $logger;
 
-		public function __construct( $subject, $error_handler ) {
+		public function __construct( $subject, WC_SiftScience_Logger $logger ) {
 			$this->subject = $subject;
-			$this->error_handler = $error_handler;
+			$this->logger = $logger;
 		}
 
 		public function __call( $name, $args ) {
 			try {
 				return call_user_func_array( array( $this->subject, $name ), $args );
 			} catch ( Exception $exception ) {
-				call_user_func( $this->error_handler, $exception );
+				$this->logger->log_error( '[siftsci exception] ' . $exception->__toString() );
 				throw $exception;
 			}
 		}

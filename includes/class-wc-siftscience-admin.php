@@ -27,13 +27,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->comm = $comm;
 		}
 
-		public function add_hooks() {
-			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
-			add_action( 'woocommerce_settings_siftsci', array( $this, 'output_settings_fields' ) );
-			add_action( 'woocommerce_settings_save_siftsci', array( $this, 'save_settings' ) );
-			add_action( 'admin_notices', array( $this, 'settings_notice' ) );
-		}
-
 		public function check_api() {
 			// try requesting a non-existent user score and see that the response isn't a permission fail
 			$response = $this->comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
@@ -93,6 +86,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Automatically send data',
 					'Automatically send data to SiftScience when an order is created'
 				),
+
+				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
+					'Log Level',
+					'How much logging information to generate',
+					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
+				),
 				
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
@@ -134,6 +133,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'desc_tip' => true,
 				'type' => 'checkbox',
 				'id' => $id,
+			);
+		}
+
+		private function get_drop_down( $id, $title, $desc, $options ) {
+			return array(
+				'id' => $id,
+				'title' => $title,
+				'desc' => $desc,
+				'desc_tip' => true,
+				'options' => $options,
+				'type' => 'select',
 			);
 		}
 
