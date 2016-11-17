@@ -31,6 +31,10 @@ if ( ! class_exists( "WC_SiftScience_Error_Catcher" ) ) :
 				throw $exception;
 			}
 		}
+
+		public function __get( $name ) {
+			return $this->subject->$name;
+		}
 	}
 
 endif;

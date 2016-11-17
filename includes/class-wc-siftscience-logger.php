@@ -14,9 +14,11 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 
 	class WC_SiftScience_Logger {
 		private $min_error_level;
+		private $log_path;
 
 		public function __construct( WC_SiftScience_Options $options ) {
 			$this->min_error_level = $options->get_log_level();
+			$this->log_path = dirname( __DIR__ ) . '/debug.log';
 		}
 
 		public function log_info( $message ) {
@@ -40,7 +42,8 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 				$message = json_encode( $message );
 			}
 
-			error_log( '[woo_siftscience]' . $message );
+			$date = date( 'Y-m-d H:i:s' );
+			error_log( "[$date] $message\n\n", 3, $this->log_path );
 		}
 	}
 
