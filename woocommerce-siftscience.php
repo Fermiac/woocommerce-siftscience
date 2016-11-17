@@ -39,12 +39,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$admin = new WC_SiftScience_Admin( $options, $comm );
 			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger );
 
-			if ( true ) {
-				$events = new WC_SiftScience_Error_Catcher( $events, $logger );
-				$order = new WC_SiftScience_Error_Catcher( $order, $logger );
-				$admin = new WC_SiftScience_Error_Catcher( $admin, $logger );
-				$api = new WC_SiftScience_Error_Catcher( $api, $logger );
-			}
+			// wrap all the classes in error catcher
+			$events = new WC_SiftScience_Error_Catcher( $events, $logger );
+			$order = new WC_SiftScience_Error_Catcher( $order, $logger );
+			$admin = new WC_SiftScience_Error_Catcher( $admin, $logger );
+			$api = new WC_SiftScience_Error_Catcher( $api, $logger );
 
 			// admin hooks
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );

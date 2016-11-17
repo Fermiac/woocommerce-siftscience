@@ -32,7 +32,7 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 		}
 
 		private function log( $status, $message ) {
-			if ( $status >= $this->min_error_level ) {
+			if ( $status < $this->min_error_level ) {
 				return;
 			}
 
@@ -40,7 +40,7 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 				$message = json_encode( $message );
 			}
 
-			error_log( $message );
+			error_log( '[woo_siftscience]' . $message );
 		}
 	}
 

@@ -27,7 +27,7 @@ if ( ! class_exists( "WC_SiftScience_Error_Catcher" ) ) :
 			try {
 				return call_user_func_array( array( $this->subject, $name ), $args );
 			} catch ( Exception $exception ) {
-				$this->logger->log_error( '[siftsci exception] ' . $exception->__toString() );
+				$this->logger->log_error( $exception->__toString() );
 				throw $exception;
 			}
 		}
