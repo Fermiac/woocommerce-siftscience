@@ -14,20 +14,20 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 	include_once( 'class-wc-siftscience-comm.php' );
 	include_once( 'class-wc-siftscience-events.php' );
 	include_once( 'class-wc-siftscience-options.php' );
+	include_once( 'class-wc-siftscience-logger.php' );
 
 	class WC_SiftScience_Api {
 		private $comm;
 		private $events;
 		private $options;
+		private $logger;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events, WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events,
+			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->comm = $comm;
 			$this->events = $events;
 			$this->options = $options;
-		}
-
-		public function add_hooks() {
-			add_action( 'wp_ajax_wc_siftscience_action', array( $this, 'handle_ajax' ) );
+			$this->logger = $logger;
 		}
 
 		public function handle_ajax() {
@@ -40,8 +40,11 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					http_response_code( $result[ 'status' ] );
 				}
 
-				echo json_encode( $result, JSON_PRETTY_PRINT );
+				$response = json_encode( $result );
+				$this->logger->log_info( '[ajax response] ' . $response );
+				echo $response;
 			} catch ( Exception $error ) {
+				$this->logger->log_error( '[ajax error] ' . $error->getMessage() );
 				http_response_code( 500 );
 				echo json_encode( array(
 					'error' => true,

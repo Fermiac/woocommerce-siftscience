@@ -21,14 +21,22 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
 		public static $threshold_good = 'siftsci_threshold_good';
 		public static $threshold_bad = 'siftsci_threshold_bad';
-		public static $version = false;
+		public static $log_level_key = 'siftsci_log_level';
+
+		private $version = false;
+		private $log_level;
 
 		public function __construct( $version = false ) {
-			self::$version = $version;
+			$this->version = $version;
+			$this->log_level = get_option( self::$log_level_key, 2 );
+		}
+
+		public function get_log_level() {
+			return $this->log_level;
 		}
 
 		public function get_version() {
-			return self::$version;
+			return $this->version;
 		}
 
 		public function get_api_key() {

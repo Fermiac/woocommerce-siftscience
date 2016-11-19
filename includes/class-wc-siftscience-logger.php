@@ -13,13 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 
 	class WC_SiftScience_Logger {
-		private $error_level;
+		private $min_error_level;
+		private $log_path;
 
-		public function __construct() {
-			$this->error_level = 2;
-			if ( defined( 'WC_SIFTSCIENCE_LOG_LEVEL') ) {
-				$this->error_level = WC_SIFTSCIENCE_LOG_LEVEL;
-			}
+		public function __construct( WC_SiftScience_Options $options ) {
+			$this->min_error_level = $options->get_log_level();
+			$this->log_path = dirname( __DIR__ ) . '/debug.log';
 		}
 
 		public function log_info( $message ) {
@@ -35,7 +34,7 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 		}
 
 		private function log( $status, $message ) {
-			if ( $status < $this->error_level ) {
+			if ( $status < $this->min_error_level ) {
 				return;
 			}
 
@@ -43,7 +42,8 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 				$message = json_encode( $message );
 			}
 
-			error_log( $message );
+			$date = date( 'Y-m-d H:i:s' );
+			error_log( "[$date] $message\n\n", 3, $this->log_path );
 		}
 	}
 

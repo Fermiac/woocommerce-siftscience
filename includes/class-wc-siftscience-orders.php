@@ -22,13 +22,6 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 			$this->options = $options;
 		}
 
-		public function add_hooks() {
-			add_filter( 'manage_edit-shop_order_columns', array( $this, 'create_header' ), 100 );
-			add_action( 'manage_shop_order_posts_custom_column', array( $this, 'create_row' ), 11 );
-
-			add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
-		}
-
 		public function create_row( $column ) {
 			if ( $column == 'siftsci' ) {
 				global $post;

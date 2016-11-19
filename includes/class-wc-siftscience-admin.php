@@ -17,21 +17,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
-		private $settings;
 		private $options;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm )
 		{
-			$this->settings = $this->get_settings();
 			$this->options = $options;
 			$this->comm = $comm;
-		}
-
-		public function add_hooks() {
-			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 30 );
-			add_action( 'woocommerce_settings_siftsci', array( $this, 'output_settings_fields' ) );
-			add_action( 'woocommerce_settings_save_siftsci', array( $this, 'save_settings' ) );
-			add_action( 'admin_notices', array( $this, 'settings_notice' ) );
 		}
 
 		public function check_api() {
@@ -40,8 +31,48 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 
+		public function get_sections() {
+			global $current_section;
+			$sections  = array(
+				'' => 'Settings',
+				'debug' => 'Debug',
+			);
+
+			echo '<ul class="subsubsub">';
+			$array_keys = array_keys( $sections );
+
+			foreach ( $sections as $id => $label ) {
+				echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+			}
+
+			echo '</ul><br class="clear" />';
+		}
+
 		public function output_settings_fields() {
-			WC_Admin_Settings::output_fields( $this->settings );
+			global $current_section;
+			if ( 'debug' === $current_section ) {
+				$log_file = dirname( __DIR__ ) . '/debug.log';
+				if ( isset( $_GET[ 'clear_logs' ] ) ) {
+					$url = home_url( remove_query_arg( 'clear_logs' ) );
+					$fh = fopen( $log_file, 'w' );
+					fclose( $fh );
+					wp_redirect( $url );
+				}
+
+				$GLOBALS['hide_save_button'] = true;
+				$logs = 'none';
+				if ( file_exists( $log_file ) ) {
+					$logs = file_get_contents( $log_file );
+				}
+				$logs = nl2br( esc_html( $logs ) );
+				echo '<h2>Logs</h2>';
+				echo "<p>$logs</p>";
+				$url = home_url( add_query_arg( array( 'clear_logs' => 1 ) ) );
+				echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
+				return;
+			}
+
+			WC_Admin_Settings::output_fields( $this->get_settings() );
 
 			$jsPath = $this->options->get_react_app_path();
 			echo $this->batch_upload();
@@ -53,7 +84,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function save_settings() {
-			WC_Admin_Settings::save_fields( $this->settings );
+			global $current_section;
+			if ( '' !== $current_section ) {
+				return;
+			}
+			WC_Admin_Settings::save_fields( $this->get_settings() );
 			$is_api_working = $this->check_api() ? 1 : 0;
 			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
 			if ( $is_api_working === 1 ) {
@@ -92,6 +127,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
 					'Automatically send data to SiftScience when an order is created'
+				),
+
+				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
+					'Log Level',
+					'How much logging information to generate',
+					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
 				),
 				
 				$this->get_section_end( 'sifsci_section_main' ),
@@ -134,6 +175,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'desc_tip' => true,
 				'type' => 'checkbox',
 				'id' => $id,
+			);
+		}
+
+		private function get_drop_down( $id, $title, $desc, $options ) {
+			return array(
+				'id' => $id,
+				'title' => $title,
+				'desc' => $desc,
+				'desc_tip' => true,
+				'options' => $options,
+				'type' => 'select',
 			);
 		}
 
