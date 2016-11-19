@@ -18,16 +18,19 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
 		private $options;
+		private $logger;
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm )
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger )
 		{
 			$this->options = $options;
 			$this->comm = $comm;
+			$this->logger = $logger;
 		}
 
 		public function check_api() {
 			// try requesting a non-existent user score and see that the response isn't a permission fail
 			$response = $this->comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
+			$this->logger->log_info( '[api check response] ' . json_encode( $response ) );
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 

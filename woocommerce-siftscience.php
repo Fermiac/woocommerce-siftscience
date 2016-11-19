@@ -36,7 +36,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			$events = new WC_SiftScience_Events( $comm, $options );
 			$order = new WC_SiftScience_Orders( $options );
-			$admin = new WC_SiftScience_Admin( $options, $comm );
+			$admin = new WC_SiftScience_Admin( $options, $comm, $logger );
 			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger );
 
 			// wrap all the classes in error catcher
