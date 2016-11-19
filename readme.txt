@@ -27,6 +27,10 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 
 == Changelog ==
 
+= 0.4.3 Beta =
+* 2016-11-19
+* Add better logging of errors and a debug tab in settings
+
 = 0.4.2 Beta =
 * 2016-11-15
 * Add JavaScript version to avoid caching issues
