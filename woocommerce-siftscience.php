@@ -47,6 +47,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			// admin hooks
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );
+			add_filter( 'woocommerce_sections_siftsci', array( $admin, 'get_sections' ) );
 			add_action( 'woocommerce_settings_siftsci', array( $admin, 'output_settings_fields' ) );
 			add_action( 'woocommerce_settings_save_siftsci', array( $admin, 'save_settings' ) );
 			add_action( 'admin_notices', array( $admin, 'settings_notice' ) );

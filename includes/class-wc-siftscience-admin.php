@@ -17,12 +17,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
-		private $settings;
 		private $options;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm )
 		{
-			$this->settings = $this->get_settings();
 			$this->options = $options;
 			$this->comm = $comm;
 		}
@@ -33,8 +31,38 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 
+		public function get_sections() {
+			global $current_section;
+			$sections  = array(
+				'' => 'Settings',
+				'debug' => 'Debug',
+			);
+
+			echo '<ul class="subsubsub">';
+			$array_keys = array_keys( $sections );
+
+			foreach ( $sections as $id => $label ) {
+				echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+			}
+
+			echo '</ul><br class="clear" />';
+		}
+
 		public function output_settings_fields() {
-			WC_Admin_Settings::output_fields( $this->settings );
+			global $current_section;
+			if ( 'debug' === $current_section ) {
+				$logs = 'none';
+				$log_file = dirname( __DIR__ ) . '/debug.log';
+				if ( file_exists( $log_file ) ) {
+					$logs = file_get_contents( $log_file );
+				}
+				$logs = nl2br( esc_html( $logs ) );
+				echo '<h2>Logs</h2>';
+				echo "<p>$logs</p>";
+				return;
+			}
+
+			WC_Admin_Settings::output_fields( $this->get_settings() );
 
 			$jsPath = $this->options->get_react_app_path();
 			echo $this->batch_upload();
@@ -46,7 +74,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function save_settings() {
-			WC_Admin_Settings::save_fields( $this->settings );
+			WC_Admin_Settings::save_fields( $this->get_settings() );
 			$is_api_working = $this->check_api() ? 1 : 0;
 			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
 			if ( $is_api_working === 1 ) {
