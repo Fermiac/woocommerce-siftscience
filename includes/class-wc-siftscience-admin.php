@@ -51,14 +51,24 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function output_settings_fields() {
 			global $current_section;
 			if ( 'debug' === $current_section ) {
-				$logs = 'none';
 				$log_file = dirname( __DIR__ ) . '/debug.log';
+				if ( isset( $_GET[ 'clear_logs' ] ) ) {
+					$url = home_url( remove_query_arg( 'clear_logs' ) );
+					$fh = fopen( $log_file, 'w' );
+					fclose( $fh );
+					wp_redirect( $url );
+				}
+
+				$GLOBALS['hide_save_button'] = true;
+				$logs = 'none';
 				if ( file_exists( $log_file ) ) {
 					$logs = file_get_contents( $log_file );
 				}
 				$logs = nl2br( esc_html( $logs ) );
 				echo '<h2>Logs</h2>';
 				echo "<p>$logs</p>";
+				$url = home_url( add_query_arg( array( 'clear_logs' => 1 ) ) );
+				echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
 				return;
 			}
 
@@ -74,6 +84,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function save_settings() {
+			global $current_section;
+			if ( '' !== $current_section ) {
+				return;
+			}
 			WC_Admin_Settings::save_fields( $this->get_settings() );
 			$is_api_working = $this->check_api() ? 1 : 0;
 			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
