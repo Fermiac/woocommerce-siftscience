@@ -13,11 +13,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 	class WC_SiftScience_Html {
 
-		public static function icon( $img, $alt ) {
-			$img_path = plugins_url( "images/$img", dirname( __FILE__ ) );
-			return "<img src='$img_path' alt='$alt' width='20px' height='20px' />";
-		}
-
 		public static function tool_tip( $inner, $text ) {
 			return "<span style='display: block;' class='tips' data-tip='$text'>$inner</span>";
 		}
