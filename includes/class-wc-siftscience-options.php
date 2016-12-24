@@ -19,9 +19,13 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $name_prefix = 'siftsci_name_prefix';
 		public static $is_api_setup = 'siftsci_is_api_setup';
 		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
+		public static $send_stats = 'siftsci_send_stats';
 		public static $threshold_good = 'siftsci_threshold_good';
 		public static $threshold_bad = 'siftsci_threshold_bad';
 		public static $log_level_key = 'siftsci_log_level';
+		public static $guid = 'siftsci_guid';
+
+		public static $stats_api = 'https://sift.fermiac.staat.us';
 
 		private $version = false;
 		private $log_level;
@@ -87,6 +91,36 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return defined( 'WP_SIFTSCI_DEV' ) && WP_SIFTSCI_DEV
 				? 'http://localhost:8085/app.js'
 				: plugins_url( "dist/app.js", dirname( __FILE__ ) );
+		}
+
+		public function get_guid() {
+			$guid = get_option( self::$guid, false );
+			if ( false === $guid ) {
+				$guid = $this->generate_guid();
+				update_option( self::$guid, $guid );
+			}
+
+			return $guid;
+		}
+
+		/**
+		 * Generates a GUID.
+		 * This code is based of a snippet found in https://github.com/alixaxel/phunction,
+		 * which was referenced in http://php.net/manual/en/function.com-create-guid.php
+		 *
+		 * @return string
+		 */
+		private function generate_guid() {
+			return strtolower( sprintf( '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
+				mt_rand( 0, 65535 ),
+				mt_rand( 0, 65535 ),
+				mt_rand( 0, 65535 ),
+				mt_rand( 16384, 20479 ),
+				mt_rand( 32768, 49151 ),
+				mt_rand( 0, 65535 ),
+				mt_rand( 0, 65535 ),
+				mt_rand( 0, 65535 )
+			) );
 		}
 	}
 
