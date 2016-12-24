@@ -63,7 +63,7 @@ const LabelButton = ( { type, label, imgPath, setLabel } ) => {
 };
 
 const control = ( props ) => {
-	const { error, isWorking, score, imgPath, uploadOrder } = props;
+	const { error, isWorking, isBackfilled, score, imgPath, uploadOrder } = props;
 	if ( error ) {
 		console.log( 'error: ', error );
 		return <Icon imgUrl={ imgPath + 'error.png' } alt="error" />;
@@ -73,7 +73,7 @@ const control = ( props ) => {
 		return <Icon imgUrl={ imgPath + 'spinner.gif' } alt="working" />;
 	}
 
-	if ( score ) {
+	if ( isBackfilled && score ) {
 		return (
 			<div>
 				<Score { ...props } />
@@ -89,6 +89,7 @@ const control = ( props ) => {
 control.propTypes = {
 	error: PropTypes.string,
 	isWorking: PropTypes.bool.isRequired,
+	isBackfilled: PropTypes.bool,
 	score: PropTypes.number,
 	label: PropTypes.string,
 	imgPath: PropTypes.string.isRequired,

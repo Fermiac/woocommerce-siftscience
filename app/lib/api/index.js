@@ -24,7 +24,9 @@ const fetchApi = ( action, id, callback ) => {
 				throw error;
 			}
 		} )
-		.then( ( json ) => callback( null, json ) )
+		.then( ( json ) => {
+			callback( null, json );
+		} )
 		.catch( ( error ) => {
 			console.log( 'error parsing api result' );
 			console.log( error );

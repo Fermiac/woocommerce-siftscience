@@ -555,11 +555,11 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		}
 
 		public function get_user_id_from_order_id( $id ) {
-			return $this->options->get_name_prefix() . '_order_' . $id;
+			return $this->options->get_name_prefix() . 'anon_order_' . $id;
 		}
 
 		public function get_user_id_from_user_id( $id ) {
-			return $this->options->get_name_prefix() . '_user_' . $id;
+			return $this->options->get_name_prefix() . 'user_' . $id;
 		}
 
 		/**
