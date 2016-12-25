@@ -29,15 +29,17 @@ if ( ! class_exists( "WC_SiftScience_Error_Catcher" ) ) :
 		}
 
 		public function __call( $name, $args ) {
+			$metric = "{$this->prefix}_{$name}";
+			$timer = $this->stats->create_timer( $metric );
+			$error_timer = $this->stats->create_timer( "error_$metric" );
 			try {
-				$metric = "{$this->prefix}_{$name}";
-				$timer = $this->stats->create_timer( $metric );
 				$result = call_user_func_array( array( $this->subject, $name ), $args );
 				$this->stats->save_timer( $timer );
 				return $result;
 			} catch ( Exception $exception ) {
-
-				$this->logger->log_error( $exception->__toString() );
+				$this->stats->save_timer( $error_timer );
+				$this->stats->send_error( $exception );
+				$this->logger->log_exception( $exception );
 				throw $exception;
 			}
 		}

@@ -266,7 +266,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function settings_notice() {
-			$uri = $_SERVER['REQUEST_URI'];
+			$uri = $_SERVER[ 'REQUEST_URI' ];
 			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
 			if ( $is_admin_page || $this->options->is_setup() ) {
 				return;

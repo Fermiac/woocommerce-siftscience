@@ -48,10 +48,6 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			$current_time = microtime( true );
 			$time = $current_time - $start_time;
 
-			//if ( $time < 0) {
-				$this->logger->log_error( "Negative time calculation: $current_time - $start_time = $time" );
-			//}
-
 			if ( ! isset( $this->stats[ $metric ] ) ) {
 				$this->stats[ $metric ] = array();
 			}
