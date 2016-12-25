@@ -25,6 +25,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $log_level_key = 'siftsci_log_level';
 		public static $guid = 'siftsci_guid';
 		public static $stats = 'siftsci_stats';
+		public static $stats_last_sent = 'siftsci_stats_last_sent';
 
 		public static $stats_api = 'https://sift.fermiac.staat.us';
 

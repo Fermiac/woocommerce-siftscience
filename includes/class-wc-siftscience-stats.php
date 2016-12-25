@@ -17,10 +17,14 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		private $options;
 		private $stats;
 		private $sent = false;
+		private $last_sent;
+
+		private $send_period = 60 * 60; //send stats once every hour at most
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->options = $options;
 			$this->logger = $logger;
+			$this->last_sent = get_option( WC_SiftScience_Options::$stats_last_sent, 0 );
 
 			$stats = get_option( WC_SiftScience_Options::$stats, false );
 			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
@@ -90,7 +94,11 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			);
 
 			$data = array_merge( $data, $this->stats );
-			$this->send_data( $data );
+			$should_send = ( microtime( true ) - $this->last_sent ) > $this->send_period;
+			if ( $should_send ) {
+				update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
+				$this->send_data( $data );
+			}
 		}
 
 		private function send_data( $data ) {
