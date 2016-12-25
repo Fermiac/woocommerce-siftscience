@@ -19,12 +19,15 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $label = 'SiftScience';
 		private $options;
 		private $logger;
+		private $stats;
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger )
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm,
+			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats )
 		{
 			$this->options = $options;
 			$this->comm = $comm;
 			$this->logger = $logger;
+			$this->stats = $stats;
 		}
 
 		public function check_api() {
@@ -38,6 +41,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			$sections  = array(
 				'' => 'Settings',
+				'reporting' => 'Reporting',
 				'stats' => 'Stats',
 				'debug' => 'Debug',
 			);
@@ -57,6 +61,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			switch ( $current_section ) {
 				case 'debug':
 					$this->output_settings_debug();
+					break;
+				case 'reporting':
+					$this->output_settings_reporting();
 					break;
 				case 'stats':
 					$this->output_settings_stats();
@@ -88,7 +95,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				wp_redirect( $url );
 			}
 
-			$GLOBALS['hide_save_button'] = true;
+			$GLOBALS[ 'hide_save_button' ] = true;
 			$logs = 'none';
 			if ( file_exists( $log_file ) ) {
 				$logs = file_get_contents( $log_file );
@@ -100,8 +107,29 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
 		}
 
-		private function output_settings_stats() {
+		private function output_settings_reporting() {
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
+		}
+
+		private function output_settings_stats() {
+			$GLOBALS[ 'hide_save_button' ] = true;
+			if ( isset( $_GET[ 'clear_stats' ] ) ) {
+				$url = home_url( remove_query_arg( 'clear_stats' ) );
+				$this->stats->clear_stats();
+				wp_redirect( $url );
+			}
+
+			$stats = get_option( WC_SiftScience_Options::$stats, 'none' );
+			if ( 'none' === $stats ) {
+				echo '<p>No stats stored yet</p>';
+				return;
+			}
+
+			$stats = json_decode( $stats );
+			$stats = json_encode( $stats, JSON_PRETTY_PRINT );
+			echo "<pre>$stats</pre>";
+			$url = home_url( add_query_arg( array( 'clear_stats' => 1 ) ) );
+			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Stats</a>";
 		}
 
 		private function get_settings_stats() {
@@ -144,7 +172,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_Admin_Settings::add_error( 'API settings are broken' );
 					}
 					break;
-				case 'stats':
+				case 'reporting':
 					WC_Admin_Settings::save_fields( $this->get_settings_stats() );
 					break;
 				default:
@@ -252,19 +280,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function batch_upload() {
-			return "
-<table class='form-table'>
-<tbody>
-	<tr valign='top'>
-		<th scope='row' class='titledesc'>
-			<label>Batch Upload</label>
-		</th>
-		<td class='forminp forminp-text'>
-			<div id='batch-upload'></div>
-		</tr>
-	</tbody>
-</table>
-";
+			return "<table class='form-table'><tbody>" .
+			       "<tr valign='top'>" .
+		           "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
+			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
+			       "</tr>" .
+			       "</tbody></table>";
 		}
 	}
 

@@ -33,6 +33,10 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 			$this->log( 2, $message );
 		}
 
+		public function log_exception( Exception $exception ) {
+			$this->log_error( $exception->__toString() );
+		}
+
 		private function log( $status, $message ) {
 			if ( $status < $this->min_error_level ) {
 				return;

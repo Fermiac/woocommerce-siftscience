@@ -16,48 +16,37 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		private $logger;
 		private $options;
 		private $stats;
+		private $sent = false;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->options = $options;
 			$this->logger = $logger;
 
 			$stats = get_option( WC_SiftScience_Options::$stats, false );
-			if ( false === $stats ) {
-				$stats = "{}";
-			}
-
-			// get the stats as an array, not a class
-			$this->stats = json_decode( $stats, true );
+			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
 		}
 
-		public function increment_value( $metric, $value = null ) {
-			if ( null === $value ) {
-				$value = 1;
-			}
-
-			if ( ! isset( $this->stats[ $metric ] ) ) {
-				$this->stats[ $metric ] = array();
-			}
-
-			if ( ! isset( $this->stats[ $metric ][ 'count' ] ) ) {
-				$this->stats[ $metric ][ 'count' ] = 0;
-			}
-
-			$this->stats[ $metric ][ 'count' ] += $value;
-
+		public function clear_stats() {
+			$this->stats = array();
 			$this->save_stats();
 		}
 
 		public function create_timer( $metric ) {
 			return array(
 				'name' => $metric,
-				'start' => microtime(),
+				'start' => microtime( true ),
 			);
 		}
 
 		public function save_timer( $timer ) {
 			$metric = $timer[ 'name' ];
-			$time = microtime() - $timer[ 'start' ];
+			$start_time = $timer[ 'start' ];
+			$current_time = microtime( true );
+			$time = $current_time - $start_time;
+
+			//if ( $time < 0) {
+				$this->logger->log_error( "Negative time calculation: $current_time - $start_time = $time" );
+			//}
 
 			if ( ! isset( $this->stats[ $metric ] ) ) {
 				$this->stats[ $metric ] = array();
@@ -79,17 +68,42 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 		private function save_stats() {
 			update_option( WC_SiftScience_Options::$stats, json_encode( $this->stats ) );
-		}
-
-		private function send_stats() {
-			try{
-				$this->send_stats_inner();
-			} catch ( Exception $exception ) {
-				$this->logger->log_error( $exception->__toString() );
+			if ( ! $this->sent ) {
+				$this->sent = true;
+				$this->send_stats();
 			}
 		}
 
-		private function send_stats_inner() {
+		public function send_error( Exception $error ) {
+			$data = array(
+				'guid' => $this->options->get_guid(),
+				'type' => 'error',
+				'error' => $error->__toString(),
+			);
+			$this->send_data( $data );
+		}
+
+		private function send_stats() {
+			$data = array(
+				'guid' => $this->options->get_guid(),
+				'type' => 'stats',
+			);
+
+			$data = array_merge( $data, $this->stats );
+			$this->send_data( $data );
+		}
+
+		private function send_data( $data ) {
+			try {
+				$timer = $this->create_timer( 'stats_send_data' );
+				$this->send_data_inner( $data );
+				$this->save_timer( $timer );
+			} catch ( Exception $exception ) {
+				$this->logger->log_exception( $exception );
+			}
+		}
+
+		private function send_data_inner( $data ) {
 			$url = WC_SiftScience_Options::$stats_api;
 
 			$headers = array(
@@ -100,17 +114,22 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			$request = array(
 				'headers' => $headers,
 				'method'  => 'POST',
-				'body'    => json_encode( $this->stats ),
-				'timeout' => 10,
+				'body'    => json_encode( $data ),
+				'timeout' => 5,
 			);
 
 			$result = wp_remote_request( $url, $request );
 
-			if ( ! ( isset( $result ) && isset( $result[ 'response' ] ) && isset( $result[ 'response' ] ) ) ) {
+			$is_success = isset( $result )
+			              && isset( $result[ 'response' ] )
+			              && isset( $result[ 'response' ][ 'code' ] )
+			              && 200 === $result[ 'response' ][ 'code' ];
+
+			if ( ! $is_success ) {
 				$this->logger->log_error( 'Failed to send stats' );
 				$this->logger->log_error( $result );
 			}
 		}
-	}
+}
 
 endif;
