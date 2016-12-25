@@ -24,6 +24,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $threshold_bad = 'siftsci_threshold_bad';
 		public static $log_level_key = 'siftsci_log_level';
 		public static $guid = 'siftsci_guid';
+		public static $stats = 'siftsci_stats';
 
 		public static $stats_api = 'https://sift.fermiac.staat.us';
 
