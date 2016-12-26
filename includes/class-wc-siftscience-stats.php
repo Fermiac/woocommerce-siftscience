@@ -75,6 +75,11 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		}
 
 		public function send_error( Exception $error ) {
+			$should_send = 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' );
+			if ( ! $should_send ) {
+				return;
+			}
+			
 			$data = array(
 				'guid' => $this->options->get_guid(),
 				'type' => 'error',
@@ -90,7 +95,8 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			);
 
 			$data = array_merge( $data, $this->stats );
-			$should_send = ( microtime( true ) - $this->last_sent ) > $this->send_period;
+			$should_send = 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' )
+			               && ( microtime( true ) - $this->last_sent ) > $this->send_period;
 			if ( $should_send ) {
 				update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
 				$this->send_data( $data );
