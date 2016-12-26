@@ -79,7 +79,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			if ( ! $should_send ) {
 				return;
 			}
-			
+
 			$data = array(
 				'guid' => $this->options->get_guid(),
 				'type' => 'error',

@@ -93,6 +93,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
 				wp_redirect( $url );
+				exit;
 			}
 
 			$GLOBALS[ 'hide_save_button' ] = true;
@@ -117,6 +118,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$url = home_url( remove_query_arg( 'clear_stats' ) );
 				$this->stats->clear_stats();
 				wp_redirect( $url );
+				exit;
 			}
 
 			$stats = get_option( WC_SiftScience_Options::$stats, 'none' );
@@ -290,10 +292,18 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				return;
 			}
 
+			if ( isset( $_GET[ 'set_siftsci_stats' ] ) ) {
+				$value = $_GET[ 'set_siftsci_stats' ];
+				update_option( WC_SiftScience_Options::$send_stats, $value );
+				$url = home_url( remove_query_arg( 'set_siftsci_stats' ) );
+				wp_redirect( $url );
+				exit;
+			}
 
-			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
-			$yes = "<a target='_blank' href='$link'>Enable</a>";
-			$no = "<a target='_blank' href='$link'>disable</a>";
+			$link_yes = home_url( add_query_arg( array( 'set_siftsci_stats' => 'yes' ) ) );
+			$yes = "<a href='$link_yes'>Enable</a>";
+			$link_no = home_url( add_query_arg( array( 'set_siftsci_stats' => 'no' ) ) );
+			$no = "<a href='$link_no'>disable</a>";
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
 			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
