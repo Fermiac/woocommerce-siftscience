@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 
+	require_once( dirname( __FILE__ ) . '/class-wc-siftscience-options.php' );
+
 	class WC_SiftScience_Logger {
 		private $min_error_level;
 		private $log_path;

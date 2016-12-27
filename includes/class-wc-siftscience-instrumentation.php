@@ -10,10 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( ! class_exists( "WC_SiftScience_Error_Catcher" ) ) :
+if ( ! class_exists( "WC_SiftScience_Instrumentation" ) ) :
 
-	include_once 'class-wc-siftscience-logger.php';
-	include_once 'class-wc-siftscience-stats.php';
+	require_once( 'class-wc-siftscience-logger.php' );
+	require_once( 'class-wc-siftscience-stats.php' );
 
 	class WC_SiftScience_Instrumentation {
 		private $subject;

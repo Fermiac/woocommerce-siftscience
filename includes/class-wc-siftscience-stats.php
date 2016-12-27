@@ -16,18 +16,22 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		private $logger;
 		private $options;
 		private $stats;
-		private $sent = false;
 		private $last_sent;
 
 		private $send_period = 60 * 60; //send stats once every hour at most
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->options = $options;
-			$this->logger = $logger;
+			$this->options   = $options;
+			$this->logger    = $logger;
 			$this->last_sent = get_option( WC_SiftScience_Options::$stats_last_sent, 0 );
 
-			$stats = get_option( WC_SiftScience_Options::$stats, false );
+			$stats       = get_option( WC_SiftScience_Options::$stats, false );
 			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
+		}
+
+		public function __destruct() {
+			$this->save_stats();
+			$this->send_stats();
 		}
 
 		public function clear_stats() {
@@ -37,16 +41,16 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 		public function create_timer( $metric ) {
 			return array(
-				'name' => $metric,
+				'name'  => $metric,
 				'start' => microtime( true ),
 			);
 		}
 
 		public function save_timer( $timer ) {
-			$metric = $timer[ 'name' ];
-			$start_time = $timer[ 'start' ];
+			$metric       = $timer[ 'name' ];
+			$start_time   = $timer[ 'start' ];
 			$current_time = microtime( true );
-			$time = $current_time - $start_time;
+			$time         = $current_time - $start_time;
 
 			if ( ! isset( $this->stats[ $metric ] ) ) {
 				$this->stats[ $metric ] = array();
@@ -62,45 +66,39 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 			$this->stats[ $metric ][ 'time' ] += $time;
 			$this->stats[ $metric ][ 'count' ] += 1;
-
-			$this->save_stats();
 		}
 
 		private function save_stats() {
-			update_option( WC_SiftScience_Options::$stats, json_encode( $this->stats ) );
-			if ( ! $this->sent ) {
-				$this->sent = true;
-				$this->send_stats();
-			}
+			$stats = json_encode( $this->stats );
+			update_option( WC_SiftScience_Options::$stats, $stats );
 		}
 
 		public function send_error( Exception $error ) {
-			$should_send = 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' );
-			if ( ! $should_send ) {
+			if ( ! $this->is_reporting_enabled() ) {
 				return;
 			}
 
 			$data = array(
-				'guid' => $this->options->get_guid(),
-				'type' => 'error',
+				'guid'  => $this->options->get_guid(),
+				'type'  => 'error',
 				'error' => $error->__toString(),
 			);
 			$this->send_data( $data );
 		}
 
 		private function send_stats() {
+			if ( ! ( $this->is_reporting_enabled() && $this->is_time_to_send() ) ) {
+				return;
+			}
+
 			$data = array(
-				'guid' => $this->options->get_guid(),
-				'type' => 'stats',
+				'guid'  => $this->options->get_guid(),
+				'type'  => 'stats',
+				'stats' => $this->stats,
 			);
 
-			$data = array_merge( $data, $this->stats );
-			$should_send = 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' )
-			               && ( microtime( true ) - $this->last_sent ) > $this->send_period;
-			if ( $should_send ) {
-				update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
-				$this->send_data( $data );
-			}
+			update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
+			$this->send_data( $data );
 		}
 
 		private function send_data( $data ) {
@@ -140,6 +138,14 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 				$this->logger->log_error( $result );
 			}
 		}
-}
+
+		private function is_reporting_enabled() {
+			return 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' );
+		}
+
+		private function is_time_to_send() {
+			return ( microtime( true ) - $this->last_sent ) > $this->send_period;
+		}
+	}
 
 endif;

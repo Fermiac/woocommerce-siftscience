@@ -16,15 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) )
 	&& ! class_exists( 'WCSiftScience' ) ) :
 
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-instrumentation.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-instrumentation.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
 
 	class WC_SiftScience_Plugin {
 		/**

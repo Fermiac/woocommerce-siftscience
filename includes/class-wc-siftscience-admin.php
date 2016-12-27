@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
-	include_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
