@@ -266,6 +266,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$data = apply_filters( 'wc_siftscience_create_order', $data );
 			$this->comm->post_event( $data );
+			$this->send_transaction( $order_id );
 			$this->set_backfill( $order_id );
 		}
 
@@ -355,10 +356,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
 		public function send_transaction( $order_id, array $details = array() ) {
-			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
-				return;
-			}
-
 			$order = new WC_Order( $order_id );
 			$data = array(
 				'$type'               => '$transaction',

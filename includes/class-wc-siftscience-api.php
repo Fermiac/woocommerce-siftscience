@@ -21,13 +21,15 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		private $events;
 		private $options;
 		private $logger;
+		private $stats;
 
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events,
-			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 			$this->comm = $comm;
 			$this->events = $events;
 			$this->options = $options;
 			$this->logger = $logger;
+			$this->stats = $stats;
 		}
 
 		public function handle_ajax() {
@@ -45,6 +47,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				echo $response;
 			} catch ( Exception $error ) {
 				$this->logger->log_exception( $error );
+				$this->stats->send_error( $error );
 				http_response_code( 500 );
 				echo json_encode( array(
 					'error' => true,

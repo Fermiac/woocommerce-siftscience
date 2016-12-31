@@ -29,11 +29,6 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
 		}
 
-		public function __destruct() {
-			$this->save_stats();
-			$this->send_stats();
-		}
-
 		public function clear_stats() {
 			$this->stats = array();
 			$this->save_stats();
@@ -66,6 +61,9 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 			$this->stats[ $metric ][ 'time' ] += $time;
 			$this->stats[ $metric ][ 'count' ] += 1;
+
+			$this->save_stats();
+			$this->send_stats();
 		}
 
 		private function save_stats() {

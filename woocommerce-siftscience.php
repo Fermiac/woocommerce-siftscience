@@ -39,7 +39,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$events = new WC_SiftScience_Events( $comm, $options );
 			$order = new WC_SiftScience_Orders( $options );
 			$admin = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
-			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger );
+			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
 
 			// wrap all the classes in error catcher
 			$events = new WC_SiftScience_Instrumentation( $events, 'events', $logger, $stats );
