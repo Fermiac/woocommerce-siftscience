@@ -34,7 +34,6 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 		public function clear_stats() {
 			$this->stats = array();
-			$this->save_stats();
 		}
 
 		public function create_timer( $metric ) {
@@ -64,9 +63,11 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 			$this->stats[ $metric ][ 'time' ] += $time;
 			$this->stats[ $metric ][ 'count' ] += 1;
+		}
 
-			$this->save_stats();
+		public function shutdown() {
 			$this->send_stats();
+			$this->save_stats();
 		}
 
 		private function save_stats() {
@@ -145,6 +146,10 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		}
 
 		private function is_time_to_send() {
+			error_log( 'now      : ' . microtime( true ) );
+			error_log( 'last sent: ' . $this->last_sent );
+			error_log( 'period   : ' . $this->send_period );
+
 			return ( microtime( true ) - $this->last_sent ) > $this->send_period;
 		}
 	}

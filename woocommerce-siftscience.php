@@ -78,6 +78,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			// Ajax API hook
 			add_action( 'wp_ajax_wc_siftscience_action', array( $api, 'handle_ajax' ) );
+
+			// Run stats update at shutdown
+			add_action( 'shutdown', array( $stats, 'shutdown' ) );
 		}
 	}
 
