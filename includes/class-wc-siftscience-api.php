@@ -11,23 +11,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( "WC_SiftScience_Api" ) ) :
-	include_once( 'class-wc-siftscience-comm.php' );
-	include_once( 'class-wc-siftscience-events.php' );
-	include_once( 'class-wc-siftscience-options.php' );
-	include_once( 'class-wc-siftscience-logger.php' );
+	require_once( 'class-wc-siftscience-comm.php' );
+	require_once( 'class-wc-siftscience-events.php' );
+	require_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-logger.php' );
 
 	class WC_SiftScience_Api {
 		private $comm;
 		private $events;
 		private $options;
 		private $logger;
+		private $stats;
 
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events,
-			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 			$this->comm = $comm;
 			$this->events = $events;
 			$this->options = $options;
 			$this->logger = $logger;
+			$this->stats = $stats;
 		}
 
 		public function handle_ajax() {
@@ -44,7 +46,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				$this->logger->log_info( '[ajax response] ' . $response );
 				echo $response;
 			} catch ( Exception $error ) {
-				$this->logger->log_error( '[ajax error] ' . $error->getMessage() );
+				$this->logger->log_exception( $error );
+				$this->stats->send_error( $error );
 				http_response_code( 500 );
 				echo json_encode( array(
 					'error' => true,

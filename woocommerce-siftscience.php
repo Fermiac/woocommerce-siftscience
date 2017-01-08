@@ -4,7 +4,7 @@ Plugin Name: Sift Science for WooCommerce
 Plugin URI: https://github.com/Fermiac/woocommerce-siftscience
 Description: Get a handle on fraud with Sift Science - a modern approach to fraud prevention that uses machine learning.
 Author: Nabeel Sulieman, Lukas Svec
-Version: 0.4.3
+Version: 1.0.0
 Author URI: https://github.com/Fermiac/woocommerce-siftscience/wiki
 License: GPL2
 */
@@ -16,34 +16,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) )
 	&& ! class_exists( 'WCSiftScience' ) ) :
 
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-error-catcher.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
-	include_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-instrumentation.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
 
 	class WC_SiftScience_Plugin {
 		/**
-		 * Runs all the needed code that sets up the hooks
+		 * Initialize all the classes and hook into everything
 		 */
 		public function run() {
-			$options = new WC_SiftScience_Options( '0.4.2' );
+			$options = new WC_SiftScience_Options( '1.0.0' );
 			$logger = new WC_SiftScience_Logger( $options );
+			$stats = new WC_SiftScience_Stats( $options, $logger );
 			$comm = new WC_SiftScience_Comm( $options, $logger );
 
 			$events = new WC_SiftScience_Events( $comm, $options );
 			$order = new WC_SiftScience_Orders( $options );
-			$admin = new WC_SiftScience_Admin( $options, $comm, $logger );
-			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger );
+			$admin = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
+			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
 
 			// wrap all the classes in error catcher
-			$events = new WC_SiftScience_Error_Catcher( $events, $logger );
-			$order = new WC_SiftScience_Error_Catcher( $order, $logger );
-			$admin = new WC_SiftScience_Error_Catcher( $admin, $logger );
-			$api = new WC_SiftScience_Error_Catcher( $api, $logger );
+			$events = new WC_SiftScience_Instrumentation( $events, 'events', $logger, $stats );
+			$order = new WC_SiftScience_Instrumentation( $order, 'order', $logger, $stats );
+			$admin = new WC_SiftScience_Instrumentation( $admin, 'admin', $logger, $stats );
+			$api = new WC_SiftScience_Instrumentation( $api, 'api', $logger, $stats );
 
 			// admin hooks
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );
@@ -76,6 +78,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			// Ajax API hook
 			add_action( 'wp_ajax_wc_siftscience_action', array( $api, 'handle_ajax' ) );
+
+			// Run stats update at shutdown
+			add_action( 'shutdown', array( $stats, 'shutdown' ) );
 		}
 	}
 

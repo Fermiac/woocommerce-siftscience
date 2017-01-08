@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 
-	include_once( 'class-wc-siftscience-html.php' );
-	include_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-html.php' );
+	require_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Orders {
 		private $options;

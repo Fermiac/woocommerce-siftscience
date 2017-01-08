@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 
+	require_once( dirname( __FILE__ ) . '/class-wc-siftscience-options.php' );
+
 	class WC_SiftScience_Logger {
 		private $min_error_level;
 		private $log_path;
@@ -31,6 +33,10 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 
 		public function log_error( $message ) {
 			$this->log( 2, $message );
+		}
+
+		public function log_exception( Exception $exception ) {
+			$this->log_error( $exception->__toString() );
 		}
 
 		private function log( $status, $message ) {

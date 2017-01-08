@@ -12,19 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
-	include_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
 		private $label = 'SiftScience';
 		private $options;
 		private $logger;
+		private $stats;
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm, WC_SiftScience_Logger $logger )
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm,
+			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats )
 		{
 			$this->options = $options;
 			$this->comm = $comm;
 			$this->logger = $logger;
+			$this->stats = $stats;
 		}
 
 		public function check_api() {
@@ -38,6 +41,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			$sections  = array(
 				'' => 'Settings',
+				'reporting' => 'Reporting',
+				'stats' => 'Stats',
 				'debug' => 'Debug',
 			);
 
@@ -53,28 +58,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		public function output_settings_fields() {
 			global $current_section;
-			if ( 'debug' === $current_section ) {
-				$log_file = dirname( __DIR__ ) . '/debug.log';
-				if ( isset( $_GET[ 'clear_logs' ] ) ) {
-					$url = home_url( remove_query_arg( 'clear_logs' ) );
-					$fh = fopen( $log_file, 'w' );
-					fclose( $fh );
-					wp_redirect( $url );
-				}
-
-				$GLOBALS['hide_save_button'] = true;
-				$logs = 'none';
-				if ( file_exists( $log_file ) ) {
-					$logs = file_get_contents( $log_file );
-				}
-				$logs = nl2br( esc_html( $logs ) );
-				echo '<h2>Logs</h2>';
-				echo "<p>$logs</p>";
-				$url = home_url( add_query_arg( array( 'clear_logs' => 1 ) ) );
-				echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
-				return;
+			switch ( $current_section ) {
+				case 'debug':
+					$this->output_settings_debug();
+					break;
+				case 'reporting':
+					$this->output_settings_reporting();
+					break;
+				case 'stats':
+					$this->output_settings_stats();
+					break;
+				default:
+					$this->output_settings_main();
+					break;
 			}
+		}
 
+		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
 			$jsPath = $this->options->get_react_app_path();
@@ -86,18 +86,99 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
 		}
 
-		public function save_settings() {
-			global $current_section;
-			if ( '' !== $current_section ) {
+		private function output_settings_debug() {
+			$log_file = dirname( __DIR__ ) . '/debug.log';
+			if ( isset( $_GET[ 'clear_logs' ] ) ) {
+				$url = home_url( remove_query_arg( 'clear_logs' ) );
+				$fh = fopen( $log_file, 'w' );
+				fclose( $fh );
+				wp_redirect( $url );
+				exit;
+			}
+
+			$GLOBALS[ 'hide_save_button' ] = true;
+			$logs = 'none';
+			if ( file_exists( $log_file ) ) {
+				$logs = file_get_contents( $log_file );
+			}
+			$logs = nl2br( esc_html( $logs ) );
+			echo '<h2>Logs</h2>';
+			echo "<p>$logs</p>";
+			$url = home_url( add_query_arg( array( 'clear_logs' => 1 ) ) );
+			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
+		}
+
+		private function output_settings_reporting() {
+			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
+		}
+
+		private function output_settings_stats() {
+			$GLOBALS[ 'hide_save_button' ] = true;
+			if ( isset( $_GET[ 'clear_stats' ] ) ) {
+				$url = home_url( remove_query_arg( 'clear_stats' ) );
+				$this->stats->clear_stats();
+				wp_redirect( $url );
+				exit;
+			}
+
+			$stats = get_option( WC_SiftScience_Options::$stats, 'none' );
+			if ( 'none' === $stats ) {
+				echo '<p>No stats stored yet</p>';
 				return;
 			}
-			WC_Admin_Settings::save_fields( $this->get_settings() );
-			$is_api_working = $this->check_api() ? 1 : 0;
-			update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
-			if ( $is_api_working === 1 ) {
-				WC_Admin_Settings::add_message( 'API is correctly configured' );
-			} else {
-				WC_Admin_Settings::add_error( 'API settings are broken' );
+
+			$stats = json_decode( $stats );
+			$stats = json_encode( $stats, JSON_PRETTY_PRINT );
+			echo "<pre>$stats</pre>";
+			$url = home_url( add_query_arg( array( 'clear_stats' => 1 ) ) );
+			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Stats</a>";
+		}
+
+		private function get_settings_stats() {
+			return array(
+				array(
+					'title' => 'SiftScience Stats and Debug Reporting',
+					'type' => 'title',
+					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
+					          'All information is anonymous and cannot be traced back to your site. ' .
+					          'For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
+					          'Your anonymous id is: ' . $this->options->get_guid(),
+					'id' => 'siftsci_stats_title'
+				),
+
+				$this->get_check_box( WC_SiftScience_Options::$send_stats,
+					'Enable Reporting',
+					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
+				),
+
+				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
+					'Log Level',
+					'How much logging information to generate',
+					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
+				),
+
+				$this->get_section_end( 'sifsci_section_main' ),
+			);
+		}
+
+		public function save_settings() {
+			global $current_section;
+			switch ( $current_section ) {
+				case '':
+					WC_Admin_Settings::save_fields( $this->get_settings() );
+					$is_api_working = $this->check_api() ? 1 : 0;
+					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
+					if ( $is_api_working === 1 ) {
+						WC_Admin_Settings::add_message( 'API is correctly configured' );
+					} else {
+						WC_Admin_Settings::add_error( 'API settings are broken' );
+					}
+					break;
+				case 'reporting':
+					WC_Admin_Settings::save_fields( $this->get_settings_stats() );
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -132,12 +213,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Automatically send data to SiftScience when an order is created'
 				),
 
-				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
-					'Log Level',
-					'How much logging information to generate',
-					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
-				),
-				
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
 		}
@@ -193,7 +268,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function settings_notice() {
-			$uri = $_SERVER['REQUEST_URI'];
+			$this->notice_config();
+			$this->notice_stats();
+		}
+
+		private function notice_config() {
+			$uri = $_SERVER[ 'REQUEST_URI' ];
 			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
 			if ( $is_admin_page || $this->options->is_setup() ) {
 				return;
@@ -206,20 +286,39 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			     "</div>";
 		}
 
+		private function notice_stats() {
+			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
+			if ( 'not_set' !== $enabled ) {
+				return;
+			}
+
+			if ( isset( $_GET[ 'set_siftsci_stats' ] ) ) {
+				$value = $_GET[ 'set_siftsci_stats' ];
+				update_option( WC_SiftScience_Options::$send_stats, $value );
+				$url = home_url( remove_query_arg( 'set_siftsci_stats' ) );
+				wp_redirect( $url );
+				exit;
+			}
+
+			$link_yes = home_url( add_query_arg( array( 'set_siftsci_stats' => 'yes' ) ) );
+			$yes = "<a href='$link_yes'>Enable</a>";
+			$link_no = home_url( add_query_arg( array( 'set_siftsci_stats' => 'no' ) ) );
+			$no = "<a href='$link_no'>disable</a>";
+			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
+			$details = "<a target='_blank' href='$link_info'>more info</a>";
+			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
+			echo "<div class='notice notice-error is-dismissible'>" .
+			     "<p>$message $yes, $no, $details.</p>" .
+			     "</div>";
+		}
+
 		public function batch_upload() {
-			return "
-<table class='form-table'>
-<tbody>
-	<tr valign='top'>
-		<th scope='row' class='titledesc'>
-			<label>Batch Upload</label>
-		</th>
-		<td class='forminp forminp-text'>
-			<div id='batch-upload'></div>
-		</tr>
-	</tbody>
-</table>
-";
+			return "<table class='form-table'><tbody>" .
+			       "<tr valign='top'>" .
+		           "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
+			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
+			       "</tr>" .
+			       "</tbody></table>";
 		}
 	}
 
