@@ -27,6 +27,9 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 			$stats       = get_option( WC_SiftScience_Options::$stats, false );
 			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
+			if ( defined( 'WP_SIFTSCI_STATS_PERIOD' ) ) {
+				$this->send_period = WP_SIFTSCI_STATS_PERIOD;
+			}
 		}
 
 		public function clear_stats() {
