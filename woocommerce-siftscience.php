@@ -36,7 +36,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$stats = new WC_SiftScience_Stats( $options, $logger );
 			$comm = new WC_SiftScience_Comm( $options, $logger );
 
-			$events = new WC_SiftScience_Events( $comm, $options );
+			$events = new WC_SiftScience_Events( $comm, $options, $logger );
 			$order = new WC_SiftScience_Orders( $options );
 			$admin = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
 			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );

@@ -18,11 +18,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 	class WC_SiftScience_Events {
 		private $comm;
 		private $options;
+		private $logger;
 		private $saved_user_id = null;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->comm = $comm;
 			$this->options = $options;
+			$this->logger = $logger;
 			$this->saved_user_id = get_current_user_id();
 		}
 
@@ -344,9 +346,11 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$description'      => 'woo status: ' . $order->get_status(),
 			);
 
+
 			$data[ '$order_status' ] = $this->convert_order_status( $order );
 			$data = apply_filters( 'wc_siftscience_update_order_status', $data );
 			if ( null === $data[ '$order_status' ] ) {
+				$this->logger->log_warning( 'Unknown conversion for order status: ' . $order->get_status() );
 				return;
 			}
 
@@ -641,8 +645,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			'on-hold' => '$held',
 			'refunded' => '$returned',
 			'processing' => '$approved',
-			'pending' => null,
-			'failed' => null,
+			'pending' => '$held',
+			'failed' => '$canceled',
 		);
 
 		private function convert_order_status( WC_Order $order ) {

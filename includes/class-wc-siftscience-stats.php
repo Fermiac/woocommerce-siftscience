@@ -146,10 +146,6 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		}
 
 		private function is_time_to_send() {
-			error_log( 'now      : ' . microtime( true ) );
-			error_log( 'last sent: ' . $this->last_sent );
-			error_log( 'period   : ' . $this->send_period );
-
 			return ( microtime( true ) - $this->last_sent ) > $this->send_period;
 		}
 	}
