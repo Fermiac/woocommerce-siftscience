@@ -1,9 +1,9 @@
-=== Fermiac's Sift Science for WooCommerce ===
+=== Sift Science for WooCommerce ===
 Contributors: nabsul
 Tags: sift science, woocommerce, fraud, fermiac
-Requires at least: 4.6.1
-Tested up to: 4.6.1
-Stable tag: 0.4.3
+Requires at least: 4.7.1
+Tested up to: 4.7.1
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,11 +15,12 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 
 * Sending login, logout, cart actions event data to Sift Science
 * Sending order details to Sift Science automatically or via the orders page
+* Fetch and display Sift Science fraud score in orders list and order view
 * Flagging users as good/bad to train Sift Science and improve accuracy
 
 == Installation ==
 
-1. Find the plugin (Fermiac Sift Science) in the WordPress Store and install it
+1. Install Fermiac Sift Science from the WordPress Store
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the WooCommerce->Settings->SiftScience screen to configure the plugin
 
@@ -27,12 +28,12 @@ Please help us improve the plugin by enabling anonymous statistics and error col
 
 == Changelog ==
 
-= 1.0.0 =
-* 2017-01-26 Merry Christmas!
-* Fix back-fill UI bug: Can't back-fill second order of same user
+= 0.9.0 =
+* 2017-01-15
+* Fix: Can't back-fill more than one order per user
 * Fix: Transaction details sent multiple times
-* Fix: Correct the mapping of WooCommerce order to Sift Science transaction status
-* Added stats collector for reporting issues directly to us (see our github wiki for more details)
+* Fix: Correct the mapping of WooCommerce order status to Sift Science transaction status
+* Added [stats collector](https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection) for reporting issues directly to us
 
 = 0.4.3 Beta =
 * 2016-11-19
