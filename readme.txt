@@ -24,12 +24,12 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the WooCommerce->Settings->SiftScience screen to configure the plugin
 
-Please help us improve the plugin by enabling anonymous statistics and error collection.
+Please help us improve the plugin by enabling [anonymous statistics and error collection](https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection).
 
 == Changelog ==
 
 = 0.9.0 =
-* 2017-01-15
+* 2017-01-17
 * Fix: Can't back-fill more than one order per user
 * Fix: Transaction details sent multiple times
 * Fix: Correct the mapping of WooCommerce order status to Sift Science transaction status
