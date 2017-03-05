@@ -133,7 +133,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'$card_last4'      => '4444'
 				//)
 				//),
-				'$billing_address'  => $this->create_address( $user, 'billing' ),
+				//'$billing_address'  => $this->create_address( $user, 'billing' ),
 				//'$shipping_address'  => array(
 				//'$name'          => 'Bill Jones',
 				//'$phone'         => '1-415-555-6041',
@@ -194,16 +194,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//)
 				//),
 				'$billing_address'  => $this->create_address( $user, 'billing' ),
-				//'$shipping_address' => array(
-				//'$name'         => 'Bill Jones',
-				//'$phone'        => '1-415-555-6041',
-				//'$address_1'    => '2100 Main Street',
-				//'$address_2'    => 'Apt 3B',
-				//'$city'         => 'New London',
-				//'$region'       => 'New Hampshire',
-				//'$country'      => 'US',
-				//'$zipcode'      => '03257'
-				//),
 
 				//'$social_sign_on_type'   => '$twitter',
 
@@ -235,14 +225,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->create_item_array( $order ),
 				'$ip'               => $order->customer_ip_address,
-				//'$payment_methods'  => array(
-				//array(
-				//'$payment_type'    => '$credit_card',
-				//'$payment_gateway' => '$braintree',
-				//'$card_bin'        => '542486',
-				//'$card_last4'      => '4444'
-				//)
-				//),
 				//'$expedited_shipping' => true,
 				//'$shipping_method'    => '$physical',
 				// For marketplaces, use $seller_user_id to identify the seller
@@ -266,7 +248,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-			$data = apply_filters( 'wc_siftscience_create_order', $data );
+			error_log('create_order');
+			$data = apply_filters( 'wc_siftscience_create_order', $data, $order );
 			$this->comm->post_event( $data );
 			$this->send_transaction( $order_id );
 			$this->set_backfill( $order_id );
@@ -295,14 +278,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->create_item_array( $order ),
 				'$ip'               => $order->customer_ip_address,
-				//'$payment_methods'  => array(
-				//array(
-				//'$payment_type'    => '$credit_card',
-				//'$payment_gateway' => '$braintree',
-				//'$card_bin'        => '542486',
-				//'$card_last4'      => '4444'
-				//)
-				//),
 				//'$expedited_shipping' => true,
 				//'$shipping_method'    => '$physical',
 				// For marketplaces, use $seller_user_id to identify the seller
@@ -326,7 +301,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-			$data = apply_filters( 'wc_siftscience_update_order', $data );
+			error_log('update order');
+			$data = apply_filters( 'wc_siftscience_update_order', $data, $order );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
 		}

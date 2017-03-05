@@ -16,6 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) )
 	&& ! class_exists( 'WCSiftScience' ) ) :
 
+	// make sure session is started as soon as possible
+	if ( session_status() != PHP_SESSION_ACTIVE ) {
+		session_start();
+	}
+
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-options.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-logger.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php' );
@@ -25,6 +30,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-orders.php' );
+	require_once( dirname( __FILE__ ) . '/includes/third-party/class-wc-siftscience-stripe.php' );
 
 	class WC_SiftScience_Plugin {
 		/**
@@ -62,34 +68,33 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			// events hooks
 			add_action( 'wp_enqueue_scripts', array( $events, 'add_script' ) );
 			add_action( 'login_enqueue_scripts', array( $events, 'add_script' ) );
-			add_action( 'wp_logout', array( $events, 'logout' ), 10, 2 );
-			add_action( 'wp_login', array( $events, 'login_success' ), 10, 2 );
-			add_action( 'wp_login_failed', array( $events, 'login_failure' ) );
-			add_action( 'user_register', array( $events, 'create_account' ) );
-			add_action( 'profile_update', array( $events, 'update_account' ), 10, 2 );
-			add_action( 'woocommerce_add_to_cart', array( $events, 'add_to_cart' ) );
-			add_action( 'woocommerce_remove_cart_item', array( $events, 'remove_from_cart' ) );
+			add_action( 'wp_logout', array( $events, 'logout' ), 100, 2 );
+			add_action( 'wp_login', array( $events, 'login_success' ), 100, 2 );
+			add_action( 'wp_login_failed', array( $events, 'login_failure' ), 100 );
+			add_action( 'user_register', array( $events, 'create_account' ), 100 );
+			add_action( 'profile_update', array( $events, 'update_account' ), 100, 2 );
+			add_action( 'woocommerce_add_to_cart', array( $events, 'add_to_cart' ), 100 );
+			add_action( 'woocommerce_remove_cart_item', array( $events, 'remove_from_cart' ), 100 );
 			if ( $options->send_on_create_enabled() ) {
-				add_action( 'woocommerce_new_order', array( $events, 'create_order' ) );
+				add_action( 'woocommerce_checkout_order_processed', array( $events, 'create_order' ), 100 );
 			}
-			add_action( 'woocommerce_new_order', array( $events, 'add_session_info' ) );
-			add_action( 'woocommerce_order_status_changed', array( $events, 'update_order_status' ) );
-			add_action( 'post_updated', array( $events, 'update_order' ) );
+			add_action( 'woocommerce_new_order', array( $events, 'add_session_info' ), 100 );
+			add_action( 'woocommerce_order_status_changed', array( $events, 'update_order_status' ), 100 );
+			add_action( 'post_updated', array( $events, 'update_order' ), 100 );
 
 			// Ajax API hook
-			add_action( 'wp_ajax_wc_siftscience_action', array( $api, 'handle_ajax' ) );
+			add_action( 'wp_ajax_wc_siftscience_action', array( $api, 'handle_ajax' ), 100 );
 
 			// Run stats update at shutdown
 			add_action( 'shutdown', array( $stats, 'shutdown' ) );
+
+			// Stripe
+			$stripe = new WC_SiftScience_Stripe( $logger, $stats );
+			$stripe->add_hooks();
 		}
 	}
 
 	$wc_siftscience_plugin = new WC_SiftScience_Plugin();
 	add_action( 'init', array( $wc_siftscience_plugin, 'run' ) );
-
-	// make sure session is started as soon as possible
-	if ( session_status() != PHP_SESSION_ACTIVE ) {
-		session_start();
-	}
 
 endif;
