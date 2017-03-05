@@ -16,10 +16,12 @@ class WC_SiftScience_Stripe {
 	private static $order_data_key = '_wcsiftsci_stripe';
 	private $logger;
 	private $stats;
+	private $events;
 
-	public function __construct( WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
+	public function __construct( WC_SiftScience_Events $events, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 		$this->logger = $logger;
 		$this->stats = $stats;
+		$this->events = $events;
 	}
 
 	public function add_hooks() {
@@ -37,6 +39,7 @@ class WC_SiftScience_Stripe {
 	public function stripe_payment( $request, $order ) {
 		try {
 			$this->stripe_payment_internal( $request, $order );
+			$this->events->update_order( $order->id );
 		} catch ( Exception $exception ) {
 			$this->logger->log_exception( $exception );
 			$this->stats->send_error( $exception );
