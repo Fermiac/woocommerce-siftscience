@@ -193,7 +193,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'$card_last4'      => '4444'
 				//)
 				//),
-				'$billing_address'  => $this->create_address( $user, 'billing' ),
+				//'$billing_address'  => $this->create_address( $user, 'billing' ),
 
 				//'$social_sign_on_type'   => '$twitter',
 
@@ -206,15 +206,23 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->comm->post_event( $data );
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-order
-		public function create_order( $order_id ) {
+		public function send_queued_data() {
+			foreach( $this->order_map as $order_id => $type ) {
+				$this->send_order_event( $order_id, $type );
+			}
+		}
+
+		private $order_map = array();
+
+		private function send_order_event( $order_id, $type = 'create' ) {
+			$type = 'create' === $type ? 'create' : 'update';
 			$order = wc_get_order( $order_id );
 			if ( false === $order ) {
 				return;
 			}
 
 			$data = array(
-				'$type'             => '$create_order',
+				'$type'             => 'create' === $type ? '$create_order' : '$update_order',
 				'$user_id'          => $this->get_user_id( $order ),
 				'$session_id'       => $this->get_session_id( $order ),
 				'$order_id'         => $order->get_order_number(),
@@ -248,10 +256,15 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-			$data = apply_filters( 'wc_siftscience_create_order', $data, $order );
+			$data = apply_filters( "wc_siftscience_{$type}_order", $data, $order );
 			$this->comm->post_event( $data );
 			$this->send_transaction( $order_id );
 			$this->set_backfill( $order_id );
+		}
+
+		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-order
+		public function create_order( $order_id ) {
+			$this->order_map[ $order_id ] = 'create';
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
@@ -260,49 +273,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return;
 			}
 
-			$order = wc_get_order( $order_id );
-			if ( false === $order ) {
-				return;
+			if ( ! isset( $this->order_map[ $order_id ] ) ) {
+				$this->order_map[ $order_id ] = 'update';
 			}
-
-			$data = array(
-				'$type'             => '$update_order',
-				'$user_id'          => $this->get_user_id( $order ),
-				'$session_id'       => $this->get_session_id( $order ),
-				'$order_id'         => $order->get_order_number(),
-				'$user_email'       => $order->billing_email,
-				'$amount'           => $order->get_total() * 1000000,
-				'$currency_code'    => $order->get_order_currency(),
-				'$billing_address'  => $this->create_address( $order, 'billing' ),
-				'$shipping_address' => $this->create_address( $order, 'shipping' ),
-				'$items'            => $this->create_item_array( $order ),
-				'$ip'               => $order->customer_ip_address,
-				//'$expedited_shipping' => true,
-				//'$shipping_method'    => '$physical',
-				// For marketplaces, use $seller_user_id to identify the seller
-				//'$seller_user_id'     => 'slinkys_emporium',
-				//'$promotions'         => array(
-				//array(
-				//'$promotion_id' => 'FirstTimeBuyer',
-				//'$status'       => '$success',
-				//'$description'  => '$5 off',
-				//'$discount'     => array(
-				//'$amount'                   => 5000000,  // $5.00
-				//'$currency_code'            => 'USD',
-				//'$minimum_purchase_amount'  => 25000000  // $25.00
-				//)
-				//)
-				//),
-				// Sample Custom Fields
-				//'digital_wallet'      => 'apple_pay', // 'google_wallet', etc.
-				//'coupon_code'         => 'dollarMadness',
-				//'shipping_choice'     => 'FedEx Ground Courier',
-				//'is_first_time_buyer' => false
-			);
-
-			$data = apply_filters( 'wc_siftscience_update_order', $data, $order );
-			$this->comm->post_event( $data );
-			$this->set_backfill( $order_id );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
@@ -412,6 +385,10 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return $data;
 		}
 
+		private function get_payment_methods( WC_Order $order ) {
+
+		}
+
 		private static $payment_method_map = array(
 			'cod' => array( '$payment_type' => '$cash' ),
 			'bacs' => array( '$payment_type' => '$electronic_fund_transfer' ),
@@ -419,22 +396,16 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			'paypal' => array( '$payment_type' => '$third_party_processor', '$' => '$paypal' ),
 		);
 
-		private function add_payment_method( WC_Order $order, $data ) {
+		private function get_payment_method( WC_Order $order ) {
+			$method = apply_filters( 'wc_siftscience_payment_method', null, $order );
+			if ( null !== $method ) {
+				return $method;
+			}
+
 			$payment_method_id = $order->payment_method;
 			$lookup = apply_filters( 'wc_siftscience_payment_method_lookup', self::$payment_method_map, $order );
 
-			$method = null;
-			if ( isset( $lookup[ $payment_method_id ] ) ) {
-				$method = $lookup[ $payment_method_id ];
-			}
-
-			$method = apply_filters( 'wc_siftscience_payment_method', $method, $order );
-
-			if ( null !== $method ) {
-				$data[ '$payment_method' ] = $method;
-			}
-
-			return $data;
+			return isset( $lookup[ $payment_method_id ] ) ? $lookup[ $payment_method_id ] : null;
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
@@ -552,7 +523,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 *	),
 		 * @return array
 		 */
-		private function create_address( $order, $type = 'shipping' ) {
+		private function create_address( WC_Order $order, $type = 'shipping' ) {
 			$address_object = array(
 				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
 				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
