@@ -51,10 +51,8 @@ class WC_SiftScience_Stripe {
 	 * @param $order WC_Order
 	 */
 	public function add_payment_methods( $data, WC_Order $order ) {
-		error_log('checking...');
 		$meta = $this->get_order_meta( $order );
 		if ( null !== $meta && isset( $meta[ '$payment_methods' ] ) ) {
-			error_log('got it');
 			$data[ '$payment_methods' ] = $meta[ '$payment_methods' ];
 		}
 
@@ -63,13 +61,11 @@ class WC_SiftScience_Stripe {
 
 	private function get_order_meta( WC_Order $order ) {
 		if ( 'stripe' !== $order->payment_method ) {
-			error_log('not a stripe method');
 			return null;
 		}
 
 		$meta = get_post_meta( $order->id, self::$order_data_key, true );
 		if ( ! is_string( $meta ) || 0 === strlen( $meta ) ) {
-			error_log('no metadata');
 			return null;
 		}
 

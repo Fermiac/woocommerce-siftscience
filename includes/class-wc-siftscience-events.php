@@ -248,7 +248,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-			error_log('create_order');
 			$data = apply_filters( 'wc_siftscience_create_order', $data, $order );
 			$this->comm->post_event( $data );
 			$this->send_transaction( $order_id );
@@ -301,7 +300,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-			error_log('update order');
 			$data = apply_filters( 'wc_siftscience_update_order', $data, $order );
 			$this->comm->post_event( $data );
 			$this->set_backfill( $order_id );
