@@ -28,8 +28,8 @@ Please help us improve the plugin by enabling [anonymous statistics and error co
 
 == Changelog ==
 
-= 0.9.1 =
-* 2017-03-12
+= 1.0.0 =
+* 2017-03-11
 * Added support for WooCommerce Stripe Payment Gateway
 * Including plugin version in stats
 * Performance improvement: Move all API calls to end of runtime
