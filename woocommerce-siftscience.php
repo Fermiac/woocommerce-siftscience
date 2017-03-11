@@ -46,12 +46,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$order = new WC_SiftScience_Orders( $options );
 			$admin = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
 			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
+			$stripe = new WC_SiftScience_Stripe( $events, $logger, $stats );
 
 			// wrap all the classes in error catcher
 			$events_wrapped = new WC_SiftScience_Instrumentation( $events, 'events', $logger, $stats );
 			$order_wrapped = new WC_SiftScience_Instrumentation( $order, 'order', $logger, $stats );
 			$admin_wrapped = new WC_SiftScience_Instrumentation( $admin, 'admin', $logger, $stats );
 			$api_wrapped = new WC_SiftScience_Instrumentation( $api, 'api', $logger, $stats );
+			$stripe_wrapped = new WC_SiftScience_Instrumentation( $stripe, 'stripe', $logger, $stats );
 
 			// admin hooks
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin_wrapped, 'add_settings_page' ), 30 );
@@ -81,6 +83,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'woocommerce_new_order', array( $events_wrapped, 'add_session_info' ), 100 );
 			add_action( 'woocommerce_order_status_changed', array( $events_wrapped, 'update_order_status' ), 100 );
 			add_action( 'post_updated', array( $events_wrapped, 'update_order' ), 100 );
+			add_action( 'shutdown', array( $events_wrapped, 'shutdown' ) );
 
 			// Ajax API hook
 			add_action( 'wp_ajax_wc_siftscience_action', array( $api_wrapped, 'handle_ajax' ), 100 );
@@ -89,8 +92,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'shutdown', array( $stats, 'shutdown' ) );
 
 			// Stripe
-			$stripe = new WC_SiftScience_Stripe( $events, $logger, $stats );
-			$stripe->add_hooks();
+			add_action( 'wc_gateway_stripe_process_payment', array( $stripe_wrapped, 'stripe_payment' ), 10, 2 );
+			add_filter( 'wc_siftscience_order_payment_method', array( $stripe_wrapped, 'order_payment_method' ), 10, 2 );
 		}
 	}
 

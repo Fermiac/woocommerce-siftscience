@@ -15,6 +15,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 	require_once( 'class-wc-siftscience-events.php' );
 	require_once( 'class-wc-siftscience-options.php' );
 	require_once( 'class-wc-siftscience-logger.php' );
+	require_once( 'class-wc-siftscience-stats.php' );
 
 	class WC_SiftScience_Api {
 		private $comm;
@@ -61,7 +62,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			wp_die();
 		}
 
-		public function handleRequest($action, $order_id ) {
+		public function handleRequest( $action, $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
 					'status' => 401,
@@ -69,20 +70,13 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				);
 			}
 
+			if ( 'multi' === $action ) {
+				return $this->get_orders( $order_id );
+			}
+
 			$user_id = 0;
 			if ( $order_id ) {
-				$meta = get_post_meta( $order_id, '_customer_user', true );
-
-				if ( false === $meta ) {
-					return array(
-						'status' => 400,
-						'error' => 'order id not found: ' . $order_id,
-					);
-				}
-
-				$user_id = $meta === '0'
-					? $this->events->get_user_id_from_order_id( $order_id )
-					: $this->events->get_user_id_from_user_id( $meta );
+				$user_id = $this->get_user_id( $order_id );
 			}
 
 			switch ( $action ) {
@@ -99,6 +93,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					break;
 				case 'backfill':
 					$this->events->create_order( $order_id );
+					$this->events->send_queued_data();
 					break;
 				case 'order_stats':
 					return $this->list_stats();
@@ -151,6 +146,16 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return $this->list_stats();
 		}
 
+		public function get_orders( $order_ids ) {
+			$result = array();
+			$ids = explode( ',', $order_ids );
+			foreach( $ids as $order_id ) {
+				$user_id = $this->get_user_id( $order_id );
+				$result[] = $this->get_score( $order_id, $user_id );
+			}
+			return $result;
+		}
+
 		private function get_score( $order_id, $user_id ) {
 			$backfill_meta_key = $this->options->get_backfill_meta_key();
 			$is_backfilled = get_post_meta( $order_id, $backfill_meta_key, true ) === '1';
@@ -162,6 +167,21 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				'is_backfilled' => $is_backfilled,
 				'sift' => $sift,
 			);
+		}
+
+		private function get_user_id( $order_id ) {
+			$meta = get_post_meta( $order_id, '_customer_user', true );
+
+			if ( false === $meta ) {
+				return array(
+					'status' => 400,
+					'error' => 'order id not found: ' . $order_id,
+				);
+			}
+
+			return $meta === '0'
+				? $this->options->get_user_id_from_order_id( $order_id )
+				: $this->options->get_user_id_from_user_id( $meta );
 		}
 	}
 

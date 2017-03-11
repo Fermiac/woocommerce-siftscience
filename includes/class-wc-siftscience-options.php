@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return get_option( self::$threshold_bad, 60 );
 		}
 
-		public function get_user_id() {
+		public function get_current_user_id() {
 			return is_user_logged_in() ? wp_get_current_user()->ID : null;
 		}
 
@@ -103,6 +103,25 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			}
 
 			return $guid;
+		}
+
+		public function get_order_session_id( WC_Order $order ) {
+			$session_id = get_post_meta( $order->post->ID, $this->get_session_meta_key(), true );
+			return false === $session_id ? $this->get_session_id() : $session_id;
+		}
+
+		public function get_user_id( WC_Order $order ) {
+			return 0 === $order->get_user_id()
+				? $this->get_user_id_from_order_id( $order->post->ID )
+				: $this->get_user_id_from_user_id( $order->get_user_id() );
+		}
+
+		public function get_user_id_from_order_id( $id ) {
+			return $this->get_name_prefix() . 'anon_order_' . $id;
+		}
+
+		public function get_user_id_from_user_id( $id ) {
+			return $this->get_name_prefix() . 'user_' . $id;
 		}
 
 		/**
