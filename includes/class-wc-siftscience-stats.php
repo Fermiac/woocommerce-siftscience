@@ -94,9 +94,10 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			}
 
 			$data = array(
-				'guid'  => $this->options->get_guid(),
-				'type'  => 'stats',
-				'stats' => $this->stats,
+				'guid'    => $this->options->get_guid(),
+				'type'    => 'stats',
+				'version' => $this->options->get_version(),
+				'stats'   => $this->stats,
 			);
 
 			update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
