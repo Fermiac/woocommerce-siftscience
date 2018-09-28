@@ -30,6 +30,7 @@ class WC_SiftScience_Stripe {
 	 *
 	 * @param $request Object
 	 * @param $order WC_Order
+	 * @throws
 	 */
 	public function stripe_payment( $request, $order ) {
 		if ( ! ( isset( $request ) && isset( $request->source ) ) ) {
@@ -73,6 +74,12 @@ class WC_SiftScience_Stripe {
 		return json_decode( $meta, true );
 	}
 
+	/**
+	 * @param $source
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
 	private function convert_payment_type( $source ) {
 		switch( $source->object ) {
 			case 'card':
