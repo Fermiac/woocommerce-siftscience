@@ -28,6 +28,11 @@ Please help us improve the plugin by enabling [anonymous statistics and error co
 
 == Changelog ==
 
+= 1.0.1 =
+* 2017-03-11
+* Added docker development environment
+* Fixed reported issue: https://github.com/Fermiac/woocommerce-siftscience/issues/104
+
 = 1.0.0 =
 * 2017-03-11
 * Added support for WooCommerce Stripe Payment Gateway
