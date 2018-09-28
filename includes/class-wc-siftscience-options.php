@@ -90,8 +90,8 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_react_app_path() {
-			return defined( 'WP_SIFTSCI_DEV' ) && WP_SIFTSCI_DEV
-				? 'http://localhost:8085/app.js'
+			return defined( 'WP_SIFTSCI_DEV' )
+				? WP_SIFTSCI_DEV
 				: plugins_url( "dist/app.js", dirname( __FILE__ ) );
 		}
 

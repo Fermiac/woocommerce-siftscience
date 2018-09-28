@@ -3,7 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Install nginx, php, mariadb, nodejs, yarn
 apt-get update -y
-apt-get install -y --no-install-recommends apt-utils curl ca-certificates apt-transport-https wget
+apt-get install -y --no-install-recommends apt-utils nano curl ca-certificates apt-transport-https wget
 
 echo "Installing additional libs..."
 echo "deb http://packages.dotdeb.org jessie all" | tee /etc/apt/sources.list.d/dotdeb.list
@@ -19,7 +19,7 @@ apt-get update -y
 apt-get install -y --no-install-recommends unzip supervisor php7.2 php7.2-fpm php7.2-imagick \
   php7.2-curl php7.2-mysql php7.2-xml php7.2-memcached php7.2-mbstring php7.2-zip \
   nginx mariadb-server nodejs less build-essential sqlite3 libsqlite3-dev git ruby ruby-dev
-npm install -g grunt eslint node-gyp sass check-node-version
+npm install -g npm grunt eslint node-gyp sass check-node-version
 
 echo "Install mailcatcher..."
 gem uninstall mail
@@ -31,7 +31,7 @@ mkdir /run/php
 
 echo "Installing wordpress..."
 curl -sSkL https://wordpress.org/latest.tar.gz | tar -xzvC /var/www
-rm -rf /var/www/wordpress/wp-content
+chown -R www-data:www-data /var/www/wordpress
 
 echo "Installing wp-cli..."
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar

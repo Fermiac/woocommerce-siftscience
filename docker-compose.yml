@@ -4,5 +4,6 @@ services:
     build: .
     ports:
     - "80:80"
+    - "8085:8085"
     volumes:
     - .:/var/www/wordpress/wp-content/plugins/woocommerce-siftscience

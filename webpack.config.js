@@ -8,14 +8,18 @@ const babelSettings = {
 		'react'
 	],
 	plugins: [
-		"add-module-exports",
+		'add-module-exports',
 	],
 	babelrc: false,
 };
 
 module.exports = {
+	devServer: {
+		host: '0.0.0.0',
+		disableHostCheck: true,
+	},
 	entry: {
-		'app': [ 'babel-polyfill', './app/index.js' ],
+		app: [ 'babel-polyfill', './app/index.js' ],
 	},
 	output: {
 		path: path.join( __dirname, 'dist' ),
