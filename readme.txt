@@ -29,7 +29,7 @@ Please help us improve the plugin by enabling [anonymous statistics and error co
 == Changelog ==
 
 = 1.0.1 =
-* 2017-03-11
+* 2018-09-28
 * Added docker development environment
 * Fixed reported issue: https://github.com/Fermiac/woocommerce-siftscience/issues/104
 
