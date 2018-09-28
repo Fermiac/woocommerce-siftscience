@@ -30,6 +30,7 @@ class WC_SiftScience_Stripe {
 	 *
 	 * @param $request Object
 	 * @param $order WC_Order
+	 * @throws
 	 */
 	public function stripe_payment( $request, $order ) {
 		if ( ! ( isset( $request ) && isset( $request->source ) ) ) {
@@ -44,11 +45,11 @@ class WC_SiftScience_Stripe {
 			'$card_last4'      => $source->last4,
 			'$cvv_result_code' => $source->cvc_check,
 			'$stripe_address_line1_check' => $source->address_line1_check,
-			'$stripe_address_zip_check'   => $source->address_zip_check
+			'$stripe_address_zip_check'   => $source->address_zip_check,
 		);
 
 		$data = array( 'payment_method' => $payment_details );
-		update_post_meta( $order->id, self::$order_data_key, json_encode( $data ) );
+		update_post_meta( $order->get_id(), self::$order_data_key, json_encode( $data ) );
 	}
 
 	public function order_payment_method( $current_method, WC_Order $order ) {
@@ -65,7 +66,7 @@ class WC_SiftScience_Stripe {
 	}
 
 	private function get_order_meta( WC_Order $order ) {
-		$meta = get_post_meta( $order->id, self::$order_data_key, true );
+		$meta = get_post_meta( $order->get_id(), self::$order_data_key, true );
 		if ( ! is_string( $meta ) || 0 === strlen( $meta ) ) {
 			return null;
 		}
@@ -73,6 +74,12 @@ class WC_SiftScience_Stripe {
 		return json_decode( $meta, true );
 	}
 
+	/**
+	 * @param $source
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
 	private function convert_payment_type( $source ) {
 		switch( $source->object ) {
 			case 'card':
