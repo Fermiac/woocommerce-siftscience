@@ -33,19 +33,25 @@ class WC_SiftScience_Stripe {
 	 * @throws
 	 */
 	public function stripe_payment( $request, $order ) {
-		if ( ! ( isset( $request ) && isset( $request->source ) ) ) {
+		// Check that the card data is available
+		if ( ! isset( $request, $request->source, $request->source->card ) ) {
 			return;
 		}
 
-		$source = $request->source;
+		$card = $request->source->card;
+
+		// check that the card has all the expected data
+		if ( ! isset( $card, $card->last4, $card->cvc_check, $card->address_line1_check, $card->address_zip_check ) ) {
+			return;
+		}
 
 		$payment_details = array(
-			'$payment_type'  => $this->convert_payment_type( $source ),
-			'$payment_gateway' => '$stripe',
-			'$card_last4'      => $source->last4,
-			'$cvv_result_code' => $source->cvc_check,
-			'$stripe_address_line1_check' => $source->address_line1_check,
-			'$stripe_address_zip_check'   => $source->address_zip_check,
+			'$payment_type'               => '$credit_card',
+			'$payment_gateway'            => '$stripe',
+			'$card_last4'                 => $card->last4,
+			'$cvv_result_code'            => $card->cvc_check,
+			'$stripe_address_line1_check' => $card->address_line1_check,
+			'$stripe_address_zip_check'   => $card->address_zip_check,
 		);
 
 		$data = array( 'payment_method' => $payment_details );
@@ -72,21 +78,6 @@ class WC_SiftScience_Stripe {
 		}
 
 		return json_decode( $meta, true );
-	}
-
-	/**
-	 * @param $source
-	 *
-	 * @return string
-	 * @throws Exception
-	 */
-	private function convert_payment_type( $source ) {
-		switch( $source->object ) {
-			case 'card':
-				return '$credit_card';
-			default:
-				throw new Exception( 'Unknown Stripe Source Payment Type: ' . $source->object );
-		}
 	}
 }
 
