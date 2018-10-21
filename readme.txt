@@ -3,13 +3,16 @@ Contributors: nabsul
 Tags: sift science, woocommerce, fraud, fermiac
 Requires at least: 4.7.1
 Tested up to: 4.7.1
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin integrates Sift Science fraud detection with your WooCommerce store.
 
 == Description ==
+
+WARNING: This plugin is only being minimally maintained on a best-effort basis. If you encounter a bug
+I will do my best to fix it, but you should expect response time to be several weeks.
 
 Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Features:
 
@@ -27,6 +30,11 @@ Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Fe
 Please help us improve the plugin by enabling [anonymous statistics and error collection](https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection).
 
 == Changelog ==
+
+= 1.0.2 =
+* 2018-10-15
+* Redeploy this time for real
+* See 1.0.1 for changes
 
 = 1.0.1 =
 * 2018-09-28
