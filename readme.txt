@@ -11,6 +11,9 @@ This plugin integrates Sift Science fraud detection with your WooCommerce store.
 
 == Description ==
 
+WARNING: This plugin is only being minimally maintained on a best-effort basis. If you encounter a bug
+I will do my best to fix it, but you should expect response time to be several weeks.
+
 Add this plugin to your WooCommerce shop to get Sift Science fraud detection. Features:
 
 * Sending login, logout, cart actions event data to Sift Science
