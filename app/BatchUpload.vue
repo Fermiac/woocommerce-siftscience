@@ -16,8 +16,7 @@
 </template>
 
 <script>
-import orders from './lib/order-ops'
-import orderOps from './lib/order-ops';
+import api from './lib/api';
 
 export default {
     name: 'BatchUpload',
@@ -40,14 +39,14 @@ export default {
             this.status = 'error'
             this.error = error
         },
-        clearAll() { console.log('clearAll clicked') },
+        clearAll() { alert('clearAll clicked') },
         async backfill() { 
             try {
                 this.status = 'backfill'
                 for (let i = 0; i < this.notBackfilled.length; i++) {
                     const id = this.notBackfilled[i]
                     this.orderId = id
-                    const data = await orderOps.backfill(id)
+                    const data = await api.backfill(id)
                     Object.assign(this, data)
                 }
             } catch (error) {
@@ -55,7 +54,7 @@ export default {
             }
          },
         refresh() {
-            orders.orderStats() 
+            api.orderStats() 
                 .then((data) => {
                     this.status = 'stats'
                     Object.assign(this, data)
