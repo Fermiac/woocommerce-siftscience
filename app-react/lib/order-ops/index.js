@@ -4,7 +4,7 @@ const openInSift = ( user ) => {
 	window.open( 'https://siftscience.com/console/users/' + user );
 };
 
-const setLabel = ( id, value ) => {
+const setLabel = ( id, value, callback ) => {
 	let action = 'unset';
 	if ( 'bad' === value ) {
 		action = 'set_bad';
@@ -14,23 +14,23 @@ const setLabel = ( id, value ) => {
 		action = 'set_good';
 	}
 
-	return api( action, id );
+	api( action, id, callback );
 };
 
-const backfill = ( id ) => {
-	return api( 'backfill', id );
+const backfill = ( id, callback ) => {
+	api( 'backfill', id, callback );
 };
 
-const getLabel = ( id ) => {
-	return api( 'score', id );
+const getLabel = ( id, callback ) => {
+	api( 'score', id, callback );
 };
 
-const orderStats = () => {
-	return api( 'order_stats', null );
+const orderStats = ( callback ) => {
+	api( 'order_stats', null, callback );
 };
 
-const clearAll = () => {
-	return api( 'clear_all', null );
+const clearAll = ( callback ) => {
+	api( 'clear_all', null, callback );
 };
 
 const getUserData = ( sift ) => {
