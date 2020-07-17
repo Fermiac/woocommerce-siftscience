@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button type="button" className="button-primary" @click="clearAll">Clear Data</button>
-        <button type="button" className="button-primary" @click="backfill">Back-Fill</button>
-        <button type="button" className="button-primary" @click="refresh">Refresh</button>
+        <button type="button" class="button-primary" @click="clearAll">Clear Data</button>
+        <button type="button" class="button-primary" @click="backfill">Back-Fill</button>
+        <button type="button" class="button-primary" @click="refresh">Refresh</button>
 
         <p v-if="status == 'error'">{{ error.toString() }}:{{ error.text }}</p>;
         <p v-if="status == 'loading'">Loading...</p>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import api from './lib/api';
+import api from './api';
 
 export default {
     name: 'BatchUpload',
