@@ -74,7 +74,7 @@ export default {
             e.stopPropagation()
             this.error = null
             this.state = 'loading'
-            await setLabel(v === this.label ? null : v)
+            await setLabel(this.id, v === this.label ? null : v)
             await this.refresh()
         },
         async refresh() {

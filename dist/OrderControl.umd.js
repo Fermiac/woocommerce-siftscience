@@ -2384,12 +2384,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=611d889c&
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=7a9e878b&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's SiftScience score"},on:{"click":function($event){return _vm.openSiftSci($event)}}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=611d889c&
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=7a9e878b&
 
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("2fd8");
@@ -2704,7 +2704,7 @@ var styles_getColor = function getColor(score) {
                 _this.error = null;
                 _this.state = 'loading';
                 _context.next = 6;
-                return api_setLabel(v === _this.label ? null : v);
+                return api_setLabel(_this.id, v === _this.label ? null : v);
 
               case 6:
                 _context.next = 8;
