@@ -183,6 +183,21 @@ module.exports = function (C, x) {
 
 /***/ }),
 
+/***/ "0f3b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__("eead");
+var assign = __webpack_require__("e16e");
+
+// `Object.assign` method
+// https://tc39.github.io/ecma262/#sec-object.assign
+$({ target: 'Object', stat: true, forced: Object.assign !== assign }, {
+  assign: assign
+});
+
+
+/***/ }),
+
 /***/ "1279":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -261,6 +276,21 @@ var classof = __webpack_require__("9914");
 // https://tc39.github.io/ecma262/#sec-object.prototype.tostring
 module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
   return '[object ' + classof(this) + ']';
+};
+
+
+/***/ }),
+
+/***/ "1b26":
+/***/ (function(module, exports, __webpack_require__) {
+
+var internalObjectKeys = __webpack_require__("fd39");
+var enumBugKeys = __webpack_require__("b933");
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+module.exports = Object.keys || function keys(O) {
+  return internalObjectKeys(O, enumBugKeys);
 };
 
 
@@ -1511,6 +1541,20 @@ module.exports = function (it, key) {
 
 /***/ }),
 
+/***/ "58c0":
+/***/ (function(module, exports, __webpack_require__) {
+
+var requireObjectCoercible = __webpack_require__("39fc");
+
+// `ToObject` abstract operation
+// https://tc39.github.io/ecma262/#sec-toobject
+module.exports = function (argument) {
+  return Object(requireObjectCoercible(argument));
+};
+
+
+/***/ }),
+
 /***/ "5ea0":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2384,12 +2428,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=7a9e878b&
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=f004e4fa&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's SiftScience score"},on:{"click":function($event){return _vm.openSiftSci($event)}}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=7a9e878b&
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=f004e4fa&
+
+// EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.object.assign.js
+var es_object_assign = __webpack_require__("0f3b");
 
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("2fd8");
@@ -2595,6 +2642,7 @@ var styles_getColor = function getColor(score) {
 // CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/thread-loader/dist/cjs.js!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/babel-loader/lib??ref--12-1!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=script&lang=js&
 
 
+
 //
 //
 //
@@ -2634,7 +2682,7 @@ var styles_getColor = function getColor(score) {
   data: function data() {
     return {
       iconStyle: iconStyle,
-      scoreStyle: scoreStyle,
+      scoreStyle: Object.assign({}, scoreStyle),
       state: 'loading',
       error: null,
       isBackfilled: false,
@@ -2737,10 +2785,11 @@ var styles_getColor = function getColor(score) {
                 _this2.userId = data.sift.user_id;
                 _this2.score = extractScore(data.sift);
                 _this2.label = extractLabel(data.sift);
+                _this2.scoreStyle.backgroundColor = styles_getColor(_this2.score);
                 _this2.isBackfilled = data.is_backfilled;
                 _this2.state = 'data';
 
-              case 10:
+              case 11:
               case "end":
                 return _context2.stop();
             }
@@ -2922,6 +2971,66 @@ module.exports = function (bitmap, value) {
     value: value
   };
 };
+
+
+/***/ }),
+
+/***/ "e16e":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var DESCRIPTORS = __webpack_require__("6eaa");
+var fails = __webpack_require__("787c");
+var objectKeys = __webpack_require__("1b26");
+var getOwnPropertySymbolsModule = __webpack_require__("38b3");
+var propertyIsEnumerableModule = __webpack_require__("1bee");
+var toObject = __webpack_require__("58c0");
+var IndexedObject = __webpack_require__("ec39");
+
+var nativeAssign = Object.assign;
+var defineProperty = Object.defineProperty;
+
+// `Object.assign` method
+// https://tc39.github.io/ecma262/#sec-object.assign
+module.exports = !nativeAssign || fails(function () {
+  // should have correct order of operations (Edge bug)
+  if (DESCRIPTORS && nativeAssign({ b: 1 }, nativeAssign(defineProperty({}, 'a', {
+    enumerable: true,
+    get: function () {
+      defineProperty(this, 'b', {
+        value: 3,
+        enumerable: false
+      });
+    }
+  }), { b: 2 })).b !== 1) return true;
+  // should work with symbols and should have deterministic property order (V8 bug)
+  var A = {};
+  var B = {};
+  // eslint-disable-next-line no-undef
+  var symbol = Symbol();
+  var alphabet = 'abcdefghijklmnopqrst';
+  A[symbol] = 7;
+  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+  var T = toObject(target);
+  var argumentsLength = arguments.length;
+  var index = 1;
+  var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+  var propertyIsEnumerable = propertyIsEnumerableModule.f;
+  while (argumentsLength > index) {
+    var S = IndexedObject(arguments[index++]);
+    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
+    var length = keys.length;
+    var j = 0;
+    var key;
+    while (length > j) {
+      key = keys[j++];
+      if (!DESCRIPTORS || propertyIsEnumerable.call(S, key)) T[key] = S[key];
+    }
+  } return T;
+} : nativeAssign;
 
 
 /***/ }),

@@ -26,7 +26,7 @@
 
 <script>
 import {getSettings, getLabel, setLabel, extractScore, extractLabel} from './api';
-import {iconStyle, scoreStyle} from './styles';
+import {iconStyle, scoreStyle, getColor} from './styles';
 
 export default {
     name: 'OrderControl',
@@ -34,7 +34,8 @@ export default {
     created() { this.refresh() },
     data () {
         return {
-            iconStyle, scoreStyle,
+            iconStyle, 
+            scoreStyle: Object.assign({}, scoreStyle),
             state: 'loading',
             error: null,
             isBackfilled: false,
@@ -84,6 +85,7 @@ export default {
             this.userId = data.sift.user_id
             this.score = extractScore(data.sift)
             this.label = extractLabel(data.sift)
+            this.scoreStyle.backgroundColor = getColor(this.score)
             this.isBackfilled = data.is_backfilled
             this.state = 'data'
         },
