@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import api from './api';
+import {stttings, setLabel} from './api';
 
 export default {
     name: 'OrderControl',

@@ -1,8 +1,8 @@
-export const settings = window._siftsci_app_input_data ? window._siftsci_app_input_data : {};
+const getApi = () => window._siftsci_app_data.api
 
 const api = async (action, id) => {
 	const idString = id ? '&id=' + id : '';
-	const url = settings.apiUrl + '?action=wc_siftscience_action&wcss_action=' + action + idString;
+	const url = getApi() + '?action=wc_siftscience_action&wcss_action=' + action + idString;
 	const res = await fetch(url, { credentials: 'same-origin' })
     if ( 200 > res.status || 300 < res.status ) {
         const msg = await res.text()
