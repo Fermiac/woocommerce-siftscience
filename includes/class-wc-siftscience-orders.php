@@ -31,16 +31,17 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		}
 
 		private function add_react_app() {
-			$jsPath = $this->options->get_react_app_path();
-			$imgPath = plugins_url( 'images/', dirname( __FILE__ ) );
 			$data = array(
-				'imgPath' => $imgPath,
-				'apiUrl' => admin_url( 'admin-ajax.php' ),
+				'imgPath' => plugins_url( 'images/', dirname( __FILE__ ) ),
+				'api' => admin_url( 'admin-ajax.php' ),
 				'thresholdGood' => $this->options->get_threshold_good(),
 				'thresholdBad' => $this->options->get_threshold_bad(),
 			);
-			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), $this->options->get_version(), true );
-			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
+
+            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
+            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/OrderControl.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
+            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/order-control.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
+            wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
 		public function create_header( $columns ) {

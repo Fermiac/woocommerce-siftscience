@@ -1,5 +1,14 @@
-module.exports =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["OrderControl"] = factory();
+	else
+		root["OrderControl"] = factory();
+})((typeof self !== 'undefined' ? self : this), function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -2121,39 +2130,6 @@ module.exports = /(iphone|ipod|ipad).*applewebkit/i.test(userAgent);
 
 /***/ }),
 
-/***/ "a77f":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var redefine = __webpack_require__("51c1");
-var anObject = __webpack_require__("06ee");
-var fails = __webpack_require__("787c");
-var flags = __webpack_require__("ceb6");
-
-var TO_STRING = 'toString';
-var RegExpPrototype = RegExp.prototype;
-var nativeToString = RegExpPrototype[TO_STRING];
-
-var NOT_GENERIC = fails(function () { return nativeToString.call({ source: 'a', flags: 'b' }) != '/a/b'; });
-// FF44- RegExp#toString has a wrong name
-var INCORRECT_NAME = nativeToString.name != TO_STRING;
-
-// `RegExp.prototype.toString` method
-// https://tc39.github.io/ecma262/#sec-regexp.prototype.tostring
-if (NOT_GENERIC || INCORRECT_NAME) {
-  redefine(RegExp.prototype, TO_STRING, function toString() {
-    var R = anObject(this);
-    var p = String(R.source);
-    var rf = R.flags;
-    var f = String(rf === undefined && R instanceof RegExp && !('flags' in RegExpPrototype) ? flags.call(R) : rf);
-    return '/' + p + '/' + f;
-  }, { unsafe: true });
-}
-
-
-/***/ }),
-
 /***/ "b457":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2308,30 +2284,6 @@ module.exports = !DESCRIPTORS && !fails(function () {
 
 /***/ }),
 
-/***/ "ceb6":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var anObject = __webpack_require__("06ee");
-
-// `RegExp.prototype.flags` getter implementation
-// https://tc39.github.io/ecma262/#sec-get-regexp.prototype.flags
-module.exports = function () {
-  var that = anObject(this);
-  var result = '';
-  if (that.global) result += 'g';
-  if (that.ignoreCase) result += 'i';
-  if (that.multiline) result += 'm';
-  if (that.dotAll) result += 's';
-  if (that.unicode) result += 'u';
-  if (that.sticky) result += 'y';
-  return result;
-};
-
-
-/***/ }),
-
 /***/ "d0ca":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2432,21 +2384,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./BatchUpload.vue?vue&type=template&id=2fbcbd35&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('button',{staticClass:"button-primary wc-sift-button",staticStyle:{"margin-right":"5px"},attrs:{"type":"button"},on:{"click":_vm.clearAll}},[_vm._v("Clear Data")]),_c('button',{staticClass:"button-primary wc-sift-button",staticStyle:{"margin-right":"5px"},attrs:{"type":"button"},on:{"click":_vm.backfill}},[_vm._v("Back-Fill")]),_c('button',{staticClass:"button-primary wc-sift-button",staticStyle:{"margin-right":"5px"},attrs:{"type":"button"},on:{"click":_vm.refresh}},[_vm._v("Refresh")]),(_vm.isError)?_c('p',[_vm._v(_vm._s(_vm.errorMessage))]):_vm._e(),(_vm.isLoading)?_c('p',[_vm._v("Loading...")]):_vm._e(),(_vm.isBackfill)?_c('p',[_vm._v("Backfilling order #"+_vm._s(_vm.orderId))]):_vm._e(),(_vm.isStats)?_c('p',[_vm._v(" Orders: "+_vm._s(_vm.totalOrders)+" "),_c('br'),_vm._v(" Backfilled: "+_vm._s(_vm.numBackfilled)+" "),_c('br'),_vm._v(" Not Backfilled: "+_vm._s(_vm.numNotBackfilled)+" ")]):_vm._e()])}
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=d2db6506&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's SiftScience score"},on:{"click":_vm.openSiftSci}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./BatchUpload.vue?vue&type=template&id=2fbcbd35&
-
-// EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.date.to-string.js
-var es_date_to_string = __webpack_require__("e96d");
-
-// EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.object.to-string.js
-var es_object_to_string = __webpack_require__("d0ca");
-
-// EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.regexp.to-string.js
-var es_regexp_to_string = __webpack_require__("a77f");
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=d2db6506&
 
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("2fd8");
@@ -2487,6 +2430,9 @@ function _asyncToGenerator(fn) {
     });
   };
 }
+// EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.object.to-string.js
+var es_object_to_string = __webpack_require__("d0ca");
+
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.promise.js
 var es_promise = __webpack_require__("edfc");
 
@@ -2498,6 +2444,10 @@ var es_promise = __webpack_require__("edfc");
 
 var getApi = function getApi() {
   return window._siftsci_app_data.api;
+};
+
+var getSettings = function getSettings() {
+  return window._siftsci_app_data;
 };
 
 var api = /*#__PURE__*/function () {
@@ -2567,7 +2517,7 @@ var setLabel = function setLabel(id, value) {
   var action = labelActionMap[value] ? labelActionMap[value] : 'unset';
   return api(action, id);
 };
-var api_backfill = function backfill(id) {
+var backfill = function backfill(id) {
   return api('backfill', id);
 };
 var getLabel = function getLabel(id) {
@@ -2576,7 +2526,7 @@ var getLabel = function getLabel(id) {
 var orderStats = function orderStats() {
   return api('order_stats', null);
 };
-var api_clearAll = function clearAll() {
+var clearAll = function clearAll() {
   return api('clear_all', null);
 };
 var getUserData = function getUserData(sift) {
@@ -2598,44 +2548,100 @@ var getUserData = function getUserData(sift) {
 
   return result;
 };
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/thread-loader/dist/cjs.js!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/babel-loader/lib??ref--12-1!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./BatchUpload.vue?vue&type=script&lang=js&
+var divStyle = {
+  color: 'white',
+  textAign: 'center',
+  border: '1px solid black',
+  width: '24px',
+  height: '20px',
+  margin: '0px',
+  display: 'block',
+  "float": 'none'
+};
+var iconStyle = {
+  width: '24px',
+  display: 'block',
+  "float": 'none'
+};
+var scoreStyle = {
+  color: 'white',
+  textAlign: 'center',
+  border: '1px solid black',
+  width: '20px',
+  height: '20px',
+  margin: '0px',
+  backgroundColor: 'white'
+};
+var getColor = function getColor(score) {
+  var settings = getSettings();
+  var thresholdBad = settings.thresholdBad || 60;
+
+  if (thresholdBad <= score) {
+    return 'red';
+  }
+
+  var thresholdGood = settings.thresholdGood || 30;
+
+  if (thresholdGood >= score) {
+    return 'green';
+  }
+
+  return 'orange';
+};
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/thread-loader/dist/cjs.js!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/babel-loader/lib??ref--12-1!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=script&lang=js&
 
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ var lib_vue_loader_options_BatchUploadvue_type_script_lang_js_ = ({
-  name: 'BatchUpload',
+/* harmony default export */ var lib_vue_loader_options_OrderControlvue_type_script_lang_js_ = ({
+  name: 'OrderControl',
+  props: {
+    id: String
+  },
   created: function created() {
     var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var data;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _this.refresh();
+              return getLabel(_this.id);
 
             case 2:
+              data = _context.sent;
+              _this.userId = data.sift.user_id;
+              _this.score = Math.round(data.sift.scores.payment_abuse.score * 100);
+              _this.isBackfilled = data.is_backfilled;
+
+            case 6:
             case "end":
               return _context.stop();
           }
@@ -2645,41 +2651,45 @@ var getUserData = function getUserData(sift) {
   },
   data: function data() {
     return {
+      divStyle: divStyle,
+      iconStyle: iconStyle,
+      scoreStyle: scoreStyle,
+      state: 'loading',
       error: null,
-      status: 'loading',
-      orderId: '',
-      notBackfilled: [],
-      backfilled: []
+      isBackfilled: false,
+      score: 0,
+      label: null,
+      user_id: null
     };
   },
   computed: {
-    isError: function isError() {
-      return this.status === 'error';
-    },
-    errorMessage: function errorMessage() {
-      return this.error.text || this.error.toString();
-    },
     isLoading: function isLoading() {
-      return this.status === 'loading';
+      return this.state === 'loading';
     },
-    isBackfill: function isBackfill() {
-      return this.status === 'backfill';
+    errorImage: function errorImage() {
+      return "".concat(getSettings().imgPath, "error.png");
     },
-    isStats: function isStats() {
-      return this.status === 'stats';
+    spinnerImage: function spinnerImage() {
+      return "".concat(getSettings().imgPath, "spinner.gif");
     },
-    totalOrders: function totalOrders() {
-      return this.notBackfilled.length + this.backfilled.length;
+    hasData: function hasData() {
+      return this.isBackfilled && this.score;
     },
-    numBackfilled: function numBackfilled() {
-      return this.backfilled.length;
+    goodTitle: function goodTitle() {
+      return 'good' === this.label ? 'Click to remove this label' : 'Click to set this label';
     },
-    numNotBackfilled: function numNotBackfilled() {
-      return this.notBackfilled.length;
+    badTitle: function badTitle() {
+      return 'bad' === this.label ? 'Click to remove this label' : 'Click to set this label';
+    },
+    goodImage: function goodImage() {
+      return "".concat(getSettings().imgPath, "good") + ('good' === this.label ? '.png' : '-gray.png');
+    },
+    badImage: function badImage() {
+      return "".concat(getSettings().imgPath, "bad") + ('bad' === this.label ? '.png' : '-gray.png');
     }
   },
   methods: {
-    clearAll: function clearAll() {
+    clickGood: function clickGood() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
@@ -2687,124 +2697,43 @@ var getUserData = function getUserData(sift) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
-                _this2.status = 'loading';
-                _context2.next = 4;
-                return api_clearAll();
+                _context2.next = 2;
+                return setLabel('good' === _this2.label ? null : 'good');
 
-              case 4:
-                _context2.next = 6;
-                return _this2.refresh();
-
-              case 6:
-                _context2.next = 12;
-                break;
-
-              case 8:
-                _context2.prev = 8;
-                _context2.t0 = _context2["catch"](0);
-                _this2.status = 'error';
-                _this2.error = _context2.t0;
-
-              case 12:
+              case 2:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 8]]);
+        }, _callee2);
       }))();
     },
-    backfill: function backfill() {
+    clickBad: function clickBad() {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-        var i, id;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
-                _this3.status = 'backfill';
-                i = 0;
+                _context3.next = 2;
+                return setLabel('bad' === _this3.label ? null : 'bad');
 
-              case 3:
-                if (!(i < _this3.notBackfilled.length)) {
-                  _context3.next = 11;
-                  break;
-                }
-
-                id = _this3.notBackfilled[i];
-                _this3.orderId = id;
-                _context3.next = 8;
-                return api_backfill(id);
-
-              case 8:
-                i++;
-                _context3.next = 3;
-                break;
-
-              case 11:
-                _context3.next = 13;
-                return _this3.refresh();
-
-              case 13:
-                _context3.next = 19;
-                break;
-
-              case 15:
-                _context3.prev = 15;
-                _context3.t0 = _context3["catch"](0);
-                _this3.status = 'error';
-                _this3.error = _context3.t0;
-
-              case 19:
+              case 2:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 15]]);
+        }, _callee3);
       }))();
     },
-    refresh: function refresh() {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-        var data;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.prev = 0;
-                _this4.status = 'loading';
-                _context4.next = 4;
-                return orderStats();
-
-              case 4:
-                data = _context4.sent;
-                _this4.backfilled = data.backfilled;
-                _this4.notBackfilled = data.notBackfilled;
-                _this4.status = 'stats';
-                _context4.next = 14;
-                break;
-
-              case 10:
-                _context4.prev = 10;
-                _context4.t0 = _context4["catch"](0);
-                _this4.status = 'error';
-                _this4.error = _context4.t0;
-
-              case 14:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, null, [[0, 10]]);
-      }))();
+    openSiftSci: function openSiftSci() {
+      window.open('https://siftscience.com/console/users/' + this.userId);
     }
   }
 });
-// CONCATENATED MODULE: ./BatchUpload.vue?vue&type=script&lang=js&
- /* harmony default export */ var BatchUploadvue_type_script_lang_js_ = (lib_vue_loader_options_BatchUploadvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=script&lang=js&
+ /* harmony default export */ var OrderControlvue_type_script_lang_js_ = (lib_vue_loader_options_OrderControlvue_type_script_lang_js_); 
 // CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/runtime/componentNormalizer.js
 /* globals __VUE_SSR_CONTEXT__ */
 
@@ -2905,7 +2834,7 @@ function normalizeComponent (
   }
 }
 
-// CONCATENATED MODULE: ./BatchUpload.vue
+// CONCATENATED MODULE: ./OrderControl.vue
 
 
 
@@ -2914,7 +2843,7 @@ function normalizeComponent (
 /* normalize component */
 
 var component = normalizeComponent(
-  BatchUploadvue_type_script_lang_js_,
+  OrderControlvue_type_script_lang_js_,
   render,
   staticRenderFns,
   false,
@@ -2924,11 +2853,11 @@ var component = normalizeComponent(
   
 )
 
-/* harmony default export */ var BatchUpload = (component.exports);
+/* harmony default export */ var OrderControl = (component.exports);
 // CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 
-/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (BatchUpload);
+/* harmony default export */ var entry_lib = __webpack_exports__["default"] = (OrderControl);
 
 
 
@@ -2962,30 +2891,6 @@ module.exports = function (key, value) {
     global[key] = value;
   } return value;
 };
-
-
-/***/ }),
-
-/***/ "e96d":
-/***/ (function(module, exports, __webpack_require__) {
-
-var redefine = __webpack_require__("51c1");
-
-var DatePrototype = Date.prototype;
-var INVALID_DATE = 'Invalid Date';
-var TO_STRING = 'toString';
-var nativeDateToString = DatePrototype[TO_STRING];
-var getTime = DatePrototype.getTime;
-
-// `Date.prototype.toString` method
-// https://tc39.github.io/ecma262/#sec-date.prototype.tostring
-if (new Date(NaN) + '' != INVALID_DATE) {
-  redefine(DatePrototype, TO_STRING, function toString() {
-    var value = getTime.call(this);
-    // eslint-disable-next-line no-self-compare
-    return value === value ? nativeDateToString.call(this) : INVALID_DATE;
-  });
-}
 
 
 /***/ }),
@@ -3550,4 +3455,5 @@ module.exports = function (argument) {
 /***/ })
 
 /******/ })["default"];
-//# sourceMappingURL=BatchUpload.common.js.map
+});
+//# sourceMappingURL=OrderControl.umd.js.map

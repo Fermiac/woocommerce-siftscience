@@ -1,21 +1,23 @@
 <template>
     <div>
-        <div v-if="error" class="siftsci_icon" @click="noop" >
-            <img :src="errorImageUrl" alt="Error" width="20px" height="20px" />
+        <div v-if="error" :style="iconStyle">
+            <img :src="errorImage" :alt="error" width="20px" height="20px" />
         </div>    
-        <div v-if="isWorking" class="siftsci_icon" @click="noop" >
-            <img :src="spinnerImageUrl" alt="Working..." width="20px" height="20px" />
+        
+        <div v-if="isLoading" :style="iconStyle">
+            <img :src="spinnerImage" alt="Working..." width="20px" height="20px" />
         </div>    
+        
         <div v-if="hasData">
-            <div :title="title" :id="id" className="siftsci_score" @click="openSiftSci">
+            <div title="User's SiftScience score" :style="scoreStyle" @click="openSiftSci">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
             </div>
 
-            <div :title="goodTitle" class="siftsci_icon" @click="clickGood">
+            <div :title="goodTitle" :style="iconStyle" @click="clickGood">
                 <img :src="goodImage" alt="good" width="20px" height="20px" />
             </div>    
         
-            <div :title="goodTitle" class="siftsci_icon" @click="clickBad">
+            <div :title="goodTitle" :style="iconStyle" @click="clickBad">
                 <img :src="badImage" alt="bad" width="20px" height="20px" />
             </div>    
         </div>
@@ -23,82 +25,46 @@
 </template>
 
 <script>
-import {stttings, setLabel} from './api';
+import {getSettings, getLabel, setLabel, divStyle, iconStyle, scoreStyle} from './api';
 
 export default {
     name: 'OrderControl',
-    props: {
-        imgPath: String,
-        isBackfilled: Boolean,
-        score: Number,
-        label: String,
+    props: { id: String },
+    async created() {
+        const data = await getLabel(this.id)
+        this.userId = data.sift.user_id
+        this.score = Math.round(data.sift.scores.payment_abuse.score * 100)
+        this.isBackfilled = data.is_backfilled
     },
     data () {
         return {
-            divStyle,
-            title: "The user's SiftScience score",
-            error: false,
-            isWorking: false,
+            divStyle, iconStyle, scoreStyle,
+            state: 'loading',
+            error: null,
+            isBackfilled: false,
+            score: 0,
+            label: null,
+            user_id: null,
         }
     },
     computed: {
-        scoreColor() {
-            const thresholdBad = settings.thresholdBad || 60;
-            if ( thresholdBad <= this.score ) {
-                return 'red';
-            }
-
-            const thresholdGood = settings.thresholdGood || 30;
-            if ( thresholdGood >= this.score ) {
-                return 'green';
-            }
-
-            return 'orange'
-        },
-        errorImageUrl() { return this.imgPath + 'error.png' },
-        spinnerImageUrl() { return this.imgPath + 'spinner.png' },
-        hasData() { return this.isBackfilled && this.score },
+        isLoading () { return this.state === 'loading' },
+        errorImage() { return `${getSettings().imgPath}error.png` },
+        spinnerImage() { return `${getSettings().imgPath}spinner.gif` },
+        hasData () { return this.isBackfilled && this.score },
+        goodTitle () { return 'good' === this.label ? 'Click to remove this label' : 'Click to set this label' },
+        badTitle () { return 'bad' === this.label ? 'Click to remove this label' : 'Click to set this label' },
+        goodImage () { return `${getSettings().imgPath}good` + ('good' === this.label ? '.png' : '-gray.png') },
+        badImage () { return `${getSettings().imgPath}bad` + ('bad' === this.label ? '.png' : '-gray.png') },
     },
     methods: {
-        noop () {},
         async clickGood() {
             await setLabel('good' === this.label ? null : 'good')
         },
         async clickBad() {
             await setLabel('bad' === this.label ? null : 'bad')
         },
-        goodTitle () {
-            return 'good' === this.label ? 'Click to remove this label' : 'Click to set this label'
-        },
-        badTitle () {
-            return 'bad' === this.label ? 'Click to remove this label' : 'Click to set this label'
-        },
-        goodImage() {
-            return 'good' + ('good' === this.label ? '.png' : '-gray.png')
-        },
-        badImage() {           
-            return 'bad' + ('bad' === this.label ? '.png' : '-gray.png')
-        },
         openSiftSci () { window.open( 'https://siftscience.com/console/users/' + this.userId ) }
     } 
 }
 </script>
-
-<style>
-.siftsci_icon {
-    width: '24px';
-	display: 'block';
-	float: 'none';
-}
-
-.siftsci_score {
- 	color: 'white';
-	text-align: 'center';
-	border: '1px solid black';
-    width: '24px';
-	height: '20px';
-	margin: '0px';   
-	display: 'block';
-	float: 'none';
-}
-</style>
