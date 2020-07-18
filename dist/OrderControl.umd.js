@@ -2384,12 +2384,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=d2db6506&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's SiftScience score"},on:{"click":_vm.openSiftSci}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=611d889c&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's SiftScience score"},on:{"click":function($event){return _vm.openSiftSci($event)}}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=d2db6506&
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=611d889c&
 
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/regenerator-runtime/runtime.js
 var runtime = __webpack_require__("2fd8");
@@ -2444,10 +2444,6 @@ var es_promise = __webpack_require__("edfc");
 
 var getApi = function getApi() {
   return window._siftsci_app_data.api;
-};
-
-var getSettings = function getSettings() {
-  return window._siftsci_app_data;
 };
 
 var api = /*#__PURE__*/function () {
@@ -2509,19 +2505,30 @@ var api = /*#__PURE__*/function () {
   };
 }();
 
-var labelActionMap = {
-  bad: 'set_bad',
-  good: 'set_good'
+var getLabelValue = function getLabelValue(value) {
+  switch (value) {
+    case 'bad':
+      return 'set_bad';
+
+    case 'good':
+      return 'set_good';
+
+    default:
+      return 'unset';
+  }
 };
-var setLabel = function setLabel(id, value) {
-  var action = labelActionMap[value] ? labelActionMap[value] : 'unset';
-  return api(action, id);
-};
-var backfill = function backfill(id) {
-  return api('backfill', id);
+
+var getSettings = function getSettings() {
+  return window._siftsci_app_data;
 };
 var getLabel = function getLabel(id) {
   return api('score', id);
+};
+var api_setLabel = function setLabel(id, value) {
+  return api(getLabelValue(value), id);
+};
+var backfill = function backfill(id) {
+  return api('backfill', id);
 };
 var orderStats = function orderStats() {
   return api('order_stats', null);
@@ -2529,25 +2536,22 @@ var orderStats = function orderStats() {
 var clearAll = function clearAll() {
   return api('clear_all', null);
 };
-var getUserData = function getUserData(sift) {
-  if (!sift) {
-    return null;
-  }
-
-  var result = {};
-
+var extractScore = function extractScore(sift) {
   if (sift.scores && sift.scores.payment_abuse) {
-    result.score = Math.round(sift.scores.payment_abuse.score * 100);
+    return Math.round(sift.scores.payment_abuse.score * 100);
   }
 
-  result.label = 'none';
-
-  if (sift.latest_labels && sift.latest_labels.payment_abuse) {
-    result.label = sift.latest_labels.payment_abuse.is_bad ? 'bad' : 'good';
-  }
-
-  return result;
+  return null;
 };
+var extractLabel = function extractLabel(sift) {
+  if (sift.latest_labels && sift.latest_labels.payment_abuse) {
+    return sift.latest_labels.payment_abuse.is_bad ? 'bad' : 'good';
+  }
+
+  return 'none';
+};
+// CONCATENATED MODULE: ./styles.js
+
 var divStyle = {
   color: 'white',
   textAign: 'center',
@@ -2564,7 +2568,7 @@ var iconStyle = {
   "float": 'none'
 };
 var scoreStyle = {
-  color: 'white',
+  color: 'black',
   textAlign: 'center',
   border: '1px solid black',
   width: '20px',
@@ -2572,7 +2576,7 @@ var scoreStyle = {
   margin: '0px',
   backgroundColor: 'white'
 };
-var getColor = function getColor(score) {
+var styles_getColor = function getColor(score) {
   var settings = getSettings();
   var thresholdBad = settings.thresholdBad || 60;
 
@@ -2618,40 +2622,17 @@ var getColor = function getColor(score) {
 //
 //
 
+
 /* harmony default export */ var lib_vue_loader_options_OrderControlvue_type_script_lang_js_ = ({
   name: 'OrderControl',
   props: {
     id: String
   },
   created: function created() {
-    var _this = this;
-
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var data;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return getLabel(_this.id);
-
-            case 2:
-              data = _context.sent;
-              _this.userId = data.sift.user_id;
-              _this.score = Math.round(data.sift.scores.payment_abuse.score * 100);
-              _this.isBackfilled = data.is_backfilled;
-
-            case 6:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
+    this.refresh();
   },
   data: function data() {
     return {
-      divStyle: divStyle,
       iconStyle: iconStyle,
       scoreStyle: scoreStyle,
       state: 'loading',
@@ -2667,40 +2648,99 @@ var getColor = function getColor(score) {
       return this.state === 'loading';
     },
     errorImage: function errorImage() {
-      return "".concat(getSettings().imgPath, "error.png");
+      return this.getImage('error.png');
     },
     spinnerImage: function spinnerImage() {
-      return "".concat(getSettings().imgPath, "spinner.gif");
+      return this.getImage('spinner.gif');
     },
     hasData: function hasData() {
-      return this.isBackfilled && this.score;
+      return this.state === 'data';
     },
     goodTitle: function goodTitle() {
-      return 'good' === this.label ? 'Click to remove this label' : 'Click to set this label';
+      return this.getTitle('good');
     },
     badTitle: function badTitle() {
-      return 'bad' === this.label ? 'Click to remove this label' : 'Click to set this label';
+      return this.getTitle('bad');
     },
     goodImage: function goodImage() {
-      return "".concat(getSettings().imgPath, "good") + ('good' === this.label ? '.png' : '-gray.png');
+      return this.getLabelImage('good');
     },
     badImage: function badImage() {
-      return "".concat(getSettings().imgPath, "bad") + ('bad' === this.label ? '.png' : '-gray.png');
+      return this.getLabelImage('bad');
     }
   },
   methods: {
-    clickGood: function clickGood() {
+    clickGood: function clickGood(e) {
+      this.setLabel('good', e);
+    },
+    clickBad: function clickBad(e) {
+      this.setLabel('bad', e);
+    },
+    getTitle: function getTitle(v) {
+      return v === this.label ? 'Click to remove this label' : 'Click to set this label';
+    },
+    openSiftSci: function openSiftSci(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.open('https://siftscience.com/console/users/' + this.userId);
+    },
+    getLabelImage: function getLabelImage(v) {
+      var ending = v === this.label ? '.png' : '-gray.png';
+      return this.getImage(v + ending);
+    },
+    getImage: function getImage(file) {
+      return getSettings().imgPath + file;
+    },
+    setLabel: function setLabel(v, e) {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                e.stopPropagation();
+                _this.error = null;
+                _this.state = 'loading';
+                _context.next = 6;
+                return api_setLabel(v === _this.label ? null : v);
+
+              case 6:
+                _context.next = 8;
+                return _this.refresh();
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    refresh: function refresh() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var data;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return setLabel('good' === _this2.label ? null : 'good');
+                _this2.error = null;
+                _this2.state = 'loading';
+                _context2.next = 4;
+                return getLabel(_this2.id);
 
-              case 2:
+              case 4:
+                data = _context2.sent;
+                _this2.userId = data.sift.user_id;
+                _this2.score = extractScore(data.sift);
+                _this2.label = extractLabel(data.sift);
+                _this2.isBackfilled = data.is_backfilled;
+                _this2.state = 'data';
+
+              case 10:
               case "end":
                 return _context2.stop();
             }
@@ -2708,7 +2748,7 @@ var getColor = function getColor(score) {
         }, _callee2);
       }))();
     },
-    clickBad: function clickBad() {
+    wrap: function wrap(promise) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
@@ -2716,19 +2756,27 @@ var getColor = function getColor(score) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return setLabel('bad' === _this3.label ? null : 'bad');
+                _context3.prev = 0;
+                _context3.next = 3;
+                return promise;
 
-              case 2:
+              case 3:
+                _context3.next = 9;
+                break;
+
+              case 5:
+                _context3.prev = 5;
+                _context3.t0 = _context3["catch"](0);
+                _this3.error = _context3.t0;
+                _this3.state = null;
+
+              case 9:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3);
+        }, _callee3, null, [[0, 5]]);
       }))();
-    },
-    openSiftSci: function openSiftSci() {
-      window.open('https://siftscience.com/console/users/' + this.userId);
     }
   }
 });

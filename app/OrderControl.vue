@@ -9,7 +9,7 @@
         </div>    
         
         <div v-if="hasData">
-            <div title="User's SiftScience score" :style="scoreStyle" @click="openSiftSci">
+            <div title="User's SiftScience score" :style="scoreStyle" @click="openSiftSci($event)">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
             </div>
 
@@ -25,20 +25,16 @@
 </template>
 
 <script>
-import {getSettings, getLabel, setLabel, divStyle, iconStyle, scoreStyle} from './api';
+import {getSettings, getLabel, setLabel, extractScore, extractLabel} from './api';
+import {iconStyle, scoreStyle} from './styles';
 
 export default {
     name: 'OrderControl',
     props: { id: String },
-    async created() {
-        const data = await getLabel(this.id)
-        this.userId = data.sift.user_id
-        this.score = Math.round(data.sift.scores.payment_abuse.score * 100)
-        this.isBackfilled = data.is_backfilled
-    },
+    created() { this.refresh() },
     data () {
         return {
-            divStyle, iconStyle, scoreStyle,
+            iconStyle, scoreStyle,
             state: 'loading',
             error: null,
             isBackfilled: false,
@@ -49,22 +45,56 @@ export default {
     },
     computed: {
         isLoading () { return this.state === 'loading' },
-        errorImage() { return `${getSettings().imgPath}error.png` },
-        spinnerImage() { return `${getSettings().imgPath}spinner.gif` },
-        hasData () { return this.isBackfilled && this.score },
-        goodTitle () { return 'good' === this.label ? 'Click to remove this label' : 'Click to set this label' },
-        badTitle () { return 'bad' === this.label ? 'Click to remove this label' : 'Click to set this label' },
-        goodImage () { return `${getSettings().imgPath}good` + ('good' === this.label ? '.png' : '-gray.png') },
-        badImage () { return `${getSettings().imgPath}bad` + ('bad' === this.label ? '.png' : '-gray.png') },
+        errorImage() { return this.getImage('error.png') },
+        spinnerImage() { return this.getImage('spinner.gif') },
+        hasData () { return this.state === 'data' },
+        goodTitle () { return this.getTitle('good') },
+        badTitle () { return this.getTitle('bad') },
+        goodImage () { return this.getLabelImage('good') },
+        badImage () { return this.getLabelImage('bad') },
     },
     methods: {
-        async clickGood() {
-            await setLabel('good' === this.label ? null : 'good')
+        clickGood(e) { this.setLabel('good', e) },
+        clickBad(e) { this.setLabel('bad', e) },
+        getTitle(v) { return v === this.label ? 'Click to remove this label' : 'Click to set this label'},
+        openSiftSci (e) { 
+            e.preventDefault()
+            e.stopPropagation()
+            window.open('https://siftscience.com/console/users/' + this.userId) 
         },
-        async clickBad() {
-            await setLabel('bad' === this.label ? null : 'bad')
+        getLabelImage(v) {
+            const ending = v === this.label ? '.png' : '-gray.png'
+            return this.getImage(v + ending)
         },
-        openSiftSci () { window.open( 'https://siftscience.com/console/users/' + this.userId ) }
+        getImage(file) {
+            return getSettings().imgPath + file
+        },
+        async setLabel(v, e) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.error = null
+            this.state = 'loading'
+            await setLabel(v === this.label ? null : v)
+            await this.refresh()
+        },
+        async refresh() {
+            this.error = null
+            this.state = 'loading'
+            const data = await getLabel(this.id)
+            this.userId = data.sift.user_id
+            this.score = extractScore(data.sift)
+            this.label = extractLabel(data.sift)
+            this.isBackfilled = data.is_backfilled
+            this.state = 'data'
+        },
+        async wrap(promise) {
+            try {
+                await promise
+            } catch (error) {
+                this.error = error
+                this.state = null;
+            }
+        }
     } 
 }
 </script>

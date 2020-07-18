@@ -1,2 +1,3 @@
 cd app
-vue build BatchUpload.vue -t lib
+call vue build BatchUpload.vue -t lib
+copy dist\BatchUpload.umd.js ..\dist

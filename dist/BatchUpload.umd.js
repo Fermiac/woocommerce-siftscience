@@ -2568,19 +2568,30 @@ var api = /*#__PURE__*/function () {
   };
 }();
 
-var labelActionMap = {
-  bad: 'set_bad',
-  good: 'set_good'
+var getLabelValue = function getLabelValue(value) {
+  switch (value) {
+    case 'bad':
+      return 'set_bad';
+
+    case 'good':
+      return 'set_good';
+
+    default:
+      return 'unset';
+  }
 };
-var setLabel = function setLabel(id, value) {
-  var action = labelActionMap[value] ? labelActionMap[value] : 'unset';
-  return api(action, id);
-};
-var api_backfill = function backfill(id) {
-  return api('backfill', id);
+
+var getSettings = function getSettings() {
+  return window._siftsci_app_data;
 };
 var getLabel = function getLabel(id) {
   return api('score', id);
+};
+var setLabel = function setLabel(id, value) {
+  return api(getLabelValue(value), id);
+};
+var api_backfill = function backfill(id) {
+  return api('backfill', id);
 };
 var orderStats = function orderStats() {
   return api('order_stats', null);
@@ -2588,24 +2599,19 @@ var orderStats = function orderStats() {
 var api_clearAll = function clearAll() {
   return api('clear_all', null);
 };
-var getUserData = function getUserData(sift) {
-  if (!sift) {
-    return null;
-  }
-
-  var result = {};
-
+var extractScore = function extractScore(sift) {
   if (sift.scores && sift.scores.payment_abuse) {
-    result.score = Math.round(sift.scores.payment_abuse.score * 100);
+    return Math.round(sift.scores.payment_abuse.score * 100);
   }
 
-  result.label = 'none';
-
+  return null;
+};
+var extractLabel = function extractLabel(sift) {
   if (sift.latest_labels && sift.latest_labels.payment_abuse) {
-    result.label = sift.latest_labels.payment_abuse.is_bad ? 'bad' : 'good';
+    return sift.latest_labels.payment_abuse.is_bad ? 'bad' : 'good';
   }
 
-  return result;
+  return 'none';
 };
 // CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/thread-loader/dist/cjs.js!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/babel-loader/lib??ref--12-1!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./BatchUpload.vue?vue&type=script&lang=js&
 
