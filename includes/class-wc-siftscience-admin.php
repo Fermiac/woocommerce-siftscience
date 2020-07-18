@@ -77,13 +77,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			$jsPath = $this->options->get_react_app_path();
 			echo $this->batch_upload();
-			$data = array(
-				'apiUrl' => admin_url( 'admin-ajax.php' ),
-			);
-			wp_enqueue_script( 'wc-siftsci-react-app', $jsPath, array(), $this->options->get_version(), true );
-			wp_localize_script( 'wc-siftsci-react-app', "_siftsci_app_input_data", $data );
+			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
+
+            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
+            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/BatchUpload.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
+            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
+			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
 		private function output_settings_debug() {
