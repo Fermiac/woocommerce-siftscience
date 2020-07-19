@@ -189,7 +189,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_settings() {
 			return array(
-				$this->get_title( 'siftsci_title', 'SiftScience Settings' ),
+				$this->get_title( 'siftsci_title', 'Sift Settings' ),
 
 				$this->get_text_input( WC_SiftScience_Options::$api_key,
 					'Rest API Key', 'The API key for production' ),
