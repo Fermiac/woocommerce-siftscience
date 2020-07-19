@@ -300,9 +300,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
-			$link_yes = home_url( add_query_arg( array( 'set_siftsci_stats' => 'yes' ) ) );
+			$link_yes = add_query_arg(['set_siftsci_stats'=> 'yes'],home_url('/wp-admin'));
 			$yes = "<a href='$link_yes'>Enable</a>";
-			$link_no = home_url( add_query_arg( array( 'set_siftsci_stats' => 'no' ) ) );
+			$link_no = add_query_arg(['set_siftsci_stats'=> 'no'],home_url('/wp-admin'));
 			$no = "<a href='$link_no'>disable</a>";
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
