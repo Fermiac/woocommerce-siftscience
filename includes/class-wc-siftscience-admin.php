@@ -288,9 +288,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function notice_stats() {
 			global $wp;
-			$rwp = home_url( $wp->request );
+			//$sr = $_SERVER['SERVER_NAME'];
+			$sr = $_SERVER['DOCUMENT_ROOT']; 
+			$rwp = 'xxx '.home_url(add_query_arg(array( 'set_siftsci_stats'=> 'yes' ), $wp->request ));
+			$rwp2 = home_url($wp->request);
 			$current_url = home_url($_SERVER['REQUEST_URI']);
 			$hp= get_home_path();
+			
 			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
@@ -318,6 +322,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			     <br> $link_no
 			     <br>$current_url
 			     <br>$rwp
+			     <br>xxxxx $rwp2
 			     <br>$hp</p>" .
 			     "</div>";
 		}
