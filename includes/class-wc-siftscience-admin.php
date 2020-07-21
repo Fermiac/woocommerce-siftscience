@@ -287,44 +287,34 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function notice_stats() {
-			global $wp;
-			//$sr = $_SERVER['SERVER_NAME'];
-			$sr = $_SERVER['DOCUMENT_ROOT']; 
-			$rwp = 'xxx '.home_url(add_query_arg(array( 'set_siftsci_stats'=> 'yes' ), $wp->request ));
-			$rwp2 = home_url($wp->request);
-			$current_url = home_url($_SERVER['REQUEST_URI']);
-			$hp= get_home_path();
-			
+			$s3k = 'set_siftsci_stats'; // a reusable string
 			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
-			if ( isset( $_GET[ 'set_siftsci_stats' ] ) ) {
-				$value = $_GET[ 'set_siftsci_stats' ];
+			if ( isset( $_GET[ $s3k ] ) ) {
+				$value = $_GET[ $s3k ];
 				update_option( WC_SiftScience_Options::$send_stats, $value );
-				$url = remove_query_arg( 'set_siftsci_stats' );
+				$url = remove_query_arg( $s3k );
 				wp_redirect( $url );
 				exit;
 			}
 
-
-			$link_yes = home_url( add_query_arg( array( 'set_siftsci_stats'=> 'yes' ) ) );
+			$link_yes = add_query_arg( array( $s3k => 'yes' ) );
+			$link_no = add_query_arg( array( $s3k => 'no' ) );
+			
 			$yes = "<a href='$link_yes'>Enable</a>";
-			$link_no = add_query_arg( array( 'set_siftsci_stats'=> 'no' ), home_url());
 			$no = "<a href='$link_no'>disable</a>";
+
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
+
 			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
-			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>$message $yes, $no, $details.
-			     <br> $link_yes
-			     <br> $link_no
-			     <br>$current_url
-			     <br>$rwp
-			     <br>xxxxx $rwp2
-			     <br>$hp</p>" .
-			     "</div>";
+
+			echo '<div class=\'notice notice-error is-dismissible\'>'.
+			     "<p> $message $yes, $no, $details. </p>" .
+			     '</div>';
 		}
 
 		public function batch_upload() {
