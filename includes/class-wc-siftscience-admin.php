@@ -287,22 +287,22 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function notice_stats() {
-			$s3k = 'set_siftsci_stats'; // a reusable string
+			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string
 			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
-			if ( isset( $_GET[ $s3k ] ) ) {
-				$value = $_GET[ $s3k ];
+			if ( isset( $_GET[ $set_siftsci_key ] ) ) {
+				$value = $_GET[ $set_siftsci_key ];
 				update_option( WC_SiftScience_Options::$send_stats, $value );
-				$url = remove_query_arg( $s3k );
+				$url = remove_query_arg( $set_siftsci_key );
 				wp_redirect( $url );
 				exit;
 			}
 
-			$link_yes = add_query_arg( array( $s3k => 'yes' ) );
-			$link_no = add_query_arg( array( $s3k => 'no' ) );
+			$link_yes = add_query_arg( array( $set_siftsci_key => 'yes' ) );
+			$link_no = add_query_arg( array( $set_siftsci_key => 'no' ) );
 			
 			$yes = "<a href='$link_yes'>Enable</a>";
 			$no = "<a href='$link_no'>disable</a>";
