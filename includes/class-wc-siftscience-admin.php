@@ -312,7 +312,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
 
-			echo '<div class=\'notice notice-error is-dismissible\'>'.
+			echo '<div class="notice notice-error is-dismissible">'.
 			     "<p> $message $yes, $no, $details. </p>" .
 			     '</div>';
 		}
