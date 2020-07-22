@@ -137,6 +137,8 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 *	),
 		 * @return array
 		 */
+
+		//this method is doing naming variables -not secured-
 		private function create_address( WC_Order $order, $type = 'shipping' ) {
 			$address_object = array(
 				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
@@ -154,6 +156,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			return $address_object;
 		}
 
+		//this method needs to be deleted 
 		private function get_order_param( $order, $type, $param ) {
 			$key = $type . $param;
 			return $order->$key;
