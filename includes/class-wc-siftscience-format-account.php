@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 				// Supported Fields
 				'$session_id'       => $this->options->get_session_id(),
 				'$user_email'       => $user->billing_email,
-				'$name'             => $user->billing_first_name . ' ' . $user->billing_last_name,
+				'$name'             => $user->get_billing_first_name() . ' ' . $user->billing_last_name,
 				'$phone'            => $user->billing_phone,
 				//'$referrer_user_id' => 'janejane101',
 				//'$payment_methods'  => array(
@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 				// Supported Fields
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
 				'$user_email'       => $user->billing_email,
-				'$name'             => $user->billing_first_name . ' ' . $user->billing_last_name,
+				'$name'             => $user->get_billing_first_name() . ' ' . $user->billing_last_name,
 				'$phone'            => $user->billing_phone,
 				//'$referrer_user_id' => 'janejane102',
 				//'$payment_methods'  => array(
