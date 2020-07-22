@@ -30,7 +30,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 				'$session_id'         => $this->options->get_order_session_id( $order ),
 				'$order_id'           => $order->get_order_number(),
 				'$amount'             => $order->get_total() * 1000000,
-				'$currency_code'      => $order->get_order_currency(),
+				'$currency_code'      => $order->get_currency(),
 				'$transaction_type'   => $this->get_transaction_type( $order ),
 				'$transaction_status' => $this->get_transaction_status( $order ),
 				'$payment_method'     => $this->get_payment_method( $order ),
