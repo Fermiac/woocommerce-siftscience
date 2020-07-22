@@ -94,7 +94,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 				return $method;
 			}
 
-			$payment_method_id = $order->payment_method;
+			$payment_method_id = $order->get_payment_method();
 			$lookup = apply_filters( 'wc_siftscience_order_payment_method_lookup', self::$payment_method_map, $order );
 
 			return isset( $lookup[ $payment_method_id ] ) ? $lookup[ $payment_method_id ] : null;
