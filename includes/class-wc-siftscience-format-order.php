@@ -144,8 +144,8 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				$address_object = array(
 				'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 				'$phone'     => $order->get_billing_phone(),
-				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
-				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
+				'$address_1' => $order->get_billing_address_1(),
+				'$address_2' => $order->get_billing_address_2(),
 				'$city'      => $this->get_order_param( $order, $type, '_city' ),
 				'$region'    => $this->get_order_param( $order, $type, '_state' ),
 				'$country'   => $this->get_order_param( $order, $type, '_country' ),
