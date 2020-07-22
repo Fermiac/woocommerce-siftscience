@@ -160,7 +160,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 					'$address_2' => $order->get_shipping_address_2(),
 					'$city'      => $order->get_shipping_city(),
 					'$region'    => $order->get_shipping_state(),
-					'$country'   => $this->get_order_param( $order, $type, '_country' ),
+					'$country'   => $order->get_shipping_country(),
 					'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
 				);
 			}
