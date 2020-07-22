@@ -143,7 +143,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			if( $type == 'billing' ){
 				$address_object = array(
 				'$name'      => $order->get_billing_first_name() 
-				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
+				                . ' ' . $order->get_billing_last_name(),
 				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
 				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
 				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
