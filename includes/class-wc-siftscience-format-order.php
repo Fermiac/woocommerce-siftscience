@@ -43,7 +43,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$user_id'          => $this->options->get_user_id( $order ),
 				'$session_id'       => $this->options->get_order_session_id( $order ),
 				'$order_id'         => $order->get_order_number(),
-				'$user_email'       => $order->billing_email,
+				'$user_email'       => $order->get_billing_email(),
 				'$amount'           => $order->get_total() * 1000000,
 				'$currency_code'    => $order->get_order_currency(),
 				'$billing_address'  => $this->create_address( $order, 'billing' ),

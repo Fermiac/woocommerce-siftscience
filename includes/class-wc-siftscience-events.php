@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		public function add_session_info( $order_id ) {
 			$order = wc_get_order( $order_id );
-			$post_id = $order->post->ID;
+			$post_id = $order->get_id();
 			$meta_key = $this->options->get_session_meta_key();
 			$session_id = $this->options->get_session_id();
 			do_action( 'wp_siftscience_save_session_info', $post_id, $session_id );
