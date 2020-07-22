@@ -154,15 +154,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 			} elseif($type == 'shipping'){
 				$address_object = array(
-				'$name'      => $this->get_order_param( $order, $type, '_first_name' ) 
-				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
-				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
-				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
-				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
-				'$city'      => $this->get_order_param( $order, $type, '_city' ),
-				'$region'    => $this->get_order_param( $order, $type, '_state' ),
-				'$country'   => $this->get_order_param( $order, $type, '_country' ),
-				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
+					'$name'      => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
+					'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
+					'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
+					'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
+					'$city'      => $this->get_order_param( $order, $type, '_city' ),
+					'$region'    => $this->get_order_param( $order, $type, '_state' ),
+					'$country'   => $this->get_order_param( $order, $type, '_country' ),
+					'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
 				);
 			}
 			
