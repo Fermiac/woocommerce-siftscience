@@ -158,7 +158,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 					'$company'   => $order->get_shipping_company(),
 					'$address_1' => $order->get_shipping_address_1(),
 					'$address_2' => $order->get_shipping_address_2(),
-					'$city'      => $this->get_order_param( $order, $type, '_city' ),
+					'$city'      => $order->get_shipping_city(),
 					'$region'    => $this->get_order_param( $order, $type, '_state' ),
 					'$country'   => $this->get_order_param( $order, $type, '_country' ),
 					'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
