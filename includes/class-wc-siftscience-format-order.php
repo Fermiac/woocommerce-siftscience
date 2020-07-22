@@ -142,14 +142,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private function create_address( WC_Order $order, $type = 'shipping' ) {
 			if( $type == 'billing' ){
 				$address_object = array(
-				'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
-				'$phone'     => $order->get_billing_phone(),
-				'$address_1' => $order->get_billing_address_1(),
-				'$address_2' => $order->get_billing_address_2(),
-				'$city'      => $order->get_billing_city(),
-				'$region'    => $order->get_billing_state(),
-				'$country'   => $this->get_order_param( $order, $type, '_country' ),
-				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
+					'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+					'$phone'     => $order->get_billing_phone(),
+					'$address_1' => $order->get_billing_address_1(),
+					'$address_2' => $order->get_billing_address_2(),
+					'$city'      => $order->get_billing_city(),
+					'$region'    => $order->get_billing_state(),
+					'$country'   => $order->get_billing_country(),
+					'$zipcode'   => $order->get_billing_postcode()
 				);
 
 			} elseif($type == 'shipping'){
