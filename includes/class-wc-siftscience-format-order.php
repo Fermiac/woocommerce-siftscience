@@ -140,8 +140,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 		//this method is doing naming variables -not secured-
 		private function create_address( WC_Order $order, $type = 'shipping' ) {
-			$address_object = array(
-				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
+			if( $type == 'billing' ){
+				$address_object = array(
+				'$name'      => $order->get_billing_first_name() 
 				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
 				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
 				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
@@ -150,8 +151,22 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$region'    => $this->get_order_param( $order, $type, '_state' ),
 				'$country'   => $this->get_order_param( $order, $type, '_country' ),
 				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
-			);
+				);
 
+			} elseif($type == 'shipping'){
+				$address_object = array(
+				'$name'      => $this->get_order_param( $order, $type, '_first_name' ) 
+				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
+				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
+				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
+				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
+				'$city'      => $this->get_order_param( $order, $type, '_city' ),
+				'$region'    => $this->get_order_param( $order, $type, '_state' ),
+				'$country'   => $this->get_order_param( $order, $type, '_country' ),
+				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
+				);
+			}
+			
 			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
 			return $address_object;
 		}
