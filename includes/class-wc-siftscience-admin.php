@@ -287,29 +287,34 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function notice_stats() {
+			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string
 			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
-			if ( isset( $_GET[ 'set_siftsci_stats' ] ) ) {
-				$value = $_GET[ 'set_siftsci_stats' ];
+			if ( isset( $_GET[ $set_siftsci_key ] ) ) {
+				$value = $_GET[ $set_siftsci_key ];
 				update_option( WC_SiftScience_Options::$send_stats, $value );
-				$url = home_url( remove_query_arg( 'set_siftsci_stats' ) );
+				$url = remove_query_arg( $set_siftsci_key );
 				wp_redirect( $url );
 				exit;
 			}
 
-			$link_yes = home_url( add_query_arg( array( 'set_siftsci_stats' => 'yes' ) ) );
+			$link_yes = add_query_arg( array( $set_siftsci_key => 'yes' ) );
+			$link_no = add_query_arg( array( $set_siftsci_key => 'no' ) );
+			
 			$yes = "<a href='$link_yes'>Enable</a>";
-			$link_no = home_url( add_query_arg( array( 'set_siftsci_stats' => 'no' ) ) );
 			$no = "<a href='$link_no'>disable</a>";
+
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
+
 			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
-			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>$message $yes, $no, $details.</p>" .
-			     "</div>";
+
+			echo '<div class="notice notice-error is-dismissible">'.
+			     "<p> $message $yes, $no, $details. </p>" .
+			     '</div>';
 		}
 
 		public function batch_upload() {
