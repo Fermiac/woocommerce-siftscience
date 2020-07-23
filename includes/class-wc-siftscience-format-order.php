@@ -46,8 +46,8 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$user_email'       => $order->get_billing_email(),
 				'$amount'           => $order->get_total() * 1000000,
 				'$currency_code'    => $order->get_currency(),
-				'$billing_address'  => $this->create_address( $order, 'billing' ),
-				'$shipping_address' => $this->create_address( $order, 'shipping' ),
+				'$billing_address'  => $this->create_billing_address( $order ),
+				'$shipping_address' => $this->create_shipping_address( $order ),
 				'$items'            => $this->items->get_order_items( $order ),
 				'$ip'               => $order->customer_ip_address,
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
@@ -123,47 +123,47 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		}
 
 		/**
-		 * @param $order
-		 * @param string $type
-		 * '$address'  => array(
-		 *		'$name'         => 'Bill Jones',
-		 *		'$phone'        => '1-415-555-6041',
-		 *		'$address_1'    => '2100 Main Street',
-		 *		'$address_2'    => 'Apt 3B',
-		 *		'$city'         => 'New London',
-		 *		'$region'       => 'New Hampshire',
-		 *		'$country'      => 'US',
-		 *		'$zipcode'      => '03257'
-		 *	),
+		 *
+		 * @param  WC_Order $o
+		 * creates shipping address 
+		 *
 		 * @return array
-		 */
+		 *
+		*/
+		private function create_shipping_address(WC_Order $order){
+			$shipping_address = array(
+								'$name'      => $order->get_formatted_shipping_full_name(),
+								'$company'   => $order->get_shipping_company(),
+								'$address_1' => $order->get_shipping_address_1(),
+								'$address_2' => $order->get_shipping_address_2(),
+								'$city'      => $order->get_shipping_city(),
+								'$region'    => $order->get_shipping_state(),
+								'$country'   => $order->get_shipping_country(),
+								'$zipcode'   => $order->get_shipping_postcode()
+								);
+			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shiping' );
+		}
 
-		private function create_address( WC_Order $order, $type = 'shipping' ) {
-			if( $type == 'billing' ){
-				$address_object = array(
-					'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
-					'$phone'     => $order->get_billing_phone(),
-					'$address_1' => $order->get_billing_address_1(),
-					'$address_2' => $order->get_billing_address_2(),
-					'$city'      => $order->get_billing_city(),
-					'$region'    => $order->get_billing_state(),
-					'$country'   => $order->get_billing_country(),
-					'$zipcode'   => $order->get_billing_postcode()
-				);
-			} elseif($type == 'shipping'){
-				$address_object = array(
-					'$name'      => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
-					'$company'   => $order->get_shipping_company(),
-					'$address_1' => $order->get_shipping_address_1(),
-					'$address_2' => $order->get_shipping_address_2(),
-					'$city'      => $order->get_shipping_city(),
-					'$region'    => $order->get_shipping_state(),
-					'$country'   => $order->get_shipping_country(),
-					'$zipcode'   => $order->get_shipping_postcode()
-				);
-			}			
-			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
-			return $address_object;
+		/**
+		 *
+		 * @param  WC_Order $o
+		 * creates billing address 
+		 *
+		 * @return array
+		 *
+		*/
+		private function create_billing_address(WC_Order $order){
+			$billing_address = array(
+								'$name'      => $order->get_formatted_billing_full_name(),
+								'$phone'     => $order->get_billing_phone(),
+								'$address_1' => $order->get_billing_address_1(),
+								'$address_2' => $order->get_billing_address_2(),
+								'$city'      => $order->get_billing_city(),
+								'$region'    => $order->get_billing_state(),
+								'$country'   => $order->get_billing_country(),
+								'$zipcode'   => $order->get_billing_postcode()
+								);
+			return apply_filters( 'wc_siftscience_create_address', $billing_address, $order, 'billing' );
 		}
 	}
 endif;
