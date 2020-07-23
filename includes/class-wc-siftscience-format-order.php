@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$billing_address'  => $this->create_billing_address( $order ),
 				'$shipping_address' => $this->create_shipping_address( $order ),
 				'$items'            => $this->items->get_order_items( $order ),
-				'$ip'               => $order->customer_ip_address,
+				'$ip'               => $order->get_customer_ip_address(),
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
 				//'$expedited_shipping' => true,
 				//'$shipping_method'    => '$physical',
