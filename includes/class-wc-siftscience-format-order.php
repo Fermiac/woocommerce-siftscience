@@ -155,13 +155,15 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private function create_billing_address(WC_Order $order){
 			$billing_address = array(
 								'$name'      => $order->get_formatted_billing_full_name(),
-								'$phone'     => $order->get_billing_phone(),
+								'$company'   => $order->get_billing_company(),
 								'$address_1' => $order->get_billing_address_1(),
 								'$address_2' => $order->get_billing_address_2(),
 								'$city'      => $order->get_billing_city(),
 								'$region'    => $order->get_billing_state(),
 								'$country'   => $order->get_billing_country(),
-								'$zipcode'   => $order->get_billing_postcode()
+								'$zipcode'   => $order->get_billing_postcode(),
+								'$email'	 => $order->get_billing_email(),
+								'$phone'     => $order->get_billing_phone()
 								);
 			return apply_filters( 'wc_siftscience_create_address', $billing_address, $order, 'billing' );
 		}
