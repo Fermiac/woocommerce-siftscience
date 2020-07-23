@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$billing_address'  => $this->create_billing_address( $order ),
 				'$shipping_address' => $this->create_shipping_address( $order ),
 				'$items'            => $this->items->get_order_items( $order ),
-				'$ip'               => $order->customer_ip_address,
+				'$ip'               => $order->get_customer_ip_address(),
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
 				//'$expedited_shipping' => true,
 				//'$shipping_method'    => '$physical',
@@ -132,16 +132,15 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		*/
 		private function create_shipping_address(WC_Order $order){
 			$shipping_address = array(
-								'$name'      => $order->get_formatted_shipping_full_name(),
-								'$company'   => $order->get_shipping_company(),
-								'$address_1' => $order->get_shipping_address_1(),
-								'$address_2' => $order->get_shipping_address_2(),
-								'$city'      => $order->get_shipping_city(),
-								'$region'    => $order->get_shipping_state(),
-								'$country'   => $order->get_shipping_country(),
-								'$zipcode'   => $order->get_shipping_postcode(),
-								'$note'		 => $order->get_customer_note()
-								);
+				'$name'      => $order->get_formatted_shipping_full_name(),
+				'$company'   => $order->get_shipping_company(),
+				'$address_1' => $order->get_shipping_address_1(),
+				'$address_2' => $order->get_shipping_address_2(),
+				'$city'      => $order->get_shipping_city(),
+				'$region'    => $order->get_shipping_state(),
+				'$country'   => $order->get_shipping_country(),
+				'$zipcode'   => $order->get_shipping_postcode()
+			);
 			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shiping' );
 		}
 
@@ -155,17 +154,15 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		*/
 		private function create_billing_address(WC_Order $order){
 			$billing_address = array(
-								'$name'      => $order->get_formatted_billing_full_name(),
-								'$company'   => $order->get_billing_company(),
-								'$address_1' => $order->get_billing_address_1(),
-								'$address_2' => $order->get_billing_address_2(),
-								'$city'      => $order->get_billing_city(),
-								'$region'    => $order->get_billing_state(),
-								'$country'   => $order->get_billing_country(),
-								'$zipcode'   => $order->get_billing_postcode(),
-								'$email'	 => $order->get_billing_email(),
-								'$phone'     => $order->get_billing_phone()
-								);
+				'$name'      => $order->get_formatted_billing_full_name(),
+				'$phone'     => $order->get_billing_phone(),
+				'$address_1' => $order->get_billing_address_1(),
+				'$address_2' => $order->get_billing_address_2(),
+				'$city'      => $order->get_billing_city(),
+				'$region'    => $order->get_billing_state(),
+				'$country'   => $order->get_billing_country(),
+				'$zipcode'   => $order->get_billing_postcode()
+			);
 			return apply_filters( 'wc_siftscience_create_address', $billing_address, $order, 'billing' );
 		}
 	}
