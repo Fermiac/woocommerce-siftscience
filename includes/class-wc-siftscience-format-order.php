@@ -137,27 +137,33 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 *	),
 		 * @return array
 		 */
-		private function create_address( WC_Order $order, $type = 'shipping' ) {
-			$address_object = array(
-				'$name'      => $this->get_order_param( $order, $type, '_first_name' )
-				                . ' ' . $this->get_order_param( $order, $type, '_last_name' ),
-				'$phone'     => $this->get_order_param( $order, $type, '_phone' ),
-				'$address_1' => $this->get_order_param( $order, $type, '_address_1' ),
-				'$address_2' => $this->get_order_param( $order, $type, '_address_2' ),
-				'$city'      => $this->get_order_param( $order, $type, '_city' ),
-				'$region'    => $this->get_order_param( $order, $type, '_state' ),
-				'$country'   => $this->get_order_param( $order, $type, '_country' ),
-				'$zipcode'   => $this->get_order_param( $order, $type, '_postcode' ),
-			);
 
+		private function create_address( WC_Order $order, $type = 'shipping' ) {
+			if( $type == 'billing' ){
+				$address_object = array(
+					'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+					'$phone'     => $order->get_billing_phone(),
+					'$address_1' => $order->get_billing_address_1(),
+					'$address_2' => $order->get_billing_address_2(),
+					'$city'      => $order->get_billing_city(),
+					'$region'    => $order->get_billing_state(),
+					'$country'   => $order->get_billing_country(),
+					'$zipcode'   => $order->get_billing_postcode()
+				);
+			} elseif($type == 'shipping'){
+				$address_object = array(
+					'$name'      => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
+					'$company'   => $order->get_shipping_company(),
+					'$address_1' => $order->get_shipping_address_1(),
+					'$address_2' => $order->get_shipping_address_2(),
+					'$city'      => $order->get_shipping_city(),
+					'$region'    => $order->get_shipping_state(),
+					'$country'   => $order->get_shipping_country(),
+					'$zipcode'   => $order->get_shipping_postcode()
+				);
+			}			
 			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
 			return $address_object;
 		}
-
-		private function get_order_param( $order, $type, $param ) {
-			$key = $type . $param;
-			return $order->$key;
-		}
 	}
-
 endif;

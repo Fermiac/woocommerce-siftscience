@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 				// Supported Fields
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
 				'$user_email'       => $user->get_billing_email(),
-				'$name'             => $user->get_billing_first_name() . ' ' . $user->billing_last_name(),
+				'$name'             => $user->get_billing_first_name() . ' ' . $user->get_billing_last_name(),
 				'$phone'            => $user->get_billing_phone(),
 				//'$referrer_user_id' => 'janejane102',
 				//'$payment_methods'  => array(
