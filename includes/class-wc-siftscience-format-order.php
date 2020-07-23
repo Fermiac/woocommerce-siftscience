@@ -130,18 +130,18 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 * @return array
 		 *
 		*/
-		private function create_shipping_address(WC_Order $o){
+		private function create_shipping_address(WC_Order $order){
 			$shipping_address = array(
-								'$name'      => $o->get_shipping_first_name() . ' ' . $o->get_shipping_last_name(),
-								'$company'   => $o->get_shipping_company(),
-								'$address_1' => $o->get_shipping_address_1(),
-								'$address_2' => $o->get_shipping_address_2(),
-								'$city'      => $o->get_shipping_city(),
-								'$region'    => $o->get_shipping_state(),
-								'$country'   => $o->get_shipping_country(),
-								'$zipcode'   => $o->get_shipping_postcode()
+								'$name'      => $order->get_formatted_shipping_full_name(),
+								'$company'   => $order->get_shipping_company(),
+								'$address_1' => $order->get_shipping_address_1(),
+								'$address_2' => $order->get_shipping_address_2(),
+								'$city'      => $order->get_shipping_city(),
+								'$region'    => $order->get_shipping_state(),
+								'$country'   => $order->get_shipping_country(),
+								'$zipcode'   => $order->get_shipping_postcode()
 								);
-			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $o, 'shiping' );
+			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shiping' );
 		}
 
 		/**
@@ -152,18 +152,18 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 * @return array
 		 *
 		*/
-		private function create_billing_address(WC_Order $o){
+		private function create_billing_address(WC_Order $order){
 			$billing_address = array(
-								'$name'      => $o->get_billing_first_name() . ' ' . $o->get_billing_last_name(),
-								'$phone'     => $o->get_billing_phone(),
-								'$address_1' => $o->get_billing_address_1(),
-								'$address_2' => $o->get_billing_address_2(),
-								'$city'      => $o->get_billing_city(),
-								'$region'    => $o->get_billing_state(),
-								'$country'   => $o->get_billing_country(),
-								'$zipcode'   => $o->get_billing_postcode()
+								'$name'      => $order->get_formatted_billing_full_name(),
+								'$phone'     => $order->get_billing_phone(),
+								'$address_1' => $order->get_billing_address_1(),
+								'$address_2' => $order->get_billing_address_2(),
+								'$city'      => $order->get_billing_city(),
+								'$region'    => $order->get_billing_state(),
+								'$country'   => $order->get_billing_country(),
+								'$zipcode'   => $order->get_billing_postcode()
 								);
-			return apply_filters( 'wc_siftscience_create_address', $billing_address, $o, 'billing' );
+			return apply_filters( 'wc_siftscience_create_address', $billing_address, $order, 'billing' );
 		}
 	}
 endif;
