@@ -46,7 +46,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$user_email'       => $order->get_billing_email(),
 				'$amount'           => $order->get_total() * 1000000,
 				'$currency_code'    => $order->get_currency(),
+				//adjust this call to reflect new func
 				'$billing_address'  => $this->create_address( $order, 'billing' ),
+				//adjust this call to reflect new func
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->items->get_order_items( $order ),
 				'$ip'               => $order->customer_ip_address,
@@ -137,9 +139,16 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 *	),
 		 * @return array
 		 */
-
+		/*
+			delate this function after
+			1.create billing addr func
+			2.create shipping addr func
+			3.manage func calls in lines 50, 52
+			4.delete unnessesary comments 
+		*/
 		private function create_address( WC_Order $order, $type = 'shipping' ) {
-			if( $type == 'billing' ){
+			//create_billing_address(WC_Order $order) function	
+			if( $type == 'billing' ){ //this if statement shall go away
 				$address_object = array(
 					'$name'      => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 					'$phone'     => $order->get_billing_phone(),
@@ -150,6 +159,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 					'$country'   => $order->get_billing_country(),
 					'$zipcode'   => $order->get_billing_postcode()
 				);
+			//create_shipping_address(WC_Order $order) function	
 			} elseif($type == 'shipping'){
 				$address_object = array(
 					'$name'      => $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name(),
@@ -161,7 +171,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 					'$country'   => $order->get_shipping_country(),
 					'$zipcode'   => $order->get_shipping_postcode()
 				);
-			}			
+			}
+			//a private method apply_address_filter(array $address,WC_Order $order,string $type='') 
+			//is to be deployed to overcome redunddant code 
 			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
 			return $address_object;
 		}
