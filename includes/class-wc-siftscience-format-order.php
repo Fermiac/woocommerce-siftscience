@@ -139,7 +139,8 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 								'$city'      => $order->get_shipping_city(),
 								'$region'    => $order->get_shipping_state(),
 								'$country'   => $order->get_shipping_country(),
-								'$zipcode'   => $order->get_shipping_postcode()
+								'$zipcode'   => $order->get_shipping_postcode(),
+								'$note'		 => $order->get_customer_note()
 								);
 			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shiping' );
 		}
