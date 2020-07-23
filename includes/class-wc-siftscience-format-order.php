@@ -177,5 +177,20 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			$address_object = apply_filters( 'wc_siftscience_create_address', $address_object, $order, $type );
 			return $address_object;
 		}
+		/**
+		 * 
+		 * @param array $address
+		 * @param WC_Order $order
+		 * @param string $type = ''
+		 * type should not null or empty string /^billing$|^shipping$/i 
+		 *
+		*/
+		private function apply_address_filter(array $address,WC_Order $order,$type = ''){
+			if($type){	
+				return apply_filters( 'wc_siftscience_create_address', $address, $order, $type );
+			} else {
+				//exception code 
+			}
+		}
 	}
 endif;
