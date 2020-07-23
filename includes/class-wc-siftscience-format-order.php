@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$amount'           => $order->get_total() * 1000000,
 				'$currency_code'    => $order->get_currency(),
 				//adjust this call to reflect new func
-				'$billing_address'  => $this->create_address( $order, 'billing' ),
+				'$billing_address'  => $this->create_billing_address( $order ),
 				//adjust this call to reflect new func
 				'$shipping_address' => $this->create_address( $order, 'shipping' ),
 				'$items'            => $this->items->get_order_items( $order ),
@@ -182,10 +182,12 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 * @param array $address
 		 * @param WC_Order $order
 		 * @param string $type = ''
-		 * type should not null or empty string /^billing$|^shipping$/i 
+		 * type should not null or empty string /^billing$|^shipping$/i
+		 *
+		 * @return array
 		 *
 		*/
-		private function apply_address_filter(array $address,WC_Order $order,$type = ''){
+		private function apply_address_filters(array $address,WC_Order $order,$type = ''){
 			if($type){	
 				return apply_filters( 'wc_siftscience_create_address', $address, $order, $type );
 			} else {
