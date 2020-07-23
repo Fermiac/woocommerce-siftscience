@@ -178,29 +178,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			return $address_object;
 		}
 		/**
-		 *
-		 * @param  WC_Order $order
-		 * creates billing address 
-		 *
-		 * @return array
-		 *
-		*/
-		private function create_billing_address(WC_Order $order){
-			$billing_address = array(
-								'$name'      => $order->get_billing_first_name()
-												. ' ' . $order->get_billing_last_name(),
-								'$phone'     => $order->get_billing_phone(),
-								'$address_1' => $order->get_billing_address_1(),
-								'$address_2' => $order->get_billing_address_2(),
-								'$city'      => $order->get_billing_city(),
-								'$region'    => $order->get_billing_state(),
-								'$country'   => $order->get_billing_country(),
-								'$zipcode'   => $order->get_billing_postcode()
-							);
-			return apply_address_filters( $billing_address, $order, 'billing' );
-		}
-
-		/**
 		 * 
 		 * @param array $address
 		 * @param WC_Order $order
