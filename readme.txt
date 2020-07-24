@@ -56,7 +56,7 @@ Please help us improve the plugin by enabling [anonymous statistics and error co
 * 2017-01-17
 * Fix: Can't back-fill more than one order per user
 * Fix: Transaction details sent multiple times
-* Fix: Correct the mapping of WooCommerce order status to Sift  transaction status
+* Fix: Correct the mapping of WooCommerce order status to Sift Science transaction status
 * Added [stats collector](https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection) for reporting issues directly to us
 
 = 0.4.3 Beta =
