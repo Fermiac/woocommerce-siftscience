@@ -59,7 +59,7 @@ class WC_SiftScience_Stripe {
 	}
 
 	public function order_payment_method( $current_method, WC_Order $order ) {
-		if ( null !== $current_method || 'stripe' !== $order->payment_method ) {
+		if ( null !== $current_method || 'stripe' !== $order->get_payment_method() ) {
 			return $current_method;
 		}
 

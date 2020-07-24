@@ -45,7 +45,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		}
 
 		public function create_header( $columns ) {
-			$icon = 'Sift Sci';
+			$icon = 'Sift'; //this is written inside the th tag
 			$header = WC_SiftScience_Html::tool_tip( $icon, 'SiftScience' );
 			$html = WC_SiftScience_Html::div( $header, array( 'style' => 'width: 24px;' ) );
 			$newcolumns = array();

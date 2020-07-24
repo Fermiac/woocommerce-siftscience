@@ -106,13 +106,13 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_order_session_id( WC_Order $order ) {
-			$session_id = get_post_meta( $order->post->ID, $this->get_session_meta_key(), true );
+			$session_id = get_post_meta( $order->get_id(), $this->get_session_meta_key(), true );
 			return false === $session_id ? $this->get_session_id() : $session_id;
 		}
 
 		public function get_user_id( WC_Order $order ) {
 			return 0 === $order->get_user_id()
-				? $this->get_user_id_from_order_id( $order->post->ID )
+				? $this->get_user_id_from_order_id( $order->get_id() )
 				: $this->get_user_id_from_user_id( $order->get_user_id() );
 		}
 
