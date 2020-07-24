@@ -311,8 +311,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link_yes = add_query_arg( array( $set_siftsci_key => 'yes' ) );
 			$link_no = add_query_arg( array( $set_siftsci_key => 'no' ) );
 			
-			$yes = "<a href='$link_yes'>Enable</a>";
-			$no = "<a href='$link_no'>disable</a>";
+			$yes = '<a href="' . $link_yes . '">Enable</a>';
+			$no = '<a href="' . $link_no . '">disable</a>';
 
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
