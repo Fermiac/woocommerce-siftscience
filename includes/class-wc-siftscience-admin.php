@@ -16,7 +16,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
-		private $label = 'SiftScience';
+		private $label = 'Sift';
 		private $options;
 		private $logger;
 		private $stats;
@@ -138,6 +138,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return array(
 				array(
 					'title' => 'SiftScience Stats and Debug Reporting',
+					'title' => 'Sift Stats and Debug Reporting',
 					'type' => 'title',
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
@@ -282,7 +283,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
 			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+			     "<p>Sift configuration is invalid. Click $here to update.</p>" .
 			     "</div>";
 		}
 
