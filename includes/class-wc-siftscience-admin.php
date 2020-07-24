@@ -137,7 +137,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function get_settings_stats() {
 			return array(
 				array(
-					'title' => 'SiftScience Stats and Debug Reporting',
 					'title' => 'Sift Stats and Debug Reporting',
 					'type' => 'title',
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
@@ -211,7 +210,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
-					'Automatically send data to SiftScience when an order is created'
+					'Automatically send data to Sift when an order is created'
 				),
 
 				$this->get_section_end( 'sifsci_section_main' ),
