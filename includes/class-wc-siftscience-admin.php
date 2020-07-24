@@ -208,6 +208,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Prefix to give order and user names. '
 					. 'Useful when you have have multiple stores and one Sift Science account.' ),
 
+//the checkbox code marker Rjamleh
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
 					'Automatically send data to SiftScience when an order is created'
