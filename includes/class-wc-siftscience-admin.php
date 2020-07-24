@@ -230,23 +230,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_text_input( $id, $title, $desc ) {
 			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'text',
-				'id' => $id,
+				'id' 		=> $id,
+				'title' 	=> $title,
+				'type' 		=> 'text',
+				'desc' 		=> $desc,
+				'desc_tip'	=> true
 			);
 		}
 
 		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'number',
-				'id' => $id,
-				'default' => $default,
-			);
+					'id' 		=> $id,
+					'title' 	=> $title,
+					'type' 		=> 'number',
+					'desc' 		=> $desc,
+					'desc_tip' 	=> true,
+					'default' 	=> $default
+				);
 		}
 
 		private function get_section_end( $id ) {
@@ -255,22 +255,22 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_check_box( $id, $title, $desc ) {
 			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'checkbox',
-				'id' => $id,
-			);
+					'id' 		=> $id,
+					'title' 	=> $title,
+					'type' 		=> 'checkbox',
+					'desc' 		=> $desc,
+					'desc_tip' 	=> true
+				);
 		}
 
 		private function get_drop_down( $id, $title, $desc, $options ) {
 			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'options' => $options,
-				'type' => 'select',
+				'id' 		=> $id,
+				'title' 	=> $title,
+				'desc' 		=> $desc,
+				'desc_tip'	=> true,
+				'options' 	=> $options,
+				'type' 		=> 'select'
 			);
 		}
 
