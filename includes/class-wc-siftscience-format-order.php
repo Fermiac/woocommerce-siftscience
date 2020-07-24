@@ -23,11 +23,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private $transaction;
 		private $logger;
 
-		public function __construct( WC_SiftScience_Format_Items $items, WC_SiftScience_Format_Transaction $transaction, WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->options = $options;
-			$this->items = $items;
+		public function __construct( WC_SiftScience_Format_Items $items,
+                                     WC_SiftScience_Format_Transaction $transaction,
+                                     WC_SiftScience_Options $options,
+                                     WC_SiftScience_Logger $logger ) {
+			$this->options     = $options;
+			$this->items       = $items;
 			$this->transaction = $transaction;
-			$this->logger = $logger;
+			$this->logger      = $logger;
 		}
 
 		public function create_order( $order_id, $type = 'create' ) {
@@ -102,13 +105,13 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		}
 
 		private static $order_status_map = array(
-			'completed' => '$fulfilled',
-			'cancelled' => '$canceled',
-			'on-hold' => '$held',
-			'refunded' => '$returned',
+			'completed'  => '$fulfilled',
+			'cancelled'  => '$canceled',
+			'on-hold'    => '$held',
+			'refunded'   => '$returned',
 			'processing' => '$approved',
-			'pending' => '$held',
-			'failed' => '$canceled',
+			'pending'    => '$held',
+			'failed'     => '$canceled',
 		);
 
 		private function convert_order_status( WC_Order $order ) {
