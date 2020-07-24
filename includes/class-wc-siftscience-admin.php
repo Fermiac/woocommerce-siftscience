@@ -75,15 +75,19 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_main() {
+			$dir_file = dirname( __FILE__ ); //a reusable simplifier  
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			echo $this->batch_upload();
+			echo $this->batch_upload();	
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
-            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
-            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/BatchUpload.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
-            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
-			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
+            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( 'dist/vue-dev.js', $dir_file ), 
+            	array(), time(), true );
+            wp_enqueue_script( 'wc-siftsci-control', plugins_url( 'dist/BatchUpload.umd.js', $dir_file ), 
+            	array('wc-siftsci-vuejs'), time(), true );
+            wp_enqueue_script( 'wc-siftsci-script', plugins_url( 'dist/batch-upload.js', $dir_file ), 
+            	array('wc-siftsci-control'), time(), true );
+			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
 		}
 
 		private function output_settings_debug() {
