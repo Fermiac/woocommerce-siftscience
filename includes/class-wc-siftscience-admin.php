@@ -310,7 +310,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
 
-			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
+			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
 
 			echo '<div class="notice notice-error is-dismissible">'.
 			     "<p> $message $yes, $no, $details. </p>" .
