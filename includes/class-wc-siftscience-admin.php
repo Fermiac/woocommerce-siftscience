@@ -206,7 +206,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
-					. 'Useful when you have have multiple stores and one Sift Science account.' ),
+					. 'Useful when you have have multiple stores and one Sift account.' ),
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',

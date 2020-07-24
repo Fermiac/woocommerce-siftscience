@@ -26,7 +26,7 @@ class WC_SiftScience_Stripe {
 	}
 
 	/**
-	 * Stores Stripe payment method info for later use in sift science requests
+	 * Stores Stripe payment method info for later use in sift requests
 	 *
 	 * @param $request Object
 	 * @param $order WC_Order
