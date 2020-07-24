@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 			if ( isset( $_GET[ 'clear_logs' ] ) ) {
-				$url = home_url( remove_query_arg( 'clear_logs' ) );
+				$url =  remove_query_arg( 'clear_logs' );
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
 				wp_redirect( $url );
@@ -103,9 +103,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 			$logs = nl2br( esc_html( $logs ) );
 			echo '<h2>Logs</h2>';
-			echo "<p>$logs</p>";
-			$url = home_url( add_query_arg( array( 'clear_logs' => 1 ) ) );
-			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Logs</a>";
+			echo '<p>' . $logs . '</p>';
+			$url = add_query_arg( array( 'clear_logs' => 1 ) );
+			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
 		}
 
 		private function output_settings_reporting() {
@@ -129,9 +129,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$stats = json_decode( $stats );
 			$stats = json_encode( $stats, JSON_PRETTY_PRINT );
-			echo "<pre>$stats</pre>";
-			$url = home_url( add_query_arg( array( 'clear_stats' => 1 ) ) );
-			echo "<a href='$url' class=\"button-primary woocommerce-save-button\">Clear Stats</a>";
+			echo '<pre>' . $stats . '</pre>';
+			$url = add_query_arg( array( 'clear_stats' => 1 ) );
+			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
 
 		private function get_settings_stats() {
