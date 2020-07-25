@@ -77,13 +77,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				//'is_first_time_buyer' => false
 			);
 
-//code shall go here Rjamleh
-/*
- * if (convert_amount(order->get_total(),$order->get_currency()) >= $x){ // x in local currency 
-	send data to sift WC_SiftScience_Comm::send_request( $url, $args = array() )
- }
- *
-*/
 			if ( 'create' === $type ) {
 				return apply_filters( "wc_siftscience_create_order", $data, $order );
 			} else {
