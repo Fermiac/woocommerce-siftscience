@@ -9,7 +9,7 @@
         </div>    
         
         <div v-if="hasData">
-            <div title="User's SiftScience score" :style="scoreStyle" @click="openSiftSci($event)">
+            <div title="User's Sift score" :style="scoreStyle" @click="openSiftSci($event)">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
             </div>
 

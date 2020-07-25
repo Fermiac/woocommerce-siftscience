@@ -1,6 +1,6 @@
 /*
  * Author: Nabeel Sulieman
- * Description: SiftScience client script based on
+ * Description: Sift client script based on
  * https://siftscience.com/developers/docs/javascript/javascript-api
  */
 

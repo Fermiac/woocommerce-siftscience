@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class registers all hooks related to events that are reported to SiftScience events.
+ * Description: This class registers all hooks related to events that are reported to Sift events.
  * License: GPL2
  */
 

@@ -16,7 +16,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
-		private $label = 'SiftScience';
+		private $label = 'Sift';
 		private $options;
 		private $logger;
 		private $stats;
@@ -137,7 +137,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function get_settings_stats() {
 			return array(
 				array(
-					'title' => 'SiftScience Stats and Debug Reporting',
+					'title' => 'Sift Stats and Debug Reporting',
 					'type' => 'title',
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
@@ -206,12 +206,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
-					. 'Useful when you have have multiple stores and one Sift Science account.' ),
+					. 'Useful when you have have multiple stores and one Sift account.' ),
 
 //the checkbox code marker Rjamleh
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
 					'Automatically send data',
-					'Automatically send data to SiftScience when an order is created'
+					'Automatically send data to Sift when an order is created'
 				),
 
 				$this->get_section_end( 'sifsci_section_main' ),
@@ -283,7 +283,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
 			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+			     "<p>Sift configuration is invalid. Click $here to update.</p>" .
 			     "</div>";
 		}
 
@@ -311,7 +311,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
 
-			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
+			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
 
 			echo '<div class="notice notice-error is-dismissible">'.
 			     "<p> $message $yes, $no, $details. </p>" .
