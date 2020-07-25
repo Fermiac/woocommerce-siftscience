@@ -26,7 +26,8 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public static $guid = 'siftsci_guid';
 		public static $stats = 'siftsci_stats';
 		public static $stats_last_sent = 'siftsci_stats_last_sent';
-
+		//min order value input id Rjamleh
+		public static $min_order_value = 'min_order_value';
 		public static $stats_api = 'https://sift.fermiac.staat.us';
 
 		private $version = false;
