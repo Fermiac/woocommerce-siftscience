@@ -210,7 +210,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 //the added field
 				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
 					'Order Minimum value to Send',
-					 'Orders less than this value wont get sent unless the valuse is equal to 0', 0 ),
+					 'Orders less than this value wont get sent unless the value is equal to 0', 0 ),
 
 //the checkbox code marker Rjamleh
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
