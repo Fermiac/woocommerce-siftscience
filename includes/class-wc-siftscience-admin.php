@@ -238,12 +238,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'default' => $default,
-				'type' => 'number',
-				'desc_tip' => true
+				'id' 		=> $id,
+				'title' 	=> $title,
+				'desc' 		=> $desc,
+				'default' 	=> $default,
+				'type' 		=> 'number',
+				'desc_tip' 	=> true
 			);
 		}
 
