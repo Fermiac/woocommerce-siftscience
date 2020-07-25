@@ -207,6 +207,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
 					. 'Useful when you have have multiple stores and one Sift account.' ),
+//the added field
+				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
+					'Order Minimum value to Send',
+					 'Orders less than this value wont get sent unless the valuse is equal to 0', 0 ),
 
 //the checkbox code marker Rjamleh
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
@@ -234,12 +238,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
+				'id' => $id,
 				'title' => $title,
 				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'number',
-				'id' => $id,
 				'default' => $default,
+				'type' => 'number',
+				'desc_tip' => true
 			);
 		}
 
