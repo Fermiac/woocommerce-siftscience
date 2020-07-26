@@ -29,18 +29,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			}
 			return $result;
 		}
-
-		public static function enqueue_script( $script_name, $data = null, $version = false ) {
-			wp_enqueue_script( $script_name,
-				plugins_url( "tools/$script_name.js", dirname( __FILE__ ) ),
-				array( 'jquery' ), $version, true );
-
-			$var_name = str_replace('-', '_', $script_name);
-
-			if ( $data !== null ) {
-				wp_localize_script( $script_name, "_${var_name}_input_data", $data );
-			}
-		}
 	}
 
 endif;
