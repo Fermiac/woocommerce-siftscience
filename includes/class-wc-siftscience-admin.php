@@ -127,7 +127,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_stats() {
 			$GLOBALS[ 'hide_save_button' ] = true;
 			if ( isset( $_GET[ 'clear_stats' ] ) ) {
-				$url = home_url( remove_query_arg( 'clear_stats' ) );
+				$url = remove_query_arg( 'clear_stats' );
 				$this->stats->clear_stats();
 				wp_redirect( $url );
 				exit;
