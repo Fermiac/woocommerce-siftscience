@@ -76,6 +76,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
+			
+			//important code fragment Rjamleh
+			echo '<style type="text/css">label[for="'.WC_SiftScience_Options::$send_on_create_enabled.'"]+p{display:inline-block;vertical-align:middle;}</style>';
 
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
