@@ -215,7 +215,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
 					'Minimum Order Value for Auto Send',
-					 'Orders less than this value wont get sent unless the value is equal to 0', 0 ),
+					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
 
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
