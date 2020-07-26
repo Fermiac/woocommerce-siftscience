@@ -80,17 +80,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
-            self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
-            self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
-            self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
+			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
+			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
+			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
 		private static function enqueue_script( $name, $file, $deps ) {
-		    $version = time(); // TODO: Make this switchable for dev purposes
-		    $path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
-            wp_enqueue_script( $name, $path, $deps, $version, true );
-        }
+			$version = time(); // TODO: Make this switchable for dev purposes
+			$path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
+			wp_enqueue_script( $name, $path, $deps, $version, true );
+		}
 
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
@@ -330,7 +330,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function batch_upload() {
 			return "<table class='form-table'><tbody>" .
 			       "<tr valign='top'>" .
-		           "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
+			       "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
 			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
 			       "</tr>" .
 			       "</tbody></table>";
