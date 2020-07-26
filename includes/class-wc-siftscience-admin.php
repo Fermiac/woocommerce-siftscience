@@ -209,9 +209,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					. 'Useful when you have have multiple stores and one Sift account.' ),
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
-					'Automatically send data',
+					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),
+
+				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
+					'Minimum Order Value for Auto Send',
+					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
 
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
@@ -233,12 +237,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'number',
-				'id' => $id,
-				'default' => $default,
+				'id' 		=> $id,
+				'title' 	=> $title,
+				'desc' 		=> $desc,
+				'default' 	=> $default,
+				'type' 		=> 'number',
+				'desc_tip' 	=> true
 			);
 		}
 
