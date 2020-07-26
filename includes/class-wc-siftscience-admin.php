@@ -74,12 +74,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 		}
 
-		private function get_auto_text_style(){
-			return '<style type="text/css">label[for="'
-				. WC_SiftScience_Options::$send_on_create_enabled . '"]+p'
-				. '{display:inline}</style>';
-		}
-
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
@@ -91,6 +85,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
             wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/BatchUpload.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
             wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
 			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
+		}
+
+		private function get_auto_text_style() {
+			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>',
+			WC_SiftScience_Options::$send_on_create_enabled	);
 		}
 
 		private function output_settings_debug() {
