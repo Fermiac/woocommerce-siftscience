@@ -75,12 +75,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_main() {
-			//important code fragment1 Rjamleh
-			echo '<script type="text/javascript">$("#'.WC_SiftScience_Options::$min_order_value.'").attr("min","0");</script>';
 			WC_Admin_Settings::output_fields( $this->get_settings() );
-
-		//important code fragment2 
-		echo '<style type="text/css">label[for="'.WC_SiftScience_Options::$send_on_create_enabled.'"]+p{display:inline-block;vertical-align:middle;}</style>';
 
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
@@ -257,11 +252,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_check_box( $id, $title, $desc ) {
 			return array(
-				'id' => $id,
 				'title' => $title,
 				'desc' => $desc,
+				'desc_tip' => true,
 				'type' => 'checkbox',
-				'desc_tip' => true			
+				'id' => $id,
 			);
 		}
 
