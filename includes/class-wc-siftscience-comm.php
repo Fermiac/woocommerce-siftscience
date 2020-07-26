@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class handles communication with SiftScience
+ * Description: This class handles communication with Sift
  * License: GPL2
  */
 
@@ -80,7 +80,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		}
 
 		private function send_request( $url, $args = array() ) {
-			$this->logger->log_info( "Sending Request to SiftScience API: $url" );
+			$this->logger->log_info( "Sending Request to Sift API: $url" );
 			$this->logger->log_info( $args );
 			if ( ! isset( $args['method'] ) )
 				$args['method'] = 'GET';

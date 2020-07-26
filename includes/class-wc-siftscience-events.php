@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class registers all hooks related to events that are reported to SiftScience events.
+ * Description: This class registers all hooks related to events that are reported to Sift events.
  * License: GPL2
  */
 
@@ -65,8 +65,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$data[ 'user_id' ] = $this->options->get_user_id_from_user_id( $user_id );
 			}
 
+			$name = 'wc-siftsci';
+            $path = plugins_url( "dist/wc-siftsci.js", dirname( __FILE__ ) );
+			$v = $this->options->get_version();
+			$key = '_wc_siftsci_js_input_data';
 			$data = apply_filters( 'wc_siftscience_js_script_data', $data );
-			WC_SiftScience_Html::enqueue_script( 'wc-siftsci-js', $data, $this->options->get_version() );
+
+            wp_enqueue_script( $name, $path, array( 'jquery' ), $v, true );
+            wp_localize_script( $name, $key, $data );
 		}
 
 		public function shutdown() {

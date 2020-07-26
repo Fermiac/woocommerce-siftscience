@@ -16,7 +16,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	class WC_SiftScience_Admin {
 		private $id = 'siftsci';
-		private $label = 'SiftScience';
+		private $label = 'Sift';
 		private $options;
 		private $logger;
 		private $stats;
@@ -77,13 +77,25 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
+			echo $this->get_auto_text_style();
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
-            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
-            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/BatchUpload.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
-            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
+			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
+			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
+			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
+		}
+
+		private function get_auto_text_style() {
+			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>',
+				WC_SiftScience_Options::$send_on_create_enabled );
+		}
+
+		private static function enqueue_script( $name, $file, $deps ) {
+			$version = time(); // TODO: Make this switchable for dev purposes
+			$path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
+			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
 
 		private function output_settings_debug() {
@@ -137,7 +149,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function get_settings_stats() {
 			return array(
 				array(
-					'title' => 'SiftScience Stats and Debug Reporting',
+					'title' => 'Sift Stats and Debug Reporting',
 					'type' => 'title',
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
@@ -206,12 +218,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
-					. 'Useful when you have have multiple stores and one Sift Science account.' ),
+					. 'Useful when you have have multiple stores and one Sift account.' ),
 
 				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
-					'Automatically send data',
-					'Automatically send data to SiftScience when an order is created'
+					'Automatically Send Data',
+					'Automatically send data to Sift when an order is created'
 				),
+
+				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
+					'Minimum Order Value for Auto Send',
+					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
 
 				$this->get_section_end( 'sifsci_section_main' ),
 			);
@@ -233,12 +249,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_number_input( $id, $title, $desc, $default ) {
 			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'number',
-				'id' => $id,
-				'default' => $default,
+				'id' 		=> $id,
+				'title' 	=> $title,
+				'desc' 		=> $desc,
+				'default' 	=> $default,
+				'type' 		=> 'number',
+				'desc_tip' 	=> true
 			);
 		}
 
@@ -282,7 +298,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
 			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>SiftScience configuration is invalid. Click $here to update.</p>" .
+			     "<p>Sift configuration is invalid. Click $here to update.</p>" .
 			     "</div>";
 		}
 
@@ -310,7 +326,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details = "<a target='_blank' href='$link_info'>more info</a>";
 
-			$message = 'Please help improve Sift Science for WooCommerce by enabling Stats and Error Reporting.';
+			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
 
 			echo '<div class="notice notice-error is-dismissible">'.
 			     "<p> $message $yes, $no, $details. </p>" .
@@ -320,7 +336,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function batch_upload() {
 			return "<table class='form-table'><tbody>" .
 			       "<tr valign='top'>" .
-		           "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
+			       "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
 			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
 			       "</tr>" .
 			       "</tbody></table>";

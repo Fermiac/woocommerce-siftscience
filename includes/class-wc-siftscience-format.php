@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class is used to format various data for the siftscience API.
+ * Description: This class is used to format various data for the Sift API.
  * License: GPL2
  */
 

@@ -1,40 +1,41 @@
-# woocommerce-siftscience
-A plugin that integrates SiftScience fraud detection into your WooCommerce store
+# Sift.com Fraud Detection for WooCommerce 
 
-WARNING: This code is currently in beta. Testers are needed.
+A plugin that integrates [Sift](https://sift.com) fraud detection into your WooCommerce store
 
-# Setup / Installation from Repo
+## Installation
 
-If you're checking out the latest code from the repository, you'll need node/npm to compile the React App.
+This plugin can be installed directly from the WordPres store.
+Setup requires Sift.com to be added to the settings. 
 
-Assuming that's all running correctly, you'll need to type the following commands:
-- `npm install`
-- `webpack`
+## Installation from Repo
 
-You should then be able to drop the folder in your WordPress plugins folder and use the plugin
+For development/test purposes, you can check this repository out directly to your WordPress plugins folder. 
 
-#Development
+## VueJS Development
 
-If you're developing the React App (Order controls on the order page, or metadata handling in settings), 
-then you might want to consider running the webpack server for faster reloading of your changes.
+This plugin uses VueJS for the batch-upload component in the settings section,
+and in the "sift" column that is nadded to the orders page.
+The code can be found in the `/app` directory.
+Build versions of the VueJS components are in the `/dist` directory. 
+To rebuild them you will need to install the VueJS tools with the following command:
 
-To do this:
-- Add `define('WP_SIFTSCI_DEV', 'http://localhost:8085/app.js');` either at the top of the main plugin file, or in wp-config.php
-- In the siftscience plugin folder run: `npm start`
+```shell script
+npm install -g @vue/cli @vue/cli-service-global
+```
 
-The Webpack server will start up and automatically refresh every time you edit your js code.
+You can then rebuild the VueJS components as follows:
 
-#Docker Development
+```shell script
+cd app
+vue build BatchUpload.vue -t lib
+cp dist\BatchUpload.umd.js ../dist
+vue build OrderControl.vue -t lib
+cp dist\OrderControl.umd.js ../dist
+```
 
-With docker you can get a development environment setup much more quickly:
+## Docker Development
 
-- Add `127.0.0.1 wcss.test` to your hosts file (/etc/hosts or c:\Windows\System32\Drivers\etc\)
-- Build the image with `docker-compose build`
-- Start up the image with `docker-compose up`
-
-This will create a basic WordPress installation with nothing installed, so 
-you'll still need to install WordPress, WooCommerce, StoreFront theme, etc. to really 
-get started.
-
-Once you do, you should be able to activate the WooCommerce-SiftScience plugin and it 
-will just start working.
+You can use a pre-configured Docker image with WordPress and WooCommerce setup for local testing.
+Simply run `docker-compose up` from your command line to start this environment.
+You can then navigate to [http://localhost](http://localhost) to try things out.
+The username and password are both set to `wordpress`.

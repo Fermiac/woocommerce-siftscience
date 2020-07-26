@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class format woocommerce items into the SiftScience format.
+ * Description: This class format woocommerce items into the Sift format.
  * License: GPL2
  */
 

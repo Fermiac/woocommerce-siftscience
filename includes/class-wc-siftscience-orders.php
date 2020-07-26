@@ -2,7 +2,7 @@
 
 /*
  * Author: Nabeel Sulieman
- * Description: This class handles the display of SiftScience feedback icons in order list and order view.
+ * Description: This class handles the display of Sift feedback icons in order list and order view.
  * License: GPL2
  */
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 
 		public function create_header( $columns ) {
 			$icon = 'Sift'; //this is written inside the th tag
-			$header = WC_SiftScience_Html::tool_tip( $icon, 'SiftScience' );
+			$header = WC_SiftScience_Html::tool_tip( $icon, 'Sift' );
 			$html = WC_SiftScience_Html::div( $header, array( 'style' => 'width: 24px;' ) );
 			$newcolumns = array();
 
@@ -65,7 +65,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		public function add_meta_box() {
 			add_meta_box(
 				'wc_sift_score_meta_box',
-				'SiftScience Fraud score',
+				'Sift Fraud score',
 				array( $this, 'display_siftsci_box' ),
 				'shop_order',
 				'side',
