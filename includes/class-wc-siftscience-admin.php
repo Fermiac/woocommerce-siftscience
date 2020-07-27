@@ -177,6 +177,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			switch ( $current_section ) {
 				case '':
+					//validation code should go here Rjamleh
 					WC_Admin_Settings::save_fields( $this->get_settings() );
 					$is_api_working = $this->check_api() ? 1 : 0;
 					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
