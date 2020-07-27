@@ -177,11 +177,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			switch ( $current_section ) {
 				case '':
-					//validation code should go here Rjamleh
 					WC_Admin_Settings::save_fields( $this->get_settings() );
-					$is_api_working = $this->check_api() ? 1 : 0;// should become $this->check_api() returns boolean
-					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
-					if ( $is_api_working === 1 ) {
+					$is_api_working = $this->check_api();
+					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working ? 1 : 0 );
+					if ( $is_api_working ) {
 						WC_Admin_Settings::add_message( 'API is correctly configured' );
 					} else {
 						WC_Admin_Settings::add_error( 'API settings are broken' );
