@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
 		}
 
-		public function get_min_order_allowence() {
+		public function get_min_order_value() {
 			return get_option( self::$min_order_value, 0 ) ;
 		}
 
