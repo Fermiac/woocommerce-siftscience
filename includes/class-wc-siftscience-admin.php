@@ -178,9 +178,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			switch ( $current_section ) {
 				case '':
 					WC_Admin_Settings::save_fields( $this->get_settings() );
-					$is_api_working = $this->check_api() ? 1 : 0;
-					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
-					if ( $is_api_working === 1 ) {
+					$is_api_working = $this->check_api();
+					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working ? 1 : 0 );
+					if ( $is_api_working ) {
 						WC_Admin_Settings::add_message( 'API is correctly configured' );
 					} else {
 						WC_Admin_Settings::add_error( 'API settings are broken' );

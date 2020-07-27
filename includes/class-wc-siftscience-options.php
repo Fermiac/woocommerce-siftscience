@@ -89,6 +89,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
 		}
 
+		public function get_min_order_value() {
+			return get_option( self::$min_order_value, 0 ) ;
+		}
+
 		public function get_react_app_path() {
 			return defined( 'WP_SIFTSCI_DEV' )
 				? WP_SIFTSCI_DEV
