@@ -157,7 +157,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return true;
 			}
 
-			$order_amount = ( new WC_Oorder( $order_id ) )->get_total();
+			$order_amount = ( new WC_Order( $order_id ) )->get_total();
 	
 			return $order_amount >= $min_value;
 		}
