@@ -45,7 +45,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_api_key() {
-			return get_option( self::$api_key );
+			return get_option( self::API_KEY );
 		}
 
 		public function get_backfill_meta_key() {
