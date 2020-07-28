@@ -66,13 +66,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			$name = 'wc-siftsci';
-            $path = plugins_url( "dist/wc-siftsci.js", dirname( __FILE__ ) );
+			$path = plugins_url( "dist/wc-siftsci.js", dirname( __FILE__ ) );
 			$v = $this->options->get_version();
 			$key = '_wc_siftsci_js_input_data';
 			$data = apply_filters( 'wc_siftscience_js_script_data', $data );
 
-            wp_enqueue_script( $name, $path, array( 'jquery' ), $v, true );
-            wp_localize_script( $name, $key, $data );
+			wp_enqueue_script( $name, $path, array( 'jquery' ), $v, true );
+			wp_localize_script( $name, $key, $data );
 		}
 
 		public function shutdown() {
