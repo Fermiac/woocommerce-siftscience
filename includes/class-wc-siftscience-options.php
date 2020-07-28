@@ -13,28 +13,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
-		const API_KEY 					= 'siftsci_api_key';
-		const JS_KEY 					= 'siftsci_js_key';
-		const NAME_PREFIX 				= 'siftsci_name_prefix';
-		const THRESHOLD_GOOD 			= 'siftsci_threshold_good';
-		const THRESHOLD_BAD 			= 'siftsci_threshold_bad';
-		const SEND_ON_CREATE_ENABLED 	= 'siftsci_send_on_create_enabled';
-		const MIN_ORDER_VALUE 			= 'siftsci_min_order_value';
-		public static $mode 			= 'siftsci_reporting_mode';
-		public static $is_api_setup 	= 'siftsci_is_api_setup';
-		public static $send_stats 		= 'SIFTSCI_SEND_STATS';
-		public static $log_level_key 	= 'siftsci_log_level';
-		public static $guid 			= 'siftsci_guid';
-		public static $stats 			= 'siftsci_stats';
-		public static $stats_last_sent 	= 'siftsci_stats_last_sent';
-		public static $stats_api 		= 'https://sift.fermiac.staat.us';
+		const API_KEY = 'siftsci_api_key';
+		const JS_KEY = 'siftsci_js_key';
+		const NAME_PREFIX = 'siftsci_name_prefix';
+		const THRESHOLD_GOOD = 'siftsci_threshold_good';
+		const THRESHOLD_BAD = 'siftsci_threshold_bad';
+		const SEND_ON_CREATE_ENABLED = 'siftsci_send_on_create_enabled';
+		const MIN_ORDER_VALUE = 'siftsci_min_order_value';
+		const IS_API_SETUP = 'siftsci_is_api_setup'; 
+		const SEND_STATS = 'SIFTSCI_SEND_STATS';
+		const LOG_LEVEL_KEY = 'siftsci_log_level';
+		const GUID = 'siftsci_guid';
+		const STATS = 'siftsci_stats';
+		const STATS_LAST_SENT = 'siftsci_stats_last_sent';
+		const STATS_API = 'https://sift.fermiac.staat.us';
 
 		private $version = false;
 		private $log_level;
 
 		public function __construct( $version = false ) {
 			$this->version = $version;
-			$this->log_level = get_option( self::$log_level_key, 2 );
+			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
 		public function get_log_level() {
@@ -58,7 +57,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_js_key() {
-			return get_option( self::$js_key );
+			return get_option( self::JS_KEY );
 		}
 
 		public function get_name_prefix() {
@@ -100,10 +99,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_guid() {
-			$guid = get_option( self::$guid, false );
+			$guid = get_option( self::GUID, false );
 			if ( false === $guid ) {
 				$guid = $this->generate_guid();
-				update_option( self::$guid, $guid );
+				update_option( self::GUID, $guid );
 			}
 
 			return $guid;
