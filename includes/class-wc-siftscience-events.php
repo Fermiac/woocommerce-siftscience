@@ -143,11 +143,11 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		}
 
 		private function is_auto_send($order_id) {
-			$order		= new wc_order($order_id);
-			$is_enabled	= $this->options->send_on_create_enabled(); 
+			$min_value		= $this->get_min_order_value();
+			$order_amount	= new wc_order($order_id)->get_total();
+			$is_auto_send	= $this->options->send_on_create_enabled() && $this->is_backfilled( $order_id ); 
 
-			return ( ( $is_enabled || ! $this->get_min_order_value() <= $order->get_total() ) 
-					&& $this->is_backfilled( $order_id );
+			return $is_auto_send && ( $order_amount >= $min_value || ! $min_value );
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
