@@ -151,10 +151,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return false;
 			}
 
+			if ( $min_value == 0 ) {
+				return true;
+			}
+
 			$min_value      = $this->options->get_min_order_value();
 			$order_amount   = ( new wc_order( $order_id ) )->get_total();
 	
-			return $order_amount >= $min_value || $min_value == 0;
+			return $order_amount >= $min_value;
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
