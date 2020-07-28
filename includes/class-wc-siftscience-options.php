@@ -13,20 +13,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
-		const API_KEY = 'siftsci_api_key';
-		const JS_KEY = 'siftsci_js_key';
-		const NAME_PREFIX = 'siftsci_name_prefix';
-		const THRESHOLD_GOOD = 'siftsci_threshold_good';
-		const THRESHOLD_BAD = 'siftsci_threshold_bad';
-		const SEND_ON_CREATE_ENABLED = 'siftsci_send_on_create_enabled';
-		const MIN_ORDER_VALUE = 'siftsci_min_order_value';
-		const IS_API_SETUP = 'siftsci_is_api_setup'; 
-		const SEND_STATS = 'siftsci_send_stats';
-		const LOG_LEVEL_KEY = 'siftsci_log_level';
-		const GUID = 'siftsci_guid';
-		const STATS = 'siftsci_stats';
-		const STATS_LAST_SENT = 'siftsci_stats_last_sent';
-		const STATS_API = 'https://sift.fermiac.staat.us';
+		public const API_KEY = 'siftsci_api_key';
+		public const JS_KEY = 'siftsci_js_key';
+		public const NAME_PREFIX = 'siftsci_name_prefix';
+		public const THRESHOLD_GOOD = 'siftsci_threshold_good';
+		public const THRESHOLD_BAD = 'siftsci_threshold_bad';
+		public const SEND_ON_CREATE_ENABLED = 'siftsci_send_on_create_enabled';
+		public const MIN_ORDER_VALUE = 'siftsci_min_order_value';
+		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
+		public const SEND_STATS = 'siftsci_send_stats';
+		public const LOG_LEVEL_KEY = 'siftsci_log_level';
+		public const GUID = 'siftsci_guid';
+		public const STATS = 'siftsci_stats';
+		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
+		public const STATS_API = 'https://sift.fermiac.staat.us';
 
 		private $version = false;
 		private $log_level;
@@ -81,7 +81,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function is_setup() {
-			return ( get_option( self::$is_api_setup ) === '1' );
+			return ( get_option( self::IS_API_SETUP ) === '1' );
 		}
 
 		public function send_on_create_enabled() {
