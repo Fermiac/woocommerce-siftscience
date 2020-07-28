@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_auto_text_style() {
 			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>',
-				WC_SiftScience_Options::SEND_ON_CREATE_ENABLED );
+				WC_SiftScience_Options::AUTO_SEND_ENABLED );
 		}
 
 		private static function enqueue_script( $name, $file, $deps ) {
@@ -220,7 +220,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Prefix to give order and user names. '
 					. 'Useful when you have have multiple stores and one Sift account.' ),
 
-				$this->get_check_box( WC_SiftScience_Options::SEND_ON_CREATE_ENABLED,
+				$this->get_check_box( WC_SiftScience_Options::AUTO_SEND_ENABLED,
 					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),

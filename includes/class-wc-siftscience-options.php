@@ -18,7 +18,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const NAME_PREFIX = 'siftsci_name_prefix';
 		public const THRESHOLD_GOOD = 'siftsci_threshold_good';
 		public const THRESHOLD_BAD = 'siftsci_threshold_bad';
-		public const SEND_ON_CREATE_ENABLED = 'siftsci_send_on_create_enabled';
+		public const AUTO_SEND_ENABLED = 'siftsci_auto_send_enabled';
 		public const MIN_ORDER_VALUE = 'siftsci_min_order_value';
 		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
 		public const SEND_STATS = 'siftsci_send_stats';
@@ -84,8 +84,8 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return ( get_option( self::IS_API_SETUP ) === '1' );
 		}
 
-		public function send_on_create_enabled() {
-			return ( get_option( self::SEND_ON_CREATE_ENABLED ) === 'yes' );
+		public function auto_send_enabled() {
+			return ( get_option( self::AUTO_SEND_ENABLED ) === 'yes' );
 		}
 
 		public function get_min_order_value() {
