@@ -118,7 +118,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
 		public function update_order( $order_id ) {
-			if ( ! $this->is_auto_send($order_id) ) {
+			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
 
@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
-			if ( ! $this->is_auto_send($order_id) ) {
+			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
 
@@ -142,17 +142,20 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->send_transaction( $order_id );
 		}
 
-		private function is_auto_send($order_id) {
-			if($this->is_backfilled( $order_id ) {
+		private function is_auto_send( $order_id ) {
+			if ( $this->is_backfilled( $order_id ) ) {
 				return true;
 			}
-			
-			$min_value      = $this->options->get_min_order_value();
-			$order_amount   = ( new wc_order($order_id) )->get_total();
-			$is_auto_send   = $this->options->send_on_create_enabled();
-			
 
-			return $is_auto_send && ( $order_amount >= $min_value || $min_value == 0 );
+			
+			if ( ! $this->options->send_on_create_enabled() ) {
+				return false;
+			}
+
+			$min_value      = $this->options->get_min_order_value();
+			$order_amount   = ( new wc_order( $order_id ) )->get_total();
+	
+			return $order_amount >= $min_value || $min_value == 0;
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
