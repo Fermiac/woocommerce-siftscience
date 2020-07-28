@@ -1,28 +1,28 @@
 <template>
     <div>
         <div v-if="error" :style="iconStyle">
-            <img :src="errorImage" :alt="error" width="20px" height="20px" />
+            <img :src="errorImage" :title="error.toString()" width="20px" height="20px" />
         </div>    
         
         <div v-if="isLoading" :style="iconStyle">
-            <img :src="spinnerImage" alt="Working..." width="20px" height="20px" />
+            <img :src="spinnerImage" title="Working..." width="20px" height="20px" />
         </div>    
         
-        <div v-if="noData" :style="iconStyle" @click="wrap(backfill($event))">
-            <img :src="uploadImage" alt="Working..." width="20px" height="20px" />
+        <div v-if="noData" :style="iconStyle" @click="backfill($event)">
+            <img :src="uploadImage" title="Working..." width="20px" height="20px" />
         </div>    
         
         <div v-if="hasData">
-            <div title="User's Sift score" :style="scoreStyle" @click="wrap(openSiftSci($event))">
+            <div title="User's Sift score" :style="scoreStyle" @click="openSiftSci($event)">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
             </div>
 
-            <div :title="goodTitle" :style="iconStyle" @click="wrap(clickGood($event))">
-                <img :src="goodImage" alt="good" width="20px" height="20px" />
+            <div :title="goodTitle" :style="iconStyle" @click="clickGood($event)">
+                <img :src="goodImage" title="good" width="20px" height="20px" />
             </div>    
         
-            <div :title="goodTitle" :style="iconStyle" @click="wrap(clickBad($event))">
-                <img :src="badImage" alt="bad" width="20px" height="20px" />
+            <div :title="goodTitle" :style="iconStyle" @click="clickBad($event)">
+                <img :src="badImage" title="bad" width="20px" height="20px" />
             </div>    
         </div>
     </div>
@@ -35,7 +35,14 @@ import {iconStyle, scoreStyle, getColor} from './styles';
 export default {
     name: 'OrderControl',
     props: { id: String },
-    created() { this.refresh() },
+    async created() {
+        try {
+            await this.refresh()
+        } catch (error) {
+            this.error = error
+            this.state = null
+        }
+    },
     data () {
         return {
             iconStyle, 
@@ -64,10 +71,16 @@ export default {
         clickGood(e) { this.setLabel('good', e) },
         clickBad(e) { this.setLabel('bad', e) },
         getTitle(v) { return v === this.label ? 'Click to remove this label' : 'Click to set this label'},
-        openSiftSci (e) { 
-            e.preventDefault()
-            e.stopPropagation()
-            window.open('https://siftscience.com/console/users/' + this.userId) 
+        openSiftSci (e) {
+            try {
+                e.preventDefault()
+                e.stopPropagation()
+                if (this.id) throw new Error('something something')
+                window.open('https://siftscience.com/console/users/' + this.userId)
+            } catch (error) {
+                this.error = error
+                this.state = null
+            }
         },
         getLabelImage(v) {
             const ending = v === this.label ? '.png' : '-gray.png'
@@ -77,20 +90,30 @@ export default {
             return getSettings().imgPath + file
         },
         async setLabel(v, e) {
-            e.preventDefault()
-            e.stopPropagation()
-            this.error = null
-            this.state = 'loading'
-            await setLabel(this.id, v === this.label ? null : v)
-            await this.refresh()
+            try {
+                e.preventDefault()
+                e.stopPropagation()
+                this.error = null
+                this.state = 'loading'
+                await setLabel(this.id, v === this.label ? null : v)
+                await this.refresh()
+            } catch (error) {
+                this.error = error
+                this.state = null
+            }
         },
         async backfill(e) {
-            e.preventDefault()
-            e.stopPropagation()
-            this.error = null
-            this.state = 'loading'   
-            await backfill(this.id)
-            await this.refresh()        
+            try {
+                e.preventDefault()
+                e.stopPropagation()
+                this.error = null
+                this.state = 'loading'   
+                await backfill(this.id)
+                await this.refresh()        
+            } catch (error) {
+                this.error = error
+                this.state = null
+            }
         },
         async refresh() {
             this.error = null
@@ -104,14 +127,6 @@ export default {
             const hasData = this.isBackfilled && this.score
             this.state = hasData ? 'data' : 'nodata'
         },
-        async wrap(promise) {
-            try {
-                await promise
-            } catch (error) {
-                this.error = error
-                this.state = null;
-            }
-        }
     } 
 }
 </script>
