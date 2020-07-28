@@ -13,21 +13,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
-		public static $mode = 'siftsci_reporting_mode';
-		public static $api_key = 'siftsci_api_key';
-		public static $js_key = 'siftsci_js_key';
-		public static $name_prefix = 'siftsci_name_prefix';
-		public static $is_api_setup = 'siftsci_is_api_setup';
-		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
-		public static $send_stats = 'siftsci_send_stats';
-		public static $threshold_good = 'siftsci_threshold_good';
-		public static $threshold_bad = 'siftsci_threshold_bad';
-		public static $log_level_key = 'siftsci_log_level';
-		public static $guid = 'siftsci_guid';
-		public static $stats = 'siftsci_stats';
-		public static $stats_last_sent = 'siftsci_stats_last_sent';
-		public static $min_order_value = 'siftsci_min_order_value';
-		public static $stats_api = 'https://sift.fermiac.staat.us';
+		const API_KEY 					= 'siftsci_api_key';
+		const JS_KEY 					= 'siftsci_js_key';
+		const NAME_PREFIX 				= 'siftsci_name_prefix';
+		const THRESHOLD_GOOD 			= 'siftsci_threshold_good';
+		const THRESHOLD_BAD 			= 'siftsci_threshold_bad';
+		const SEND_ON_CREATE_ENABLED 	= 'siftsci_send_on_create_enabled';
+		const MIN_ORDER_VALUE 			= 'siftsci_min_order_value';
+		public static $mode 			= 'siftsci_reporting_mode';
+		public static $is_api_setup 	= 'siftsci_is_api_setup';
+		public static $send_stats 		= 'SIFTSCI_SEND_STATS';
+		public static $log_level_key 	= 'siftsci_log_level';
+		public static $guid 			= 'siftsci_guid';
+		public static $stats 			= 'siftsci_stats';
+		public static $stats_last_sent 	= 'siftsci_stats_last_sent';
+		public static $stats_api 		= 'https://sift.fermiac.staat.us';
 
 		private $version = false;
 		private $log_level;
@@ -62,15 +62,15 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_name_prefix() {
-			return get_option( self::$name_prefix, '' );
+			return get_option( self::NAME_PREFIX, '' );
 		}
 
 		public function get_threshold_good() {
-			return get_option( self::$threshold_good, 30 );
+			return get_option( self::THRESHOLD_GOOD, 30 );
 		}
 
 		public function get_threshold_bad() {
-			return get_option( self::$threshold_bad, 60 );
+			return get_option( self::THRESHOLD_BAD, 60 );
 		}
 
 		public function get_current_user_id() {
@@ -86,11 +86,11 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function send_on_create_enabled() {
-			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
+			return ( get_option( self::SEND_ON_CREATE_ENABLED ) === 'yes' );
 		}
 
 		public function get_min_order_value() {
-			return get_option( self::$min_order_value, 0 ) ;
+			return get_option( self::MIN_ORDER_VALUE, 0 ) ;
 		}
 
 		public function get_react_app_path() {
