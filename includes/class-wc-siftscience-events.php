@@ -118,7 +118,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
 		public function update_order( $order_id ) {
-			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+			if ( ! $this->is_auto_send($order_id) ) {
 				return;
 			}
 
@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
-			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+			if ( ! $this->is_auto_send($order_id) ) {
 				return;
 			}
 
