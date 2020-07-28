@@ -16,10 +16,10 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
     class WC_SiftScience_Comm {
 		private $options;
 	    private $logger;
-		private $event_url = 'https://api.siftscience.com/v204/events';
-		private $labels_url = 'https://api.siftscience.com/v204/users/{user}/labels';
-		private $delete_url = 'https://api.siftscience.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
-		private $score_url = 'https://api.siftscience.com/v204/score/{user}/?api_key={api}';
+		private $event_url = 'https://api.sift.com/v204/events';
+		private $labels_url = 'https://api.sift.com/v204/users/{user}/labels';
+		private $delete_url = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
+		private $score_url = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
 
 		private $headers = array(
 			'Accept'       => 'application/json',

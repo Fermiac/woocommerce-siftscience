@@ -66,13 +66,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			$name = 'wc-siftsci';
-            $path = plugins_url( "dist/wc-siftsci.js", dirname( __FILE__ ) );
+			$path = plugins_url( "dist/wc-siftsci.js", dirname( __FILE__ ) );
 			$v = $this->options->get_version();
 			$key = '_wc_siftsci_js_input_data';
 			$data = apply_filters( 'wc_siftscience_js_script_data', $data );
 
-            wp_enqueue_script( $name, $path, array( 'jquery' ), $v, true );
-            wp_localize_script( $name, $key, $data );
+			wp_enqueue_script( $name, $path, array( 'jquery' ), $v, true );
+			wp_localize_script( $name, $key, $data );
 		}
 
 		public function shutdown() {
@@ -118,7 +118,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
 		public function update_order( $order_id ) {
-			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
 
@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
-			if ( ! $this->options->send_on_create_enabled() && ! $this->is_backfilled( $order_id ) ) {
+			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
 
@@ -140,6 +140,26 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$this->events[] = $data;
 			$this->send_transaction( $order_id );
+		}
+
+		private function is_auto_send( $order_id ) {
+			if ( $this->is_backfilled( $order_id ) ) {
+				return true;
+			}
+
+			if ( ! $this->options->send_on_create_enabled() ) {
+				return false;
+			}
+
+			$min_value = $this->options->get_min_order_value();
+
+			if ( $min_value == 0 ) {
+				return true;
+			}
+
+			$order_amount = ( new WC_Order( $order_id ) )->get_total();
+
+			return $order_amount >= $min_value;
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
