@@ -8,6 +8,10 @@
             <img :src="spinnerImage" alt="Working..." width="20px" height="20px" />
         </div>    
         
+        <div v-if="noData" :style="iconStyle" @click="backfill($event)">
+            <img :src="uploadImage" alt="Working..." width="20px" height="20px" />
+        </div>    
+        
         <div v-if="hasData">
             <div title="User's Sift score" :style="scoreStyle" @click="openSiftSci($event)">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
@@ -25,7 +29,7 @@
 </template>
 
 <script>
-import {getSettings, getLabel, setLabel, extractScore, extractLabel} from './api';
+import {getSettings, getLabel, setLabel, extractScore, extractLabel, backfill} from './api';
 import {iconStyle, scoreStyle, getColor} from './styles';
 
 export default {
@@ -48,7 +52,9 @@ export default {
         isLoading () { return this.state === 'loading' },
         errorImage() { return this.getImage('error.png') },
         spinnerImage() { return this.getImage('spinner.gif') },
+        uploadImage() { return this.getImage('upload.png') },
         hasData () { return this.state === 'data' },
+        noData () { return this.state === 'nodata' },
         goodTitle () { return this.getTitle('good') },
         badTitle () { return this.getTitle('bad') },
         goodImage () { return this.getLabelImage('good') },
@@ -78,25 +84,31 @@ export default {
             await setLabel(this.id, v === this.label ? null : v)
             await this.refresh()
         },
-        async refresh() {
+        async backfill(e) {
+            e.preventDefault()
+            e.stopPropagation()
             this.error = null
-            this.state = 'loading'
-            const data = await getLabel(this.id)
-            this.userId = data.sift.user_id
-            this.score = extractScore(data.sift)
-            this.label = extractLabel(data.sift)
-            this.scoreStyle.backgroundColor = getColor(this.score)
-            this.isBackfilled = data.is_backfilled
-            this.state = 'data'
+            this.state = 'loading'   
+            await backfill(this.id)
+            await this.refresh()        
         },
-        async wrap(promise) {
+        async refresh() {
             try {
-                await promise
+                this.error = null
+                this.state = 'loading'
+                const data = await getLabel(this.id)
+                this.userId = data.sift.user_id
+                this.score = extractScore(data.sift)
+                this.label = extractLabel(data.sift)
+                this.scoreStyle.backgroundColor = getColor(this.score)
+                this.isBackfilled = data.is_backfilled
+                const hasData = this.isBackfilled && this.score
+                this.state = hasData ? 'data' : 'nodata'
             } catch (error) {
                 this.error = error
-                this.state = null;
+                this.state = 'error';
             }
-        }
+        },
     } 
 }
 </script>
