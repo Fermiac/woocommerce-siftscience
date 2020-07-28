@@ -76,7 +76,7 @@ export default {
                 e.preventDefault()
                 e.stopPropagation()
                 if (this.id) throw new Error('something something')
-                window.open('https://siftscience.com/console/users/' + this.userId)
+                window.open('https://sift.com/console/users/' + this.userId)
             } catch (error) {
                 this.error = error
                 this.state = null
