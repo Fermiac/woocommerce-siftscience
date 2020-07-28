@@ -133,7 +133,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
-			$stats = get_option( WC_SiftScience_Options::$stats, 'none' );
+			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
 			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
@@ -158,12 +158,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'id' => 'siftsci_stats_title'
 				),
 
-				$this->get_check_box( WC_SiftScience_Options::$send_stats,
+				$this->get_check_box( WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
 				),
 
-				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
+				$this->get_drop_down( WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
 					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
@@ -179,7 +179,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				case '':
 					WC_Admin_Settings::save_fields( $this->get_settings() );
 					$is_api_working = $this->check_api();
-					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working ? 1 : 0 );
+					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
 					if ( $is_api_working ) {
 						WC_Admin_Settings::add_message( 'API is correctly configured' );
 					} else {
@@ -304,14 +304,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function notice_stats() {
 			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string
-			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
+			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
 			if ( isset( $_GET[ $set_siftsci_key ] ) ) {
 				$value = $_GET[ $set_siftsci_key ];
-				update_option( WC_SiftScience_Options::$send_stats, $value );
+				update_option( WC_SiftScience_Options::SEND_STATS, $value );
 				$url = remove_query_arg( $set_siftsci_key );
 				wp_redirect( $url );
 				exit;
