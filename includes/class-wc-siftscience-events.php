@@ -146,7 +146,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			if ( $this->is_backfilled( $order_id ) ) {
 				return true;
 			}
-			
+
 			if ( ! $this->options->send_on_create_enabled() ) {
 				return false;
 			}
@@ -158,7 +158,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			$order_amount = ( new WC_Order( $order_id ) )->get_total();
-	
+
 			return $order_amount >= $min_value;
 		}
 
