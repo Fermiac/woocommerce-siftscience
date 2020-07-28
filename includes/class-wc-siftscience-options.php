@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		const SEND_ON_CREATE_ENABLED = 'siftsci_send_on_create_enabled';
 		const MIN_ORDER_VALUE = 'siftsci_min_order_value';
 		const IS_API_SETUP = 'siftsci_is_api_setup'; 
-		const SEND_STATS = 'SIFTSCI_SEND_STATS';
+		const SEND_STATS = 'siftsci_send_stats';
 		const LOG_LEVEL_KEY = 'siftsci_log_level';
 		const GUID = 'siftsci_guid';
 		const STATS = 'siftsci_stats';
