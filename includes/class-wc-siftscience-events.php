@@ -143,7 +143,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		}
 
 		private function is_auto_send($order_id) {
-			$min_value		= $this->get_min_order_value();
+			$min_value	= $this->get_min_order_value();
 			$order_amount	= new wc_order($order_id)->get_total();
 			$is_auto_send	= $this->options->send_on_create_enabled() && $this->is_backfilled( $order_id ); 
 
