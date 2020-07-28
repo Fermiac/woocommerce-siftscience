@@ -20,13 +20,13 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const THRESHOLD_BAD = 'siftsci_threshold_bad';
 		public const AUTO_SEND_ENABLED = 'siftsci_auto_send_enabled';
 		public const MIN_ORDER_VALUE = 'siftsci_min_order_value';
-		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
-		public const SEND_STATS = 'siftsci_send_stats';
 		public const LOG_LEVEL_KEY = 'siftsci_log_level';
-		public const GUID = 'siftsci_guid';
+		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
 		public const STATS = 'siftsci_stats';
-		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
 		public const STATS_API = 'https://sift.fermiac.staat.us';
+		public const SEND_STATS = 'siftsci_send_stats';
+		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
+		public const GUID = 'siftsci_guid';
 
 		private $version = false;
 		private $log_level;
