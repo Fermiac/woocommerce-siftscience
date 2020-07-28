@@ -61,7 +61,7 @@ export default {
         openSiftSci (e) { 
             e.preventDefault()
             e.stopPropagation()
-            window.open('https://siftscience.com/console/users/' + this.userId) 
+            window.open('https://sift.com/console/users/' + this.userId)
         },
         getLabelImage(v) {
             const ending = v === this.label ? '.png' : '-gray.png'
