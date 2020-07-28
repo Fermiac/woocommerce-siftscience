@@ -93,21 +93,16 @@ export default {
             await this.refresh()        
         },
         async refresh() {
-            try {
-                this.error = null
-                this.state = 'loading'
-                const data = await getLabel(this.id)
-                this.userId = data.sift.user_id
-                this.score = extractScore(data.sift)
-                this.label = extractLabel(data.sift)
-                this.scoreStyle.backgroundColor = getColor(this.score)
-                this.isBackfilled = data.is_backfilled
-                const hasData = this.isBackfilled && this.score
-                this.state = hasData ? 'data' : 'nodata'
-            } catch (error) {
-                this.error = error
-                this.state = 'error';
-            }
+            this.error = null
+            this.state = 'loading'
+            const data = await getLabel(this.id)
+            this.userId = data.sift.user_id
+            this.score = extractScore(data.sift)
+            this.label = extractLabel(data.sift)
+            this.scoreStyle.backgroundColor = getColor(this.score)
+            this.isBackfilled = data.is_backfilled
+            const hasData = this.isBackfilled && this.score
+            this.state = hasData ? 'data' : 'nodata'
         },
     } 
 }
