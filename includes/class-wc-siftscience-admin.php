@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function get_auto_text_style() {
 			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>',
-				WC_SiftScience_Options::$send_on_create_enabled );
+				WC_SiftScience_Options::SEND_ON_CREATE_ENABLED );
 		}
 
 		private static function enqueue_script( $name, $file, $deps ) {
@@ -203,29 +203,29 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return array(
 				$this->get_title( 'siftsci_title', 'Sift Settings' ),
 
-				$this->get_text_input( WC_SiftScience_Options::$api_key,
+				$this->get_text_input( WC_SiftScience_Options::API_KEY,
 					'Rest API Key', 'The API key for production' ),
 
-				$this->get_text_input( WC_SiftScience_Options::$js_key,
+				$this->get_text_input( WC_SiftScience_Options::JS_KEY,
 					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
-				$this->get_number_input( WC_SiftScience_Options::$threshold_good,
+				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold', 'Scores below this value are considered good and shown in green', 30),
 
-				$this->get_number_input( WC_SiftScience_Options::$threshold_bad,
+				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_BAD,
 					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red', 60 ),
 
-				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
+				$this->get_text_input( WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
 					. 'Useful when you have have multiple stores and one Sift account.' ),
 
-				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
+				$this->get_check_box( WC_SiftScience_Options::SEND_ON_CREATE_ENABLED,
 					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),
 
-				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
+				$this->get_number_input( WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Minimum Order Value for Auto Send',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
 
