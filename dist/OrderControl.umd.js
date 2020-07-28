@@ -189,12 +189,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=bd935546&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.noData)?_c('div',{style:(_vm.iconStyle),on:{"click":function($event){return _vm.backfill($event)}}},[_c('img',{attrs:{"src":_vm.uploadImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's Sift score"},on:{"click":function($event){return _vm.openSiftSci($event)}}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickGood}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":_vm.clickBad}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
+// CONCATENATED MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"788fb7fa-vue-loader-template"}!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./OrderControl.vue?vue&type=template&id=eb8af93a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.error)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.errorImage,"alt":_vm.error,"width":"20px","height":"20px"}})]):_vm._e(),(_vm.isLoading)?_c('div',{style:(_vm.iconStyle)},[_c('img',{attrs:{"src":_vm.spinnerImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.noData)?_c('div',{style:(_vm.iconStyle),on:{"click":function($event){_vm.wrap(_vm.backfill($event))}}},[_c('img',{attrs:{"src":_vm.uploadImage,"alt":"Working...","width":"20px","height":"20px"}})]):_vm._e(),(_vm.hasData)?_c('div',[_c('div',{style:(_vm.scoreStyle),attrs:{"title":"User's Sift score"},on:{"click":function($event){_vm.wrap(_vm.openSiftSci($event))}}},[_c('div',{style:({ backgroundColor: _vm.scoreColor })},[_vm._v(_vm._s(_vm.score))])]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":function($event){_vm.wrap(_vm.clickGood($event))}}},[_c('img',{attrs:{"src":_vm.goodImage,"alt":"good","width":"20px","height":"20px"}})]),_c('div',{style:(_vm.iconStyle),attrs:{"title":_vm.goodTitle},on:{"click":function($event){_vm.wrap(_vm.clickBad($event))}}},[_c('img',{attrs:{"src":_vm.badImage,"alt":"bad","width":"20px","height":"20px"}})])]):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=bd935546&
+// CONCATENATED MODULE: ./OrderControl.vue?vue&type=template&id=eb8af93a&
 
 // EXTERNAL MODULE: C:/Users/nabee/AppData/Roaming/npm/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es.object.assign.js
 var es_object_assign = __webpack_require__("ecd2");
@@ -573,13 +573,12 @@ var styles_getColor = function getColor(score) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
                 _this3.error = null;
                 _this3.state = 'loading';
-                _context3.next = 5;
+                _context3.next = 4;
                 return getLabel(_this3.id);
 
-              case 5:
+              case 4:
                 data = _context3.sent;
                 _this3.userId = data.sift.user_id;
                 _this3.score = extractScore(data.sift);
@@ -588,21 +587,43 @@ var styles_getColor = function getColor(score) {
                 _this3.isBackfilled = data.is_backfilled;
                 hasData = _this3.isBackfilled && _this3.score;
                 _this3.state = hasData ? 'data' : 'nodata';
-                _context3.next = 19;
-                break;
 
-              case 15:
-                _context3.prev = 15;
-                _context3.t0 = _context3["catch"](0);
-                _this3.error = _context3.t0;
-                _this3.state = 'error';
-
-              case 19:
+              case 12:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 15]]);
+        }, _callee3);
+      }))();
+    },
+    wrap: function wrap(promise) {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return promise;
+
+              case 3:
+                _context4.next = 9;
+                break;
+
+              case 5:
+                _context4.prev = 5;
+                _context4.t0 = _context4["catch"](0);
+                _this4.error = _context4.t0;
+                _this4.state = null;
+
+              case 9:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 5]]);
       }))();
     }
   }

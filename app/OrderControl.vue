@@ -8,20 +8,20 @@
             <img :src="spinnerImage" alt="Working..." width="20px" height="20px" />
         </div>    
         
-        <div v-if="noData" :style="iconStyle" @click="backfill($event)">
+        <div v-if="noData" :style="iconStyle" @click="wrap(backfill($event))">
             <img :src="uploadImage" alt="Working..." width="20px" height="20px" />
         </div>    
         
         <div v-if="hasData">
-            <div title="User's Sift score" :style="scoreStyle" @click="openSiftSci($event)">
+            <div title="User's Sift score" :style="scoreStyle" @click="wrap(openSiftSci($event))">
                 <div :style="{ backgroundColor: scoreColor }">{{ score }}</div>
             </div>
 
-            <div :title="goodTitle" :style="iconStyle" @click="clickGood">
+            <div :title="goodTitle" :style="iconStyle" @click="wrap(clickGood($event))">
                 <img :src="goodImage" alt="good" width="20px" height="20px" />
             </div>    
         
-            <div :title="goodTitle" :style="iconStyle" @click="clickBad">
+            <div :title="goodTitle" :style="iconStyle" @click="wrap(clickBad($event))">
                 <img :src="badImage" alt="bad" width="20px" height="20px" />
             </div>    
         </div>
@@ -104,6 +104,14 @@ export default {
             const hasData = this.isBackfilled && this.score
             this.state = hasData ? 'data' : 'nodata'
         },
+        async wrap(promise) {
+            try {
+                await promise
+            } catch (error) {
+                this.error = error
+                this.state = null;
+            }
+        }
     } 
 }
 </script>
