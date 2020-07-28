@@ -142,6 +142,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->send_transaction( $order_id );
 		}
 
+		private function is_auto_send($order_id) {
+			$order 			= new wc_order($order_id);
+			$is_enabled 	= $this->options->send_on_create_enabled(); 
+
+			return ( ( $is_enabled || ! $this->get_min_order_value() <= $order->get_total() ) 
+					&& $this->is_backfilled( $order_id );
+		}
+
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
 		public function send_transaction( $order_id ) {
 			$data = $this->format->transactions->create_transaction( $order_id );
