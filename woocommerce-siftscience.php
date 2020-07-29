@@ -77,7 +77,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'profile_update', array( $events_wrapped, 'update_account' ), 100, 2 );
 			add_action( 'woocommerce_add_to_cart', array( $events_wrapped, 'add_to_cart' ), 100 );
 			add_action( 'woocommerce_remove_cart_item', array( $events_wrapped, 'remove_from_cart' ), 100 );
-			if ( $options->send_on_create_enabled() ) {
+			if ( $options->auto_send_enabled() ) {
 				add_action( 'woocommerce_checkout_order_processed', array( $events_wrapped, 'create_order' ), 100 );
 			}
 			add_action( 'woocommerce_new_order', array( $events_wrapped, 'add_session_info' ), 100 );

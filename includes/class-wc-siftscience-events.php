@@ -147,7 +147,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return true;
 			}
 
-			if ( ! $this->options->send_on_create_enabled() ) {
+			if ( ! $this->options->auto_send_enabled() ) {
 				return false;
 			}
 

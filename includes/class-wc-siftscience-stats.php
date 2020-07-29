@@ -23,9 +23,9 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->options   = $options;
 			$this->logger    = $logger;
-			$this->last_sent = get_option( WC_SiftScience_Options::$stats_last_sent, 0 );
+			$this->last_sent = get_option( WC_SiftScience_Options::STATS_LAST_SENT, 0 );
 
-			$stats       = get_option( WC_SiftScience_Options::$stats, false );
+			$stats       = get_option( WC_SiftScience_Options::STATS, false );
 			$this->stats = ( false === $stats ) ? array() : json_decode( $stats, true );
 			if ( defined( 'WP_SIFTSCI_STATS_PERIOD' ) ) {
 				$this->send_period = WP_SIFTSCI_STATS_PERIOD;
@@ -72,7 +72,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 
 		private function save_stats() {
 			$stats = json_encode( $this->stats );
-			update_option( WC_SiftScience_Options::$stats, $stats );
+			update_option( WC_SiftScience_Options::STATS, $stats );
 		}
 
 		public function send_error( Exception $error ) {
@@ -100,7 +100,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 				'stats'   => $this->stats,
 			);
 
-			update_option( WC_SiftScience_Options::$stats_last_sent, microtime( true ) );
+			update_option( WC_SiftScience_Options::STATS_LAST_SENT, microtime( true ) );
 			$this->send_data( $data );
 		}
 
@@ -115,7 +115,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		}
 
 		private function send_data_inner( $data ) {
-			$url = WC_SiftScience_Options::$stats_api;
+			$url = WC_SiftScience_Options::STATS_API;
 
 			$headers = array(
 				'Accept'       => 'application/json',
@@ -143,7 +143,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 		}
 
 		private function is_reporting_enabled() {
-			return 'yes' === get_option( WC_SiftScience_Options::$send_stats, 'no' );
+			return 'yes' === get_option( WC_SiftScience_Options::SEND_STATS, 'no' );
 		}
 
 		private function is_time_to_send() {
