@@ -81,15 +81,21 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
-            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
-            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/BatchUpload.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
-            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/batch-upload.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
+			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
+			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
+			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
 		private function get_auto_text_style() {
 			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>',
-			WC_SiftScience_Options::$send_on_create_enabled	);
+				WC_SiftScience_Options::AUTO_SEND_ENABLED );
+		}
+
+		private static function enqueue_script( $name, $file, $deps ) {
+			$version = time(); // TODO: Make this switchable for dev purposes
+			$path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
+			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
 
 		private function output_settings_debug() {
@@ -121,13 +127,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_stats() {
 			$GLOBALS[ 'hide_save_button' ] = true;
 			if ( isset( $_GET[ 'clear_stats' ] ) ) {
-				$url = home_url( remove_query_arg( 'clear_stats' ) );
+				$url = remove_query_arg( 'clear_stats' );
 				$this->stats->clear_stats();
 				wp_redirect( $url );
 				exit;
 			}
 
-			$stats = get_option( WC_SiftScience_Options::$stats, 'none' );
+			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
 			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
@@ -152,12 +158,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'id' => 'siftsci_stats_title'
 				),
 
-				$this->get_check_box( WC_SiftScience_Options::$send_stats,
+				$this->get_check_box( WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
 				),
 
-				$this->get_drop_down( WC_SiftScience_Options::$log_level_key,
+				$this->get_drop_down( WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
 					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
@@ -172,9 +178,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			switch ( $current_section ) {
 				case '':
 					WC_Admin_Settings::save_fields( $this->get_settings() );
-					$is_api_working = $this->check_api() ? 1 : 0;
-					update_option( WC_SiftScience_Options::$is_api_setup, $is_api_working );
-					if ( $is_api_working === 1 ) {
+					$is_api_working = $this->check_api();
+					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
+					if ( $is_api_working ) {
 						WC_Admin_Settings::add_message( 'API is correctly configured' );
 					} else {
 						WC_Admin_Settings::add_error( 'API settings are broken' );
@@ -197,29 +203,29 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return array(
 				$this->get_title( 'siftsci_title', 'Sift Settings' ),
 
-				$this->get_text_input( WC_SiftScience_Options::$api_key,
+				$this->get_text_input( WC_SiftScience_Options::API_KEY,
 					'Rest API Key', 'The API key for production' ),
 
-				$this->get_text_input( WC_SiftScience_Options::$js_key,
+				$this->get_text_input( WC_SiftScience_Options::JS_KEY,
 					'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
-				$this->get_number_input( WC_SiftScience_Options::$threshold_good,
+				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold', 'Scores below this value are considered good and shown in green', 30),
 
-				$this->get_number_input( WC_SiftScience_Options::$threshold_bad,
+				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_BAD,
 					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red', 60 ),
 
-				$this->get_text_input( WC_SiftScience_Options::$name_prefix,
+				$this->get_text_input( WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. '
 					. 'Useful when you have have multiple stores and one Sift account.' ),
 
-				$this->get_check_box( WC_SiftScience_Options::$send_on_create_enabled,
+				$this->get_check_box( WC_SiftScience_Options::AUTO_SEND_ENABLED,
 					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),
 
-				$this->get_number_input( WC_SiftScience_Options::$min_order_value,
+				$this->get_number_input( WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Minimum Order Value for Auto Send',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
 
@@ -298,14 +304,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function notice_stats() {
 			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string
-			$enabled = get_option( WC_SiftScience_Options::$send_stats, 'not_set' );
+			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
 			if ( isset( $_GET[ $set_siftsci_key ] ) ) {
 				$value = $_GET[ $set_siftsci_key ];
-				update_option( WC_SiftScience_Options::$send_stats, $value );
+				update_option( WC_SiftScience_Options::SEND_STATS, $value );
 				$url = remove_query_arg( $set_siftsci_key );
 				wp_redirect( $url );
 				exit;
@@ -330,7 +336,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function batch_upload() {
 			return "<table class='form-table'><tbody>" .
 			       "<tr valign='top'>" .
-		           "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
+			       "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
 			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
 			       "</tr>" .
 			       "</tbody></table>";

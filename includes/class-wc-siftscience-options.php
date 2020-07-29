@@ -13,28 +13,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
-		public static $mode = 'siftsci_reporting_mode';
-		public static $api_key = 'siftsci_api_key';
-		public static $js_key = 'siftsci_js_key';
-		public static $name_prefix = 'siftsci_name_prefix';
-		public static $is_api_setup = 'siftsci_is_api_setup';
-		public static $send_on_create_enabled = 'siftsci_send_on_create_enabled';
-		public static $send_stats = 'siftsci_send_stats';
-		public static $threshold_good = 'siftsci_threshold_good';
-		public static $threshold_bad = 'siftsci_threshold_bad';
-		public static $log_level_key = 'siftsci_log_level';
-		public static $guid = 'siftsci_guid';
-		public static $stats = 'siftsci_stats';
-		public static $stats_last_sent = 'siftsci_stats_last_sent';
-		public static $min_order_value = 'siftsci_min_order_value';
-		public static $stats_api = 'https://sift.fermiac.staat.us';
+		public const API_KEY = 'siftsci_api_key';
+		public const JS_KEY = 'siftsci_js_key';
+		public const NAME_PREFIX = 'siftsci_name_prefix';
+		public const THRESHOLD_GOOD = 'siftsci_threshold_good';
+		public const THRESHOLD_BAD = 'siftsci_threshold_bad';
+		public const AUTO_SEND_ENABLED = 'siftsci_auto_send_enabled';
+		public const MIN_ORDER_VALUE = 'siftsci_min_order_value';
+		public const LOG_LEVEL_KEY = 'siftsci_log_level';
+		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
+		public const STATS = 'siftsci_stats';
+		public const STATS_API = 'https://sift.fermiac.staat.us';
+		public const SEND_STATS = 'siftsci_send_stats';
+		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
+		public const GUID = 'siftsci_guid';
 
 		private $version = false;
 		private $log_level;
 
 		public function __construct( $version = false ) {
 			$this->version = $version;
-			$this->log_level = get_option( self::$log_level_key, 2 );
+			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
 		public function get_log_level() {
@@ -46,7 +45,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_api_key() {
-			return get_option( self::$api_key );
+			return get_option( self::API_KEY );
 		}
 
 		public function get_backfill_meta_key() {
@@ -58,19 +57,19 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_js_key() {
-			return get_option( self::$js_key );
+			return get_option( self::JS_KEY );
 		}
 
 		public function get_name_prefix() {
-			return get_option( self::$name_prefix, '' );
+			return get_option( self::NAME_PREFIX, '' );
 		}
 
 		public function get_threshold_good() {
-			return get_option( self::$threshold_good, 30 );
+			return get_option( self::THRESHOLD_GOOD, 30 );
 		}
 
 		public function get_threshold_bad() {
-			return get_option( self::$threshold_bad, 60 );
+			return get_option( self::THRESHOLD_BAD, 60 );
 		}
 
 		public function get_current_user_id() {
@@ -82,11 +81,15 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function is_setup() {
-			return ( get_option( self::$is_api_setup ) === '1' );
+			return ( get_option( self::IS_API_SETUP ) === '1' );
 		}
 
-		public function send_on_create_enabled() {
-			return ( get_option( self::$send_on_create_enabled ) === 'yes' );
+		public function auto_send_enabled() {
+			return ( get_option( self::AUTO_SEND_ENABLED ) === 'yes' );
+		}
+
+		public function get_min_order_value() {
+			return get_option( self::MIN_ORDER_VALUE, 0 ) ;
 		}
 
 		public function get_react_app_path() {
@@ -96,10 +99,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		public function get_guid() {
-			$guid = get_option( self::$guid, false );
+			$guid = get_option( self::GUID, false );
 			if ( false === $guid ) {
 				$guid = $this->generate_guid();
-				update_option( self::$guid, $guid );
+				update_option( self::GUID, $guid );
 			}
 
 			return $guid;
