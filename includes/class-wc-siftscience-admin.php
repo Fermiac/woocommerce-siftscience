@@ -77,7 +77,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			echo $this->styling_checkbox_label(WC_SiftScience_Options::AUTO_SEND_ENABLED);
+			echo $this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
