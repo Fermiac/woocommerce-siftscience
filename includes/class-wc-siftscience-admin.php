@@ -77,7 +77,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			echo $this->styling_checkbox_text(WC_SiftScience_Options::AUTO_SEND_ENABLED);
+			echo $this->styling_checkbox_label(WC_SiftScience_Options::AUTO_SEND_ENABLED);
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
@@ -87,7 +87,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
-		private function styling_checkbox_text( $label_for ) {
+		private function styling_checkbox_label( $label_for ) {
 			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for );
 		}
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function output_settings_reporting() {
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
-			echo $this->styling_checkbox_text( WC_SiftScience_Options::SEND_STATS );
+			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
 
 		private function output_settings_stats() {
