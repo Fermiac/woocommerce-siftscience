@@ -114,6 +114,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 			$logs = nl2br( esc_html( $logs ) );
 			echo '<h2>SSL Check</h2>';
+			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. '
+			     . 'Click "Test SSL" to test your store.</p>';
 			if ( isset( $_GET[ 'test_ssl' ] ) ) {
 				$ch = curl_init('https://www.howsmyssl.com/a/check');
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
