@@ -113,10 +113,20 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$logs = file_get_contents( $log_file );
 			}
 			$logs = nl2br( esc_html( $logs ) );
+			echo '<h2>SSL Check</h2>';
+			if ( isset( $_GET[ 'test_ssl' ] ) ) {
+				$ch = curl_init('https://www.howsmyssl.com/a/check');
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$data = curl_exec($ch);
+				curl_close($ch);
+				$tls_version = json_decode($data)->tls_version;
+				echo "<p>TLS Version: $tls_version</p>\n";
+				echo "<p>Full Data: $data</p>\n";
+			}
+			echo '<a href="' . add_query_arg( array( 'test_ssl' => 1 ) ) . '" class="button-primary woocommerce-save-button">Test SSL</a>';
 			echo '<h2>Logs</h2>';
 			echo '<p>' . $logs . '</p>';
-			$url = add_query_arg( array( 'clear_logs' => 1 ) );
-			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
+			echo '<a href="' . add_query_arg( array( 'clear_logs' => 1 ) ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
 		}
 
 		private function output_settings_reporting() {
