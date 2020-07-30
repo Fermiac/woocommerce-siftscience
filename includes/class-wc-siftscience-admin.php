@@ -112,10 +112,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			if ( file_exists( $log_file ) ) {
 				$logs = file_get_contents( $log_file );
 			}
-			$logs = nl2br( esc_html( $logs ) );
+
+			// Display SSL check logic
 			echo '<h2>SSL Check</h2>';
-			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. '
-			     . 'Click "Test SSL" to test your store.</p>';
+			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. ' .
+			     'Click "Test SSL" to test your store.</p>';
 			if ( isset( $_GET[ 'test_ssl' ] ) ) {
 				$ch = curl_init('https://www.howsmyssl.com/a/check');
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -126,8 +127,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				echo "<p>Full Data: $data</p>\n";
 			}
 			echo '<a href="' . add_query_arg( array( 'test_ssl' => 1 ) ) . '" class="button-primary woocommerce-save-button">Test SSL</a>';
+
+			// Display logs
 			echo '<h2>Logs</h2>';
-			echo '<p>' . $logs . '</p>';
+			echo '<p>' . nl2br( esc_html( $logs ) ) . '</p>';
 			echo '<a href="' . add_query_arg( array( 'clear_logs' => 1 ) ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
 		}
 
