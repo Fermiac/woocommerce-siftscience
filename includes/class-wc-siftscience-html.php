@@ -13,14 +13,14 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 	class WC_SiftScience_Html {
 
-		public static function tool_tip( $inner, $text ) {
+		/*public static function tool_tip( $inner, $text ) {
 			return "<span style='display: block;' class='tips' data-tip='$text'>$inner</span>";
 		}
 
 		public static function div( $content, $params ) {
 			$divTags = self::tag_params( $params );
 			return "<div$divTags>$content</div>";
-		}
+		}*/
 
 		private static function tag_params( $params, $str_enclose = '"' ) {
 			$result = '';
