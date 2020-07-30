@@ -46,14 +46,14 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 
 		public function create_header( $columns ) {
 			$icon = 'Sift'; //this is written inside the th tag
-			$header = WC_SiftScience_Html::tool_tip( $icon, 'Sift' );
-			$html = WC_SiftScience_Html::div( $header, array( 'style' => 'width: 24px;' ) );
+			/*$header = WC_SiftScience_Html::tool_tip( $icon, 'Sift' );
+			$html = WC_SiftScience_Html::div( $header, array( 'style' => 'width: 24px;' ) );*/
 			$newcolumns = array();
 
 			foreach ( $columns as $k => $v ) {
 				$newcolumns[$k] = $v;
 				if ( $k == 'order_status' ) {
-					$newcolumns['siftsci'] = $html;
+					$newcolumns['siftsci'] = $icon;
 				}
 			}
 
