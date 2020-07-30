@@ -114,6 +114,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			// Display SSL check logic
+			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/
 			echo '<h2>SSL Check</h2>';
 			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. ' .
 			     'Click "Test SSL" to test your store.</p>';
