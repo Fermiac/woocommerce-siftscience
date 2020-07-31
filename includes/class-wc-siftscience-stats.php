@@ -132,6 +132,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			$result = wp_remote_request( $url, $request );
 
 			$is_success = isset( $result )
+			              && ! is_wp_error( $result )
 			              && isset( $result[ 'response' ] )
 			              && isset( $result[ 'response' ][ 'code' ] )
 			              && 200 === $result[ 'response' ][ 'code' ];
