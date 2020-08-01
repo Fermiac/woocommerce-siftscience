@@ -1,7 +1,7 @@
 /*
  * Author: Nabeel Sulieman
  * Description: Sift client script based on
- * https://siftscience.com/developers/docs/javascript/javascript-api
+ * https://sift.com/developers/docs/curl/javascript-api/overview
  */
 
 var _wc_siftsci_js_input_data = window._wc_siftsci_js_input_data || [];
@@ -11,10 +11,15 @@ _sift.push( [ '_setUserId', _wc_siftsci_js_input_data.user_id ] );
 _sift.push( [ '_setSessionId', _wc_siftsci_js_input_data.session_id ] );
 _sift.push( [ '_trackPageview' ] );
 
-(function( d, s, id ) {
-	var e, f = d.getElementsByTagName( s )[0];
-	if ( d.getElementById( id ) ) {return;}
-	e = d.createElement( s ); e.id = id;
-	e.src = 'https://cdn.siftscience.com/s.js';
-	f.parentNode.insertBefore( e, f );
-})( document, 'script', 'sift-beacon' );
+(function() {
+	function ls() {
+		var e = document.createElement('script');
+		e.src = 'https://cdn.sift.com/s.js';
+		document.body.appendChild(e);
+	}
+	if (window.attachEvent) {
+		window.attachEvent('onload', ls);
+	} else {
+		window.addEventListener('load', ls, false);
+	}
+})();
