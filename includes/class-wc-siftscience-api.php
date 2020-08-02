@@ -92,6 +92,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 					$this->comm->delete_label( $user_id );
 					break;
 				case 'backfill':
+					$this->events->set_backfill( $order_id );
 					$this->events->create_order( $order_id );
 					$this->events->send_queued_data();
 					break;
