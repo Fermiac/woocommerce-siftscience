@@ -26,7 +26,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			$data = array(
 				// Required Fields
 				'$type'       => '$create_account',
-				'$user_id'    => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'    => $this->options->get_sift_user_id( $user_id ),
 
 				// Supported Fields
 				'$session_id'       => $this->options->get_session_id(),
@@ -84,7 +84,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			$data = array(
 				// Required Fields
 				'$type'       => '$update_account',
-				'$user_id'    => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'    => $this->options->get_sift_user_id( $user_id ),
 
 				// Supported Fields
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
@@ -114,7 +114,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 		public function link_session_to_user( $user_id ) {
 			$data = array (
 				'$type'       => '$link_session_to_user',
-				'$user_id'    => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'    => $this->options->get_sift_user_id( $user_id ),
 				'$session_id' => $this->options->get_session_id(),
 			);
 

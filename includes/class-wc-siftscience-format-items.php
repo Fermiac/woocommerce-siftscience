@@ -42,10 +42,10 @@ if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
 		 */
 		public function create_item( $wc_item ) {
 			$order_item = array(
-				'$item_id'       => $wc_item['product_id'],
-				'$product_title' => $wc_item['name'],
-				'$price'         => $wc_item['line_subtotal'] * 1000000,
-				'$quantity'      => $wc_item['qty'],
+				'$item_id'       => $wc_item[ 'product_id' ],
+				'$product_title' => $wc_item[ 'name' ],
+				'$price'         => $wc_item[ 'line_subtotal' ] * 1000000,
+				'$quantity'      => $wc_item[ 'qty' ],
 			);
 			return apply_filters( 'wc_siftscience_create_order_item', $order_item, $wc_item );
 		}

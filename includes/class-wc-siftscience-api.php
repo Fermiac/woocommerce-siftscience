@@ -181,7 +181,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 
 			return $meta === '0'
 				? $this->options->get_user_id_from_order_id( $order_id )
-				: $this->options->get_user_id_from_user_id( $meta );
+				: $this->options->get_sift_user_id( $meta );
 		}
 	}
 

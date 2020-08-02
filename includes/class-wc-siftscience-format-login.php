@@ -25,7 +25,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 		public function login_success( WP_User $user ) {
 			$data = array(
 				'$type'         => '$login',
-				'$user_id'      => $this->options->get_user_id_from_user_id( $user->ID ),
+				'$user_id'      => $this->options->get_sift_user_id( $user->ID ),
 				'$session_id'   => $this->options->get_session_id(),
 				'$login_status' => '$success'
 			);
@@ -43,7 +43,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 
 			$user = get_user_by( 'login', $username );
 			if ( false !== $user ) {
-				$data[ '$user_id' ] = $this->options->get_user_id_from_user_id( $user->ID );
+				$data[ '$user_id' ] = $this->options->get_sift_user_id( $user->ID );
 			}
 
 			return apply_filters( 'wc_siftscience_login_failure', $data );
@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			if ( null !== $user_id && 0 === $user_id ) {
 				$data = array(
 					'$type'         => '$logout',
-					'$user_id'      => $this->options->get_user_id_from_user_id( $user_id ),
+					'$user_id'      => $this->options->get_sift_user_id( $user_id ),
 				);
 			}
 

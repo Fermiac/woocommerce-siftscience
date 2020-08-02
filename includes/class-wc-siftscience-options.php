@@ -116,14 +116,14 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public function get_user_id( WC_Order $order ) {
 			return 0 === $order->get_user_id()
 				? $this->get_user_id_from_order_id( $order->get_id() )
-				: $this->get_user_id_from_user_id( $order->get_user_id() );
+				: $this->get_sift_user_id( $order->get_user_id() );
 		}
 
 		public function get_user_id_from_order_id( $id ) {
 			return $this->get_name_prefix() . 'anon_order_' . $id;
 		}
 
-		public function get_user_id_from_user_id( $id ) {
+		public function get_sift_user_id( $id ) {
 			return $this->get_name_prefix() . 'user_' . $id;
 		}
 

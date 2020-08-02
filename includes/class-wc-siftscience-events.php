@@ -64,7 +64,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$user_id = $this->options->get_current_user_id();
 			if ( null !== $user_id ) {
-				$data[ 'user_id' ] = $this->options->get_user_id_from_user_id( $user_id );
+				$data[ 'user_id' ] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			$name = 'wc-siftsci';
