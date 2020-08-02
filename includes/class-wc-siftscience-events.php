@@ -151,14 +151,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return false;
 			}
 
-			$min_value = $this->options->get_min_order_value();
+			$min_value = ( float ) ( $this->options->get_min_order_value() );
 
-			if ( $min_value == 0 ) {
+			if ( $min_value === 0 ) {
 				return true;
 			}
 
-			$order_amount = ( new WC_Order( $order_id ) )->get_total();
-
+			$order_amount = ( float )( ( new WC_Order( $order_id ) )->get_total() );
 			return $order_amount >= $min_value;
 		}
 
