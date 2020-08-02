@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
 			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
@@ -164,25 +164,25 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			return $order_amount >= $min_value;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/transaction
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction
 		public function send_transaction( $order_id ) {
 			$data = $this->format->transactions->create_transaction( $order_id );
 			$this->events[] = $data;
 		}
 
-		// https://sift.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
 			$data = $this->format->cart->add_to_cart( $cart_item_key );
 			$this->events[] = $data;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
 		public function remove_from_cart( $cart_item_key ) {
 			$data = $this->format->cart->remove_from_cart( $cart_item_key );
 			$this->events[] = $data;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/link-session-to-user
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/link-session-to-user
 		public function link_session_to_user( $user_id ) {
 			$data = $this->format->account->link_session_to_user( $user_id );
 			$this->events[] = $data;

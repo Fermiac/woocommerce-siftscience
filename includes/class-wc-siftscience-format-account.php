@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			$this->options = $options;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-account
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account
 		public function create_account( $user_id, $user ) {
 			$data = array(
 				// Required Fields

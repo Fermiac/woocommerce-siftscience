@@ -127,6 +127,10 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return $this->get_name_prefix() . 'user_' . $id;
 		}
 
+		public function get_sift_product_id( $pid ) {
+			return $this->get_name_prefix() . 'product_' . $pid;
+		}
+
 		/**
 		 * Generates a GUID.
 		 * This code is based of a snippet found in https://github.com/alixaxel/phunction,
