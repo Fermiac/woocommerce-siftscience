@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 		//https://siftscience.com/developers/docs/curl/events-api/reserved-events/logout
 		public function logout( $user_id ) {
 			$data = null;
-			if ( null !== $user_id && 0 === $user_id ) {
+			if ( null !== $user_id && 0 !== $user_id ) {
 				$data = array(
 					'$type'         => '$logout',
 					'$user_id'      => $this->options->get_user_id_from_user_id( $user_id ),
