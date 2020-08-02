@@ -113,6 +113,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-order
 		public function create_order( $order_id ) {
+			if ( ! $this->is_auto_send( $order_id ) ) {
+				return;
+			}
 			$this->order_map[ $order_id ] = 'create';
 		}
 
