@@ -57,8 +57,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
 				'$price'         => $data[ 'subtotal' ] * 1000000,
 				'$quantity'      => $wc_item->get_quantity(),
 			);
-			error_log(json_encode($data));
-			error_log(json_encode($order_item));
 			return apply_filters( 'wc_siftscience_create_order_item', $order_item, $wc_item );
 		}
 	}

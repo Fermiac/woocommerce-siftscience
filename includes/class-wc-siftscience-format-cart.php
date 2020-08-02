@@ -23,14 +23,18 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
+			$cart = WC()->cart->get_cart();
+			$item = $cart[ $cart_item_key ];
+			$product_id = $item[ 'product_id' ];
+			$product = new WC_Product( $product_id );
 			$data = array(
 				'$type'       =>  '$add_item_to_cart',
 				'$session_id' => $this->options->get_session_id(),
 				'$item'       => array(
 					'$item_id'        => $cart_item_key,
-					//'$product_title'  => 'The Slanket Blanket-Texas Tea',
-					//'$price'          => 39990000, // $39.99
-					//'$currency_code'  => 'USD',
+					'$product_title'  => $product->get_title(),
+					'$price'          => $product->get_price() * 1000000, // $39.99
+					'$currency_code'  => get_woocommerce_currency(),
 					//'$upc'            => '67862114510011',
 					//'$sku'            => '004834GQ',
 					//'$brand'          => 'Slanket',
@@ -38,7 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 					//'$category'       => 'Blankets & Throws',
 					//'$tags'           => ['Awesome', 'Wintertime specials'],
 					//'$color'          => 'Texas Tea',
-					//'$quantity'       => 16,
+					'$quantity'       => $item[ 'quantity' ],
 				)
 			);
 
@@ -52,24 +56,26 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
 		public function remove_from_cart( $cart_item_key ) {
+			$cart = WC()->cart->get_cart();
+			$item = $cart[ $cart_item_key ];
+			$product_id = $item[ 'product_id' ];
+			$product = new WC_Product( $product_id );
 			$data = array(
-				'$type'       => '$remove_item_from_cart',
-				//'$user_id'    => 'billy_jones_301',
-				// Supported Fields
+				'$type'       =>  '$add_item_to_cart',
 				'$session_id' => $this->options->get_session_id(),
 				'$item'       => array(
 					'$item_id'        => $cart_item_key,
-					//'$product_title'  => 'The Slanket Blanket-Texas Tea',
-					//'$price'          => 39990000, // $39.99
-					//'$currency_code'  => 'USD',
-					//'$quantity'       => 2,
+					'$product_title'  => $product->get_title(),
+					'$price'          => $product->get_price() * 1000000, // $39.99
+					'$currency_code'  => get_woocommerce_currency(),
 					//'$upc'            => '67862114510011',
 					//'$sku'            => '004834GQ',
 					//'$brand'          => 'Slanket',
 					//'$manufacturer'   => 'Slanket',
 					//'$category'       => 'Blankets & Throws',
 					//'$tags'           => ['Awesome', 'Wintertime specials'],
-					//'$color'          => 'Texas Tea'
+					//'$color'          => 'Texas Tea',
+					'$quantity'       => $item[ 'quantity' ],
 				)
 			);
 
