@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Format' ) ) :
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->transactions = new WC_SiftScience_Format_Transaction( $options );
-			$this->items = new WC_SiftScience_Format_Items();
+			$this->items = new WC_SiftScience_Format_Items( $options );
 			$this->login = new WC_SiftScience_Format_Login( $options );
 			$this->account = new WC_SiftScience_Format_Account( $options );
 			$this->order = new WC_SiftScience_Format_Order( $this->items, $this->transactions, $options, $logger );

@@ -13,6 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
 
 	class WC_SiftScience_Format_Items {
+		private $options;
+
+		public function __construct( WC_SiftScience_Options  $options ) {
+			$this->options = $options;
+		}
+
 		public function get_order_items( WC_Order $order ) {
 			$data = array();
 			foreach( $order->get_items() as $item ) {
@@ -46,11 +52,13 @@ if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
 			$data = $wc_item->get_data();
 			$order_item = array(
 				'$item_id'       => $this->options->get_sift_product_id( $data[ 'product_id' ] ),
-				'$product_title' => $data['name'],
+				'$product_title' => $data[ 'name' ],
 				'$currency_code' => $order->get_currency(),
-				'$price'         => $data['line_subtotal'] * 1000000,
-				'$quantity'      => $data['qty'],
+				'$price'         => $data[ 'subtotal' ] * 1000000,
+				'$quantity'      => $wc_item->get_quantity(),
 			);
+			error_log(json_encode($data));
+			error_log(json_encode($order_item));
 			return apply_filters( 'wc_siftscience_create_order_item', $order_item, $wc_item );
 		}
 	}
