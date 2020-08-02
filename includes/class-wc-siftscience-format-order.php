@@ -44,7 +44,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			$data = array(
 				'$type'             => 'create' === $type ? '$create_order' : '$update_order',
 				'$user_id'          => $this->options->get_user_id( $order ),
-				'$session_id'       => $this->options->get_order_session_id( $order ),
 				'$order_id'         => $order->get_order_number(),
 				'$user_email'       => $order->get_billing_email(),
 				'$amount'           => $order->get_total() * 1000000,
@@ -76,6 +75,12 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				//'shipping_choice'     => 'FedEx Ground Courier',
 				//'is_first_time_buyer' => false
 			);
+
+			// only add session id if it exists
+			$session_id = $this->options->get_order_session_id( $order );
+			if ( $session_id !== '' ) {
+				$data[ '$session_id' ] = $session_id;
+			}
 
 			if ( 'create' === $type ) {
 				return apply_filters( "wc_siftscience_create_order", $data, $order );
@@ -127,16 +132,13 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 		/**
 		 *
-		 * @param  WC_Order $o
-		 * creates shipping address 
+		 * @param WC_Order $order
 		 *
 		 * @return array
-		 *
-		*/
-		private function create_shipping_address(WC_Order $order){
+		 */
+		private function create_shipping_address( WC_Order $order ){
 			$shipping_address = array(
 				'$name'      => $order->get_formatted_shipping_full_name(),
-				'$company'   => $order->get_shipping_company(),
 				'$address_1' => $order->get_shipping_address_1(),
 				'$address_2' => $order->get_shipping_address_2(),
 				'$city'      => $order->get_shipping_city(),
@@ -144,18 +146,16 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$country'   => $order->get_shipping_country(),
 				'$zipcode'   => $order->get_shipping_postcode()
 			);
-			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shiping' );
+			return apply_filters( 'wc_siftscience_create_address', $shipping_address, $order, 'shipping' );
 		}
 
 		/**
 		 *
-		 * @param  WC_Order $o
-		 * creates billing address 
+		 * @param WC_Order $order
 		 *
 		 * @return array
-		 *
-		*/
-		private function create_billing_address(WC_Order $order){
+		 */
+		private function create_billing_address( WC_Order $order ){
 			$billing_address = array(
 				'$name'      => $order->get_formatted_billing_full_name(),
 				'$phone'     => $order->get_billing_phone(),

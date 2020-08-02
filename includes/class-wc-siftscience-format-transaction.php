@@ -27,7 +27,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 			$data = array(
 				'$type'               => '$transaction',
 				'$user_id'            => $this->options->get_user_id( $order ),
-				'$session_id'         => $this->options->get_order_session_id( $order ),
 				'$order_id'           => $order->get_order_number(),
 				'$amount'             => $order->get_total() * 1000000,
 				'$currency_code'      => $order->get_currency(),
@@ -35,6 +34,12 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 				'$transaction_status' => $this->get_transaction_status( $order ),
 				'$payment_method'     => $this->get_payment_method( $order ),
 			);
+
+			// only add session id if it exists
+			$session_id = $this->options->get_order_session_id( $order );
+			if ( $session_id !== '' ) {
+				$data[ '$session_id' ] = $session_id;
+			}
 
 			return apply_filters( 'wc_siftscience_send_transaction', $data, $order );
 		}
