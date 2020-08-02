@@ -113,21 +113,29 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$logs = file_get_contents( $log_file );
 			}
 
-			// Display SSL check logic
+			// SSL check logic
 			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/
-			echo '<h2>SSL Check</h2>';
-			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. ' .
-			     'Click "Test SSL" to test your store.</p>';
 			if ( isset( $_GET[ 'test_ssl' ] ) ) {
-				$ch = curl_init('https://www.howsmyssl.com/a/check');
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				$data = curl_exec($ch);
-				curl_close($ch);
+				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
+				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+				$data = curl_exec( $ch );
+				curl_close( $ch );
 				$tls_version = json_decode($data)->tls_version;
-				echo "<p>TLS Version: $tls_version</p>\n";
-				echo "<p>Full Data: $data</p>\n";
+				$data =  "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+				set_transient( 'wc-siftsci-ssl-log', $data );
+				wp_redirect( remove_query_arg( 'test_ssl' ) );
+				exit;
 			}
-			echo '<a href="' . add_query_arg( array( 'test_ssl' => 1 ) ) . '" class="button-primary woocommerce-save-button">Test SSL</a>';
+
+			echo '<h2>SSL Check</h2>';
+			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. Click "Test SSL" to test your store.</p>';
+			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
+			if ( false !== $ssl_data ) {
+				delete_transient( 'wc-siftsci-ssl-log' );
+				echo $ssl_data;
+			}
+			$ssl_url = add_query_arg( array( 'test_ssl' => 1 ) );
+			echo "<a href='$ssl_url' class='button-primary woocommerce-save-button'>Test SSL</a>";
 
 			// Display logs
 			echo '<h2>Logs</h2>';
