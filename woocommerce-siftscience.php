@@ -17,7 +17,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	&& ! class_exists( 'WCSiftScience' ) ) :
 
 	// make sure session is started as soon as possible
-	if ( session_status() != PHP_SESSION_ACTIVE ) {
+	if ( ! headers_sent() && session_status() !== PHP_SESSION_ACTIVE ) {
 		session_start();
 	}
 
