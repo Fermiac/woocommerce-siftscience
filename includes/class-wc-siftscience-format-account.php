@@ -22,7 +22,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 		}
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/create-account
-		public function create_account( $user_id, $user ) {
+		public function create_account( $user_id, WP_User $user ) {
 			$data = array(
 				// Required Fields
 				'$type'       => '$create_account',
@@ -30,9 +30,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 
 				// Supported Fields
 				'$session_id'       => $this->options->get_session_id(),
-				'$user_email'       => $user->get_billing_email(),
-				'$name'             => $user->get_billing_first_name() . ' ' . $user->get_billing_last_name(),
-				'$phone'            => $user->get_billing_phone(),
+				'$user_email'       => $user->user_email,
+				'$name'             => $user->first_name . ' ' . $user->last_name,
+				//'$phone'            => $user->get_billing_phone(),
 				//'$referrer_user_id' => 'janejane101',
 				//'$payment_methods'  => array(
 				//array(
@@ -88,9 +88,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 
 				// Supported Fields
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
-				'$user_email'       => $user->get_billing_email(),
-				'$name'             => $user->get_billing_first_name() . ' ' . $user->get_billing_last_name(),
-				'$phone'            => $user->get_billing_phone(),
+				'$user_email'       => $user->user_email,
+				'$name'             => $user->first_name . ' ' . $user->last_name,
+				//'$phone'            => $user->get_billing_phone(),
 				//'$referrer_user_id' => 'janejane102',
 				//'$payment_methods'  => array(
 				//array(
