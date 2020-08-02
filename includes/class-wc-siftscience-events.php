@@ -23,6 +23,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		private $options;
 		private $logger;
 		private $saved_user_id = null;
+		private $order_map     = array();
+		private $events        = array();
 
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->format = new WC_SiftScience_Format( $options, $logger );
@@ -168,7 +170,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->events[] = $data;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
+		// https://sift.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
 			$data = $this->format->cart->add_to_cart( $cart_item_key );
 			$this->events[] = $data;
@@ -185,9 +187,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$data = $this->format->account->link_session_to_user( $user_id );
 			$this->events[] = $data;
 		}
-
-		private $order_map = array();
-		private $events = array();
 
 		public function send_queued_data() {
 			foreach( $this->order_map as $order_id => $type ) {

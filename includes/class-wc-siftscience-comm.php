@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 	require_once( 'class-wc-siftscience-options.php' );
 
-    class WC_SiftScience_Comm {
+	class WC_SiftScience_Comm {
 		private $options;
-	    private $logger;
+		private $logger;
 		private const EVENT_URL = 'https://api.sift.com/v204/events';
 		private const LABELS_URL = 'https://api.sift.com/v204/users/{user}/labels';
 		private const DELETE_URL = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
@@ -57,17 +57,13 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				'body'    => $data,
 			);
 
-			$response = $this->send_request( $url, $args );
-
-			return $response;
+			return $this->send_request( $url, $args );
 		}
 
 		public function delete_label( $user ) {
 			$api = $this->options->get_api_key();
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user, self::DELETE_URL ) );
-			$result = $this->send_request( $url, array( 'method' => 'DELETE' ) );
-
-			return $result;
+			return $this->send_request( $url, array( 'method' => 'DELETE' ) );
 		}
 
 		public function get_user_score( $user_id ) {
@@ -75,7 +71,6 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user_id, self::SCORE_URL ) );
 
 			$response = $this->send_request( $url );
-
 			return json_decode( $response['body'] );
 		}
 
