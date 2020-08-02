@@ -100,6 +100,10 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$description'      => 'woo status: ' . $order->get_status(),
 			);
 
+			if ( $data[ '$session_id' ] === '' ) {
+				unset( $data[ '$session_id' ] );
+			}
+
 			$data[ '$order_status' ] = $this->convert_order_status( $order );
 			$data = apply_filters( 'wc_siftscience_update_order_status', $data );
 			if ( null === $data[ '$order_status' ] ) {

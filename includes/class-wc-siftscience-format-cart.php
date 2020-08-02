@@ -61,7 +61,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 			$product_id = $item[ 'product_id' ];
 			$product = new WC_Product( $product_id );
 			$data = array(
-				'$type'       =>  '$add_item_to_cart',
+				'$type'       =>  '$remove_item_from_cart',
 				'$session_id' => $this->options->get_session_id(),
 				'$item'       => array(
 					'$item_id'        => $cart_item_key,
