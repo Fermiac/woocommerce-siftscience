@@ -9,7 +9,7 @@
         </div>    
         
         <div v-if="noData" :style="iconStyle" @click="backfill($event)">
-            <img :src="uploadImage" title="Working..." width="20px" height="20px" />
+            <img :src="uploadImage" title="Send this order to Sift" width="20px" height="20px" />
         </div>    
         
         <div v-if="hasData">
