@@ -91,7 +91,11 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
-			$order = new WC_Order( $order_id );
+			$order = wc_get_order( $order_id );
+			if ( $order === false ) {
+				return null;
+			}
+
 			$data = array(
 				'$type'             => '$order_status',
 				'$user_id'          => $this->options->get_user_id( $order ),

@@ -121,6 +121,11 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/update-order
 		public function update_order( $order_id ) {
+			$order = wc_get_order( $order_id );
+			if ( $order === false ) {
+				return;
+			}
+
 			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
@@ -160,7 +165,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return true;
 			}
 
-			$order_amount = ( float )( ( new WC_Order( $order_id ) )->get_total() );
+			$order = wc_get_order( $order_id );
+			if ( $order === false ) {
+				return false;
+			}
+
+			$order_amount = ( float )( $order->get_total() );
 			return $order_amount >= $min_value;
 		}
 
