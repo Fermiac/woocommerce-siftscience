@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 				// Supported Fields
 				'$session_id'       => $this->options->get_session_id(),
 				'$user_email'       => $user->user_email,
-				'$name'             => $user->first_name . ' ' . $user->last_name,
+				'$name'             => $user->get_formatted_billing_full_name();
 				//'$phone'            => $user->get_billing_phone(),
 				//'$referrer_user_id' => 'janejane101',
 				//'$payment_methods'  => array(
