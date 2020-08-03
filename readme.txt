@@ -31,6 +31,7 @@ Please help us improve the plugin by enabling [anonymous statistics and error co
 
 = 1.1.0 =
 * 2020-08-02
+* Welcomed @ramico to the development team
 * Tested with latest versions of WordPress and WooCommerce
 * Retested and fixed several API issues
 * Fixed all warnings of deprecated function usage
