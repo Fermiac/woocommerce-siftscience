@@ -21,15 +21,15 @@ if ( ! class_exists( "WC_SiftScience_Instrumentation" ) ) :
 		private $stats;
 		private $prefix;
 
-		public function __construct( $subject, $prefix, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
+		public function __construct( $subject, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 			$this->subject = $subject;
 			$this->logger = $logger;
 			$this->stats = $stats;
-			$this->prefix = $prefix;
+			$this->prefix = get_class( $subject );
 		}
 
 		public function __call( $name, $args ) {
-			$metric = "{$this->prefix}_{$name}";
+			$metric = "{$this->prefix}::{$name}";
 			$timer = $this->stats->create_timer( $metric );
 			$error_timer = $this->stats->create_timer( "error_$metric" );
 			try {

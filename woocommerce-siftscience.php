@@ -49,11 +49,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$stripe = new WC_SiftScience_Stripe( $events, $logger, $stats );
 
 			// wrap all the classes in error catcher
-			$events_wrapped = new WC_SiftScience_Instrumentation( $events, 'events', $logger, $stats );
-			$order_wrapped = new WC_SiftScience_Instrumentation( $order, 'order', $logger, $stats );
-			$admin_wrapped = new WC_SiftScience_Instrumentation( $admin, 'admin', $logger, $stats );
-			$api_wrapped = new WC_SiftScience_Instrumentation( $api, 'api', $logger, $stats );
-			$stripe_wrapped = new WC_SiftScience_Instrumentation( $stripe, 'stripe', $logger, $stats );
+			$events_wrapped = new WC_SiftScience_Instrumentation( $events, $logger, $stats );
+			$order_wrapped = new WC_SiftScience_Instrumentation( $order, $logger, $stats );
+			$admin_wrapped = new WC_SiftScience_Instrumentation( $admin, $logger, $stats );
+			$api_wrapped = new WC_SiftScience_Instrumentation( $api, $logger, $stats );
+			$stripe_wrapped = new WC_SiftScience_Instrumentation( $stripe, $logger, $stats );
 
 			// admin hooks
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin_wrapped, 'add_settings_page' ), 30 );
