@@ -165,13 +165,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$stats = json_decode( $stats , true );
 
-			foreach ( array_keys( $stats ) as $outer_v ) {
+			foreach ( $stats as $outer_k => $outer_v ) {
 										
 				echo '<table><thead>',
-					 '<tr><th colspan="2" style="text-align:left">' . $outer_v . ':</th></tr>',
+					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
 					 '</thead><tbody>';
 
-				foreach ( array_reverse( $stats[ $outer_v ] ) as $inner_k => $inner_v ) {
+				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
 					echo '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
 				}
 
