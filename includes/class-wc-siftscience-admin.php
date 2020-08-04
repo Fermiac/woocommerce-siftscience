@@ -166,7 +166,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$stats = json_decode( $stats , true );
 
 			foreach ( $stats as $outer_k => $outer_v ) {
-										
+				
+				$outer_k = '<span style="color:#00a0d2">' . str_replace('::', '</span>::', $outer_k);						
 				echo '<table><thead>',
 					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
 					 '</thead><tbody>';
