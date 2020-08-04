@@ -157,6 +157,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
+			echo '<h2>Statistics</h2>';
+
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
 			if ( $stats === 'none' ) {
 				echo '<p>No stats stored yet</p>';
