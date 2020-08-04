@@ -174,7 +174,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$present_key = str_replace( '_', ' ', $key );
 				
 				echo "<table><thead>
-						<tr><th colspan=\"2\" style=\"text-align:left\">$present_key</th></tr>
+						<tr><th colspan=\"2\" style=\"text-align:left\">$present_key:</th></tr>
 						</thead><tbody>";
 
 				foreach ( array_reverse( $stats_array[ $key ] ) as $k => $v ) {
