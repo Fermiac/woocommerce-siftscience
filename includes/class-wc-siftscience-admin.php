@@ -163,9 +163,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				return;
 			}
 
-			$stats = json_decode( $stats );
+			$stats = json_decode( $stats , true );
+			$stats_array = $stats;
 			$stats = json_encode( $stats, JSON_PRETTY_PRINT );
-			echo '<pre>' . $stats . '</pre>';
+
+			$stats_keys = array_keys( $stats_array );
+						
+			for ( $i = 0 ; $i < count( $stats_keys ) ; $i++ ) { 
+				$key = $stats_keys[ $i ];
+				$present_key = str_replace( '_', ' ', $key );
+				
+				echo "<table><thead>
+						<tr><th colspan=\"2\" style=\"text-align:left\">$present_key</th></tr>
+						</thead><tbody>";
+
+				foreach ( array_reverse( $stats_array[ $key ] ) as $k => $v ) {
+					echo "<tr><td style=\"width:50px\">$k</td><td>$v</td></tr>";
+				}
+
+				echo '</tbody></table><br>';
+			}
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
 			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
