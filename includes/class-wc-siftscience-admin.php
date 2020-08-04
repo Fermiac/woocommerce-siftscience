@@ -158,14 +158,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
-			if ( 'none' === $stats ) {
+			if ( $stats === 'none' ) {
 				echo '<p>No stats stored yet</p>';
 				return;
 			}
 
 			$stats = json_decode( $stats , true );
 
-			foreach (array_keys( $stats ) as $outer_v) {
+			foreach ( array_keys( $stats ) as $outer_v ) {
 										
 				echo "<table><thead>
 					<tr><th colspan=\"2\" style=\"text-align:left\">$outer_v:</th></tr>
