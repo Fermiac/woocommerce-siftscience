@@ -158,14 +158,25 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
-			if ( 'none' === $stats ) {
+			if ( $stats === 'none' ) {
 				echo '<p>No stats stored yet</p>';
 				return;
 			}
 
-			$stats = json_decode( $stats );
-			$stats = json_encode( $stats, JSON_PRETTY_PRINT );
-			echo '<pre>' . $stats . '</pre>';
+			$stats = json_decode( $stats , true );
+
+			foreach ( $stats as $outer_k => $outer_v ) {
+										
+				echo '<table><thead>',
+					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
+					 '</thead><tbody>';
+
+				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
+					echo '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
+				}
+
+				echo '</tbody></table><br>';
+			}
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
 			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
