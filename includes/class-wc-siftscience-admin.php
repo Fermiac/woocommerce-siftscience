@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$tabs[] = "<a href='$url' class='$class'>$label</a>";
 			}
 
-			$tabs_html = '<li>' . join( '|</li>', $tabs ) . '</li>';
+			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
 			echo "<ul class='subsubsub'>$tabs_html</ul><br class='clear' />";
 		}
 
@@ -170,7 +170,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			foreach ( $stats as $outer_k => $outer_v ) {
 
-				$outer_k = sprintf( '<span style="color:#00a0d2">%1$s' , str_replace('::', '</span>::', $outer_k ) );				
+				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );				
+
 				echo '<table><thead>',
 					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
 					 '</thead><tbody>';
