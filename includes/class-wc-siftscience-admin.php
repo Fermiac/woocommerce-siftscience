@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$tabs[] = "<a href='$url' class='$class'>$label</a>";
 			}
 
-			$tabs_html = '<li>' . join( '|</li>', $tabs ) . '</li>';
+			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
 			echo "<ul class='subsubsub'>$tabs_html</ul><br class='clear' />";
 		}
 
