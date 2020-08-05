@@ -46,14 +46,15 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'debug' => 'Debug',
 			);
 
-			echo '<ul class="subsubsub">';
-			$array_keys = array_keys( $sections );
-
+			$tabs = array();
 			foreach ( $sections as $id => $label ) {
-				echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+				$url = admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) );
+				$class = $current_section == $id ? 'current' : '';
+				$tabs[] = "<a href='$url' class='$class'>$label</a>";
 			}
 
-			echo '</ul><br class="clear" />';
+			$tabs_html = '<li>' . join( '|</li>', $tabs ) . '</li>';
+			echo "<ul class='subsubsub'>$tabs_html</ul><br class='clear' />";
 		}
 
 		public function output_settings_fields() {
