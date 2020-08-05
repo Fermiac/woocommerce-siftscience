@@ -68,7 +68,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			}
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/order-status
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
 		public function update_order_status( $order_id ) {
 			$order = wc_get_order( $order_id );
 			if ( $order === false ) {
