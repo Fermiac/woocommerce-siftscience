@@ -194,7 +194,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
 					          'For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					          'Your anonymous id is: ' . $this->options->get_guid(),
+					          'Your anonymous id is:<span id="reporting_guid"> ' . $this->options->get_guid() . ' </span><a href="#">Reset</a>',
 					'id' => 'siftsci_stats_title'
 				),
 
