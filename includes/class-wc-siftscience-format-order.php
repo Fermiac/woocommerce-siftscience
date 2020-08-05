@@ -24,9 +24,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private $logger;
 
 		public function __construct( WC_SiftScience_Format_Items $items,
-                                     WC_SiftScience_Format_Transaction $transaction,
-                                     WC_SiftScience_Options $options,
-                                     WC_SiftScience_Logger $logger ) {
+		                             WC_SiftScience_Format_Transaction $transaction,
+		                             WC_SiftScience_Options $options,
+		                             WC_SiftScience_Logger $logger ) {
 			$this->options     = $options;
 			$this->items       = $items;
 			$this->transaction = $transaction;
@@ -53,27 +53,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$items'            => $this->items->get_order_items( $order ),
 				'$ip'               => $order->get_customer_ip_address(),
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
-				//'$expedited_shipping' => true,
-				//'$shipping_method'    => '$physical',
-				// For marketplaces, use $seller_user_id to identify the seller
-				//'$seller_user_id'     => 'slinkys_emporium',
-				//'$promotions'         => array(
-				//array(
-				//'$promotion_id' => 'FirstTimeBuyer',
-				//'$status'       => '$success',
-				//'$description'  => '$5 off',
-				//'$discount'     => array(
-				//'$amount'                   => 5000000,  // $5.00
-				//'$currency_code'            => 'USD',
-				//'$minimum_purchase_amount'  => 25000000  // $25.00
-				//)
-				//)
-				//),
-				// Sample Custom Fields
-				//'digital_wallet'      => 'apple_pay', // 'google_wallet', etc.
-				//'coupon_code'         => 'dollarMadness',
-				//'shipping_choice'     => 'FedEx Ground Courier',
-				//'is_first_time_buyer' => false
 			);
 
 			// only add session id if it exists
