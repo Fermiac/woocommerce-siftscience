@@ -120,7 +120,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 				$data = curl_exec( $ch );
 				curl_close( $ch );
-				$tls_version = json_decode($data)->tls_version;
+				$tls_version = json_decode( $data )->tls_version;
 				$data =  "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 				set_transient( 'wc-siftsci-ssl-log', $data );
 				wp_redirect( remove_query_arg( 'test_ssl' ) );
@@ -169,7 +169,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			foreach ( $stats as $outer_k => $outer_v ) {
 
-				$outer_k = '<span style="color:#00a0d2">' . str_replace('::', '</span>::', $outer_k);				
+				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );				
 				echo '<table><thead>',
 					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
 					 '</thead><tbody>';
