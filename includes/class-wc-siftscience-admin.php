@@ -166,7 +166,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$stats = json_decode( $stats , true );
-			ksort($stats);
+			ksort( $stats );
 
 			foreach ( $stats as $outer_k => $outer_v ) {
 
