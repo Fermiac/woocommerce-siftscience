@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 			$this->options = $options;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
 			$cart = WC()->cart->get_cart();
 			$item = $cart[ $cart_item_key ];
@@ -54,7 +54,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 			return apply_filters( 'wc_siftscience_add_to_cart', $data );
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
 		public function remove_from_cart( $cart_item_key ) {
 			$cart = WC()->cart->get_cart();
 			$item = $cart[ $cart_item_key ];
