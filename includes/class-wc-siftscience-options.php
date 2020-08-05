@@ -100,7 +100,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public function get_guid() {
 			$guid = get_option( self::GUID, false );
-			if ( false === $guid ) {
+			if ( $guid === false ) {
 				$guid = $this->generate_guid();
 				update_option( self::GUID, $guid );
 			}
