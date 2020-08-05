@@ -15,15 +15,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	require_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Admin {
-		private $id = 'siftsci';
-		private $label = 'Sift';
+		private const ADMIN_ID = 'siftsci';
+		private const ADMIN_LABEL = 'Sift';
 		private $options;
 		private $logger;
 		private $stats;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm,
-			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats )
-		{
+			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 			$this->options = $options;
 			$this->comm = $comm;
 			$this->logger = $logger;
@@ -48,7 +47,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$tabs = array();
 			foreach ( $sections as $id => $label ) {
-				$url = admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) );
+				$url = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
 				$class = $current_section == $id ? 'current' : '';
 				$tabs[] = "<a href='$url' class='$class'>$label</a>";
 			}
@@ -235,7 +234,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function add_settings_page( $pages ) {
-			$pages[$this->id] = $this->label;
+			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
 			return $pages;
 		}
 

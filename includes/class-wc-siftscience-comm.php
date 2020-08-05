@@ -13,13 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 	require_once( 'class-wc-siftscience-options.php' );
 
-    class WC_SiftScience_Comm {
+	class WC_SiftScience_Comm {
+		private const EVENT_URL = 'https://api.sift.com/v204/events';
+		private const LABELS_URL = 'https://api.sift.com/v204/users/{user}/labels';
+		private const DELETE_URL = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
+		private const SCORE_URL = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
+
 		private $options;
-	    private $logger;
-		private $event_url = 'https://api.sift.com/v204/events';
-		private $labels_url = 'https://api.sift.com/v204/users/{user}/labels';
-		private $delete_url = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
-		private $score_url = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
+		private $logger;
 
 		private $headers = array(
 			'Accept'       => 'application/json',
@@ -40,7 +41,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				'body'    => $data
 			);
 
-			return $this->send_request( $this->event_url, $args );
+			return $this->send_request( self::EVENT_URL, $args );
 		}
 
 		public function post_label( $user_id, $isBad ) {
@@ -50,29 +51,25 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 				'$abuse_type' => 'payment_abuse',
 			);
 
-			$url = str_replace( '{user}', urlencode( $user_id ), $this->labels_url );
+			$url = str_replace( '{user}', urlencode( $user_id ), self::LABELS_URL );
 			$args = array(
 				'headers' => $this->headers,
 				'method'  => 'POST',
 				'body'    => $data
 			);
 
-			$response = $this->send_request( $url, $args );
-
-			return $response;
+			return $this->send_request( $url, $args );
 		}
 
 		public function delete_label( $user ) {
 			$api = $this->options->get_api_key();
-			$url = str_replace( '{api}', $api, str_replace( '{user}', $user, $this->delete_url ) );
-			$result = $this->send_request( $url, array( 'method' => 'DELETE' ) );
-
-			return $result;
+			$url = str_replace( '{api}', $api, str_replace( '{user}', $user, self::DELETE_URL ) );
+			return $this->send_request( $url, array( 'method' => 'DELETE' ) );
 		}
 
 		public function get_user_score( $user_id ) {
 			$api = $this->options->get_api_key();
-			$url = str_replace( '{api}', $api, str_replace( '{user}', $user_id, $this->score_url ) );
+			$url = str_replace( '{api}', $api, str_replace( '{user}', $user_id, self::SCORE_URL ) );
 
 			$response = $this->send_request( $url );
 
