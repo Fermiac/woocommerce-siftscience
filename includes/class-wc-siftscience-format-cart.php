@@ -35,13 +35,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 					'$product_title'  => $product->get_title(),
 					'$price'          => $product->get_price() * 1000000, // $39.99
 					'$currency_code'  => get_woocommerce_currency(),
-					//'$upc'            => '67862114510011',
-					//'$sku'            => '004834GQ',
-					//'$brand'          => 'Slanket',
-					//'$manufacturer'   => 'Slanket',
-					//'$category'       => 'Blankets & Throws',
-					//'$tags'           => ['Awesome', 'Wintertime specials'],
-					//'$color'          => 'Texas Tea',
 					'$quantity'       => $item[ 'quantity' ],
 				)
 			);
@@ -68,13 +61,6 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 					'$product_title'  => $product->get_title(),
 					'$price'          => $product->get_price() * 1000000, // $39.99
 					'$currency_code'  => get_woocommerce_currency(),
-					//'$upc'            => '67862114510011',
-					//'$sku'            => '004834GQ',
-					//'$brand'          => 'Slanket',
-					//'$manufacturer'   => 'Slanket',
-					//'$category'       => 'Blankets & Throws',
-					//'$tags'           => ['Awesome', 'Wintertime specials'],
-					//'$color'          => 'Texas Tea',
 					'$quantity'       => $item[ 'quantity' ],
 				)
 			);
