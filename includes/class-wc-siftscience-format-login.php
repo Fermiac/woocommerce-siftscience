@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			$this->options = $options;
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/login
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
 		public function login_success( WP_User $user ) {
 			$data = array(
 				'$type'         => '$login',
@@ -33,7 +33,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			return apply_filters( 'wc_siftscience_login_success', $data );
 		}
 
-		// https://siftscience.com/developers/docs/curl/events-api/reserved-events/login
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
 		public function login_failure( $username ) {
 			$data = array(
 				'$type'         => '$login',
@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			return apply_filters( 'wc_siftscience_login_failure', $data );
 		}
 
-		//https://siftscience.com/developers/docs/curl/events-api/reserved-events/logout
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
 		public function logout( $user_id ) {
 			$data = null;
 			if ( null !== $user_id && 0 !== $user_id ) {
