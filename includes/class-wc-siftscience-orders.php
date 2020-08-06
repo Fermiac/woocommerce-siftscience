@@ -38,10 +38,10 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 				'thresholdBad' => $this->options->get_threshold_bad(),
 			);
 
-            wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
-            wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/OrderControl.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
-            wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/order-control.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
-            wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
+			wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );
+			wp_enqueue_script( 'wc-siftsci-control', plugins_url( "dist/OrderControl.umd.js", dirname( __FILE__ ) ), array('wc-siftsci-vuejs'), time(), true );
+			wp_enqueue_script( 'wc-siftsci-script', plugins_url( "dist/order-control.js", dirname( __FILE__ ) ), array('wc-siftsci-control'), time(), true );
+			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
 		}
 
 		public function create_header( $columns ) {
