@@ -144,6 +144,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_reporting() {
+			if ( isset ( $_GET[ 'reset_requested' ] ) ) {
+				if ( $_GET[ 'reset_requested' ] == 1 ) {
+					$url = remove_query_arg( 'reset_requested' );
+					delete_option( WC_SiftScience_Options::GUID );
+					wp_redirect( $url );
+					exit(); 
+				}
+			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
 			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
@@ -187,6 +195,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function get_settings_stats() {
+			$reset_url = add_query_arg( array( 'reset_requested' => 1 ) );
+			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
+
 			return array(
 				array(
 					'title' => 'Sift Stats and Debug Reporting',
@@ -194,7 +205,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
 					          'For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					          'Your anonymous id is:<span id="reporting_guid"> ' . $this->options->get_guid() . ' </span><a href="#">Reset</a>',
+					          'Your anonymous id is: ' . $this->options->get_guid() . $reset_anchor,
 					'id' => 'siftsci_stats_title'
 				),
 
