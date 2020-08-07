@@ -144,7 +144,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_reporting() {
-			if ( isset ( $_GET[ 'reset_requested' ] ) ) {
+			if ( isset( $_GET[ 'reset_requested' ] ) ) {
 				if ( $_GET[ 'reset_requested' ] == 1 ) {
 					$url = remove_query_arg( 'reset_requested' );
 					delete_option( WC_SiftScience_Options::GUID );
