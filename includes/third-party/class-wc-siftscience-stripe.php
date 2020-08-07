@@ -14,7 +14,7 @@ if ( ! class_exists( "WC_SiftScience_Stripe" ) ) :
 	require_once dirname( dirname( __FILE__ ) ) . '/class-wc-siftscience-stats.php';
 
 class WC_SiftScience_Stripe {
-	private static $order_data_key = '_wcsiftsci_stripe';
+	private const ORDER_DATA_KEY = '_wcsiftsci_stripe';
 	private $logger;
 	private $stats;
 	private $events;
@@ -55,7 +55,7 @@ class WC_SiftScience_Stripe {
 		);
 
 		$data = array( 'payment_method' => $payment_details );
-		update_post_meta( $order->get_id(), self::$order_data_key, json_encode( $data ) );
+		update_post_meta( $order->get_id(), self::ORDER_DATA_KEY, json_encode( $data ) );
 	}
 
 	public function order_payment_method( $current_method, WC_Order $order ) {
@@ -72,7 +72,7 @@ class WC_SiftScience_Stripe {
 	}
 
 	private function get_order_meta( WC_Order $order ) {
-		$meta = get_post_meta( $order->get_id(), self::$order_data_key, true );
+		$meta = get_post_meta( $order->get_id(), self::ORDER_DATA_KEY, true );
 		if ( ! is_string( $meta ) || 0 === strlen( $meta ) ) {
 			return null;
 		}
