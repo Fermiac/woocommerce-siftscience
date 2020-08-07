@@ -144,9 +144,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_reporting() {
-			if ( isset( $_GET[ 'reset_requested' ] ) ) {
-				if ( $_GET[ 'reset_requested' ] == 1 ) {
-					$url = remove_query_arg( 'reset_requested' );
+			if ( isset( $_GET[ 'reset_guid' ] ) ) {
+				if ( $_GET[ 'reset_guid' ] == 1 ) {
+					$url = remove_query_arg( 'reset_guid' );
 					delete_option( WC_SiftScience_Options::GUID );
 					wp_redirect( $url );
 					exit(); 
@@ -195,7 +195,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function get_settings_stats() {
-			$reset_url = add_query_arg( array( 'reset_requested' => 1 ) );
+			$reset_url = add_query_arg( array( 'reset_guid' => 1 ) );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
