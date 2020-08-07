@@ -205,8 +205,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				$this->get_drop_down( WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
-					'How much logging information to generate',
+					'How much logging information to generate',//array( 'Errors, Warnings & Info', 'Errors & Warnings' , 'Errors' )
 					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
+					//array( 0=>'Errors, Warnings & Info',1=> 'Errors & Warnings' ,2=> 'Errors' )
 				),
 
 				$this->get_section_end( 'sifsci_section_main' ),
