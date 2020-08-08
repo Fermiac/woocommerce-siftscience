@@ -81,6 +81,12 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$user_id = 0;
 			if ( $order_id ) {
 				$user_id = $this->get_user_id( $order_id );
+				if ( $user_id === false ) {
+					return array (
+						'status' => 400,
+						'error' => "User not found for order: $order_id",
+					);
+				}
 			}
 
 			switch ( $action ) {
@@ -156,6 +162,9 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$ids = explode( ',', $order_ids );
 			foreach( $ids as $order_id ) {
 				$user_id = $this->get_user_id( $order_id );
+				if ( $user_id === false ) {
+					continue;
+				}
 				$result[] = $this->get_score( $order_id, $user_id );
 			}
 			return $result;
@@ -177,11 +186,8 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		private function get_user_id( $order_id ) {
 			$meta = get_post_meta( $order_id, '_customer_user', true );
 
-			if ( false === $meta ) {
-				return array(
-					'status' => 400,
-					'error' => 'order id not found: ' . $order_id,
-				);
+			if ( $meta === false ) {
+				return false;
 			}
 
 			return $meta === '0'
