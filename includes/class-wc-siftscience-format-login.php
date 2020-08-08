@@ -15,18 +15,18 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 	require_once 'class-wc-siftscience-options.php';
 
 	class WC_SiftScience_Format_Login {
-		private $_options;
+		private $options;
 
 		public function __construct( WC_SiftScience_Options $options ) {
-			$this->_options = $options;
+			$this->options = $options;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
 		public function login_success( WP_User $user ) {
 			$data = array(
 				'$type'         => '$login',
-				'$user_id'      => $this->_options->get_user_id_from_user_id( $user->ID ),
-				'$session_id'   => $this->_options->get_session_id(),
+				'$user_id'      => $this->options->get_user_id_from_user_id( $user->ID ),
+				'$session_id'   => $this->options->get_session_id(),
 				'$login_status' => '$success'
 			);
 
@@ -38,12 +38,12 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			$data = array(
 				'$type'         => '$login',
 				'$login_status' => '$failure',
-				'$session_id'   => $this->_options->get_session_id(),
+				'$session_id'   => $this->options->get_session_id(),
 			);
 
 			$user = get_user_by( 'login', $username );
 			if ( false !== $user ) {
-				$data[ '$user_id' ] = $this->_options->get_user_id_from_user_id( $user->ID );
+				$data[ '$user_id' ] = $this->options->get_user_id_from_user_id( $user->ID );
 			}
 
 			return apply_filters( 'wc_siftscience_login_failure', $data );
@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 			if ( null !== $user_id && 0 !== $user_id ) {
 				$data = array(
 					'$type'         => '$logout',
-					'$user_id'      => $this->_options->get_user_id_from_user_id( $user_id ),
+					'$user_id'      => $this->options->get_user_id_from_user_id( $user_id ),
 				);
 			}
 
