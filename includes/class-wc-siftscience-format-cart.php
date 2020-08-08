@@ -15,10 +15,10 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 	require_once 'class-wc-siftscience-options.php';
 
 	class WC_SiftScience_Format_Cart {
-		private $options;
+		private $_options;
 
 		public function __construct( WC_SiftScience_Options $options ) {
-			$this->options = $options;
+			$this->_options = $options;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
@@ -29,7 +29,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 			$product = new WC_Product( $product_id );
 			$data = array(
 				'$type'       =>  '$add_item_to_cart',
-				'$session_id' => $this->options->get_session_id(),
+				'$session_id' => $this->_options->get_session_id(),
 				'$item'       => array(
 					'$item_id'        => $cart_item_key,
 					'$product_title'  => $product->get_title(),
@@ -41,7 +41,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data[ '$user_id' ] = $this->options->get_user_id_from_user_id( $user_id );
+				$data[ '$user_id' ] = $this->_options->get_user_id_from_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_add_to_cart', $data );
@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 			$product = new WC_Product( $product_id );
 			$data = array(
 				'$type'       =>  '$remove_item_from_cart',
-				'$session_id' => $this->options->get_session_id(),
+				'$session_id' => $this->_options->get_session_id(),
 				'$item'       => array(
 					'$item_id'        => $cart_item_key,
 					'$product_title'  => $product->get_title(),
@@ -67,7 +67,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data[ '$user_id' ] = $this->options->get_user_id_from_user_id( $user_id );
+				$data[ '$user_id' ] = $this->_options->get_user_id_from_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_remove_from_cart', $data );
