@@ -19,8 +19,8 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		private const DELETE_URL = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
 		private const SCORE_URL = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
 
-		private $options;
-		private $logger;
+		private $_options;
+		private $_logger;
 
 		private $headers = array(
 			'Accept'       => 'application/json',
@@ -28,12 +28,12 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		);
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->options = $options;
-			$this->logger = $logger;
+			$this->_options = $options;
+			$this->_logger = $logger;
 		}
 
 		public function post_event( $data ) {
-			$data[ '$api_key' ] = $this->options->get_api_key();
+			$data[ '$api_key' ] = $this->_options->get_api_key();
 
 			$args = array(
 				'headers' => $this->headers,
@@ -46,7 +46,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
 		public function post_label( $user_id, $isBad ) {
 			$data = array(
-				'$api_key'    => $this->options->get_api_key(),
+				'$api_key'    => $this->_options->get_api_key(),
 				'$is_bad'     => ( $isBad ? 'true' : 'false' ),
 				'$abuse_type' => 'payment_abuse',
 			);
@@ -62,13 +62,13 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		}
 
 		public function delete_label( $user ) {
-			$api = $this->options->get_api_key();
+			$api = $this->_options->get_api_key();
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user, self::DELETE_URL ) );
 			return $this->send_request( $url, array( 'method' => 'DELETE' ) );
 		}
 
 		public function get_user_score( $user_id ) {
-			$api = $this->options->get_api_key();
+			$api = $this->_options->get_api_key();
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user_id, self::SCORE_URL ) );
 
 			$response = $this->send_request( $url );
@@ -77,8 +77,8 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		}
 
 		private function send_request( $url, $args = array() ) {
-			$this->logger->log_info( "Sending Request to Sift API: $url" );
-			$this->logger->log_info( $args );
+			$this->_logger->log_info( "Sending Request to Sift API: $url" );
+			$this->_logger->log_info( $args );
 			if ( ! isset( $args['method'] ) )
 				$args['method'] = 'GET';
 
@@ -89,7 +89,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			}
 
 			$result = wp_remote_request( $url, $args );
-			$this->logger->log_info( $result );
+			$this->_logger->log_info( $result );
 			return $result;
 		}
 	}
