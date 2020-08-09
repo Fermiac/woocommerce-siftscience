@@ -23,6 +23,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		private $_options;
 		private $_logger;
 		private $_saved_user_id;
+		private $_order_map;
+		private $_events;
 
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->_format = new WC_SiftScience_Format( $options, $logger );
@@ -30,6 +32,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$this->_options = $options;
 			$this->_logger = $logger;
 			$this->_saved_user_id = get_current_user_id();
+			$this->_order_map = array();
+			$this->_events = array();
 		}
 
 		public function is_backfilled( $post_id ) {
@@ -82,33 +86,33 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
 		public function login_success( $username, $user ) {
 			$data = $this->_format->login->login_success( $user );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 			$this->link_session_to_user( $user->ID );
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
 		public function login_failure( $username ) {
-			$this->events[] = $this->_format->login->login_failure( $username );
+			$this->_eventss[] = $this->_format->login->login_failure( $username );
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
 		public function logout() {
 			$data = $this->_format->login->logout( $this->_saved_user_id );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account
 		public function create_account( $user_id ) {
 			$user = get_userdata( $user_id );
 			$data = $this->_format->account->create_account( $user_id, $user );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 			$this->link_session_to_user( $user->ID );
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-account
 		public function update_account( $user_id, $old_user_data ) {
 			$data = $this->_format->account->update_account( $user_id, $old_user_data );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-order
@@ -116,7 +120,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
-			$this->order_map[ $order_id ] = 'create';
+			$this->_order_map[ $order_id ] = 'create';
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-order
@@ -130,8 +134,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return;
 			}
 
-			if ( ! isset( $this->order_map[ $order_id ] ) ) {
-				$this->order_map[ $order_id ] = 'update';
+			if ( ! isset( $this->_order_map[ $order_id ] ) ) {
+				$this->_order_map[ $order_id ] = 'update';
 			}
 		}
 
@@ -146,7 +150,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return;
 			}
 
-			$this->events[] = $data;
+			$this->_events[] = $data;
 			$this->send_transaction( $order_id );
 		}
 
@@ -177,49 +181,46 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction
 		public function send_transaction( $order_id ) {
 			$data = $this->_format->transactions->create_transaction( $order_id );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
 		public function add_to_cart( $cart_item_key ) {
 			$data = $this->_format->cart->add_to_cart( $cart_item_key );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
 		public function remove_from_cart( $cart_item_key ) {
 			$data = $this->_format->cart->remove_from_cart( $cart_item_key );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
 		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/link-session-to-user
 		public function link_session_to_user( $user_id ) {
 			$data = $this->_format->account->link_session_to_user( $user_id );
-			$this->events[] = $data;
+			$this->_events[] = $data;
 		}
 
-		private $order_map = array();
-		private $events = array();
-
 		public function send_queued_data() {
-			foreach( $this->order_map as $order_id => $type ) {
+			foreach( $this->_order_map as $order_id => $type ) {
 				$this->send_order_event( $order_id, $type );
 			}
 
-			foreach ( $this->events as $event ) {
-				if ( null != $event ) {
+			foreach ( $this->_events as $event ) {
+				if ( $event != null ) {
 					$this->_comm->post_event( $event );
 				}
 			}
 
-			$this->order_map = array();
-			$this->events = array();
+			$this->_order_map = array();
+			$this->_events = array();
 		}
 
 		private function send_order_event( $order_id, $type = 'create' ) {
 			$data = $this->_format->order->create_order( $order_id, $type );
 			if ( null !== $data ) {
-				$this->events[] = $data;
+				$this->_events[] = $data;
 				$this->send_transaction( $order_id );
 				$this->set_backfill( $order_id );
 			}
