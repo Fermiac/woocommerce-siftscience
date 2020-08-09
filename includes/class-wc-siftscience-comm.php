@@ -18,14 +18,13 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		private const LABELS_URL = 'https://api.sift.com/v204/users/{user}/labels';
 		private const DELETE_URL = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
 		private const SCORE_URL = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
-
-		private $_options;
-		private $_logger;
-
-		private $headers = array(
+		private const HEADERS = array(
 			'Accept'       => 'application/json',
 			'Content-Type' => 'application/json',
 		);
+
+		private $_options;
+		private $_logger;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->_options = $options;
@@ -36,7 +35,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 			$data[ '$api_key' ] = $this->_options->get_api_key();
 
 			$args = array(
-				'headers' => $this->headers,
+				'headers' => self::HEADERS,
 				'method'  => 'POST',
 				'body'    => $data
 			);
@@ -53,7 +52,7 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 
 			$url = str_replace( '{user}', urlencode( $user_id ), self::LABELS_URL );
 			$args = array(
-				'headers' => $this->headers,
+				'headers' => self::HEADERS,
 				'method'  => 'POST',
 				'body'    => $data
 			);
