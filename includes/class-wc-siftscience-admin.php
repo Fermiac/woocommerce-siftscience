@@ -181,7 +181,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );				
 
 				echo '<table><thead>',
-					 '<tr><th colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
+					 '<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
 					 '</thead><tbody>';
 
 				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
