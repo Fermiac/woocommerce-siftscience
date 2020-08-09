@@ -15,14 +15,14 @@ if ( ! class_exists( "WC_SiftScience_Stripe" ) ) :
 
 class WC_SiftScience_Stripe {
 	private const ORDER_DATA_KEY = '_wcsiftsci_stripe';
-	private $logger;
-	private $stats;
-	private $events;
+	private $_logger;
+	private $_stats;
+	private $_events;
 
 	public function __construct( WC_SiftScience_Events $events, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
-		$this->logger = $logger;
-		$this->stats = $stats;
-		$this->events = $events;
+		$this->_logger = $logger;
+		$this->_stats = $stats;
+		$this->_events = $events;
 	}
 
 	/**

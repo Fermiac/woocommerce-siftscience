@@ -16,10 +16,10 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 	require_once( 'class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Orders {
-		private $options;
+		private $_options;
 
 		public function __construct( WC_SiftScience_Options $options ) {
-			$this->options = $options;
+			$this->_options = $options;
 		}
 
 		public function create_row( $column ) {
@@ -34,8 +34,8 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 			$data = array(
 				'imgPath' => plugins_url( 'images/', dirname( __FILE__ ) ),
 				'api' => admin_url( 'admin-ajax.php' ),
-				'thresholdGood' => $this->options->get_threshold_good(),
-				'thresholdBad' => $this->options->get_threshold_bad(),
+				'thresholdGood' => $this->_options->get_threshold_good(),
+				'thresholdBad' => $this->_options->get_threshold_bad(),
 			);
 
 			wp_enqueue_script( 'wc-siftsci-vuejs', plugins_url( "dist/vue-dev.js", dirname( __FILE__ ) ), array(), time(), true );

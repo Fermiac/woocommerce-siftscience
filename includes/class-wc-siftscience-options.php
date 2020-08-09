@@ -28,20 +28,20 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
 		public const GUID = 'siftsci_guid';
 
-		private $version = false;
-		private $log_level;
+		private $_version = false;
+		private $_log_level;
 
 		public function __construct( $version = false ) {
-			$this->version = $version;
-			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
+			$this->_version = $version;
+			$this->_log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
 		public function get_log_level() {
-			return $this->log_level;
+			return $this->_log_level;
 		}
 
 		public function get_version() {
-			return $this->version;
+			return $this->_version;
 		}
 
 		public function get_api_key() {

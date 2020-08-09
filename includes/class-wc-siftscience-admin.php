@@ -17,22 +17,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
-		private $options;
-		private $logger;
-		private $stats;
+		private $_options;
+		private $_logger;
+		private $_stats;
+		private $_comm;
 
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm,
 			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
-			$this->options = $options;
-			$this->comm = $comm;
-			$this->logger = $logger;
-			$this->stats = $stats;
+			$this->_options = $options;
+			$this->_comm = $comm;
+			$this->_logger = $logger;
+			$this->_stats = $stats;
 		}
 
 		public function check_api() {
 			// try requesting a non-existent user score and see that the response isn't a permission fail
-			$response = $this->comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
-			$this->logger->log_info( '[api check response] ' . json_encode( $response ) );
+			$response = $this->_comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
+			$this->_logger->log_info( '[api check response] ' . json_encode( $response ) );
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
 		}
 
@@ -160,7 +161,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$GLOBALS[ 'hide_save_button' ] = true;
 			if ( isset( $_GET[ 'clear_stats' ] ) ) {
 				$url = remove_query_arg( 'clear_stats' );
-				$this->stats->clear_stats();
+				$this->_stats->clear_stats();
 				wp_redirect( $url );
 				exit;
 			}
@@ -205,7 +206,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					          'All information is anonymous and cannot be traced back to your site. ' .
 					          'For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					          'Your anonymous id is: ' . $this->options->get_guid() . $reset_anchor,
+					          'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor,
 					'id' => 'siftsci_stats_title'
 				),
 
@@ -342,7 +343,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function notice_config() {
 			$uri = $_SERVER[ 'REQUEST_URI' ];
 			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
-			if ( $is_admin_page || $this->options->is_setup() ) {
+			if ( $is_admin_page || $this->_options->is_setup() ) {
 				return;
 			}
 
