@@ -15,12 +15,12 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 	require_once( dirname( __FILE__ ) . '/class-wc-siftscience-options.php' );
 
 	class WC_SiftScience_Logger {
-		private $min_error_level;
-		private $log_path;
+		private $_min_error_level;
+		private $_log_path;
 
 		public function __construct( WC_SiftScience_Options $options ) {
-			$this->min_error_level = $options->get_log_level();
-			$this->log_path = dirname( __DIR__ ) . '/debug.log';
+			$this->_min_error_level = $options->get_log_level();
+			$this->_log_path = dirname( __DIR__ ) . '/debug.log';
 		}
 
 		public function log_info( $message ) {
@@ -40,7 +40,7 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 		}
 
 		private function log( $status, $message ) {
-			if ( $status < $this->min_error_level ) {
+			if ( $status < $this->_min_error_level ) {
 				return;
 			}
 
@@ -49,7 +49,7 @@ if ( ! class_exists( "WC_SiftScience_Logger" ) ) :
 			}
 
 			$date = date( 'Y-m-d H:i:s' );
-			error_log( "[$date] $message\n\n", 3, $this->log_path );
+			error_log( "[$date] $message\n\n", 3, $this->_log_path );
 		}
 	}
 
