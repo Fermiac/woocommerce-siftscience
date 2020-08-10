@@ -113,7 +113,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				default:
 					return array(
 						'status' => 400,
-						'error' => 'unknown action: ' . $action,
+						'error' => 'unknown action: ' . $action
 					);
 			}
 
@@ -124,7 +124,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return get_posts( array(
 				'numberposts' => -1,
 				'post_type'   => array( 'shop_order' ),
-				'post_status' => array_keys( wc_get_order_statuses() ),
+				'post_status' => array_keys( wc_get_order_statuses() )
 			) );
 		}
 
