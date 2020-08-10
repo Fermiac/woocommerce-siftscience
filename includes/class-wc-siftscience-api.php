@@ -84,7 +84,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				if ( $user_id === false ) {
 					return array (
 						'status' => 400,
-						'error' => "User not found for order: $order_id",
+						'error' => 'User not found for order: ' . $order_id
 					);
 				}
 			}
