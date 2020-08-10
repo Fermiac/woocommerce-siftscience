@@ -343,6 +343,36 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			);
 		}
 
+		private function get_element( $type, $id, $title='', $desc = '', $special_oprions = array() ){
+			$element = array();
+
+			$element = array_merge( $element, array( 'type' => $type, 'id' => $id ) );
+
+			if ( $type === 'sectionend' ) {
+
+				return $element;
+
+			} elseif ( $type === 'title' )  {
+
+				return array_merge( $element, array( 'title' => $title, 'desc' => '' ) );
+
+			} elseif ( $type === 'select' || $type === 'number' ) {
+
+				$element = array_merge( $element, $special_oprions );
+
+			}
+
+			if ( ! empty( $desc ) ) {
+
+				$element = array_merge( $element, array( 'desc' => $desc, 'desc_tip' => true ) );
+
+			}
+
+			$element['title'] = $title;
+
+			return $element;
+		}
+
 		public function settings_notice() {
 			$this->notice_config();
 			$this->notice_stats();
