@@ -28,7 +28,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
 		public const GUID = 'siftsci_guid';
 
-		private $_version = false;
+		private $_version;
 		private $_log_level;
 
 		public function __construct( $version = false ) {
