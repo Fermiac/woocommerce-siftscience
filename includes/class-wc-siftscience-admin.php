@@ -281,7 +281,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			);
 		}
 
-
 		private function get_element( $type, $id, $title='', $desc = '', $special_oprions = array() ){
 			$element = array();
 
