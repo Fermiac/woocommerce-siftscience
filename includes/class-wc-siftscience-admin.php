@@ -294,7 +294,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				return array_merge( $element, array( 'title' => $title, 'desc' => $desc ) );
 
-			} elseif ( $type === 'select' || $type === 'number' ) {
+			} 
+
+			if ( ! empty( $special_oprions ) ) {
 
 				$element = array_merge( $element, $special_oprions );
 
