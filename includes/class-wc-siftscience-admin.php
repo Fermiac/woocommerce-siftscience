@@ -281,63 +281,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			);
 		}
 
-		private function get_title( $id, $title ) {
-			return array( 
-				'id' => $id, 
-				'title' => $title,
-				'type' => 'title',
-				'desc' => ''
-			);
-		}
-
-		private function get_text_input( $id, $title, $desc ) {
-			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'text'
-			);
-		}
-
-		private function get_number_input( $id, $title, $desc, $default ) {
-			return array(
-				'id' 		=> $id,
-				'title' 	=> $title,
-				'desc' 		=> $desc,
-				'desc_tip' 	=> true,
-				'default' 	=> $default,
-				'type' 		=> 'number'
-			);
-		}
-
-		private function get_section_end( $id ) {
-			return array( 
-				'id' => $id, 
-				'type' => 'sectionend'
-			);
-		}
-
-		private function get_check_box( $id, $title, $desc ) {
-			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'checkbox'
-			);
-		}
-
-		private function get_drop_down( $id, $title, $desc, $options ) {
-			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'options' => $options,
-				'type' => 'select'
-			);
-		}
 
 		private function get_element( $type, $id, $title='', $desc = '', $special_oprions = array() ){
 			$element = array();
