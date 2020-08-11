@@ -281,34 +281,35 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			);
 		}
 
-		private function get_element( $type, $id, $title='', $desc = '', $special_oprions = array() ){
-			$element = array();
+		private function get_element( $type, $id, $title = '', $desc = '', $special_options = array() ) {
+			
+			$element = array( 'type' => $type, 'id' => $id );
 
-			$element = array_merge( $element, array( 'type' => $type, 'id' => $id ) );
+			switch ( $type ) {
+				case 'sectionend':
+					return $element;
+				case 'title':
+					return array_merge( $element, array( 'title' => $title, 'desc' => $desc ) );
+				case 'number':
+				case 'select':
+					if ( ! empty( $special_options ) ) {
 
-			if ( $type === 'sectionend' ) {
+						$element = array_merge( $element, $special_options );
+					}
+				case 'checkbox':
+				case 'text':	
+					if ( ! empty( $desc ) ) {
 
-				return $element;
+						$element = array_merge( $element, array( 'desc' => $desc, 'desc_tip' => true ) );
 
-			} elseif ( $type === 'title' )  {
+					}
 
-				return array_merge( $element, array( 'title' => $title, 'desc' => $desc ) );
-
-			} 
-
-			if ( ! empty( $special_oprions ) ) {
-
-				$element = array_merge( $element, $special_oprions );
-
+					$element['title'] = $title;
+					break;
+				default:
+					error_log( $type . ' is nut supported yet!' );
+					break;
 			}
-
-			if ( ! empty( $desc ) ) {
-
-				$element = array_merge( $element, array( 'desc' => $desc, 'desc_tip' => true ) );
-
-			}
-
-			$element['title'] = $title;
 
 			return $element;
 		}
