@@ -7,7 +7,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
@@ -31,7 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		public function check_api() {
-			// try requesting a non-existent user score and see that the response isn't a permission fail
+			// try requesting a non-existent user score and see that the response isn't a permission fail.
 			$response = $this->_comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
 			$this->_logger->log_info( '[api check response] ' . json_encode( $response ) );
 			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
@@ -93,7 +93,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private static function enqueue_script( $name, $file, $deps ) {
-			$version = time(); // TODO: Make this switchable for dev purposes
+			$version = time(); // TODO: Make this switchable for dev purposes.
 			$path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
 			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
@@ -114,8 +114,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$logs = file_get_contents( $log_file );
 			}
 
-			// SSL check logic
-			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/
+			// SSL check logic.
+			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 			if ( isset( $_GET[ 'test_ssl' ] ) ) {
 				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -138,7 +138,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$ssl_url = add_query_arg( array( 'test_ssl' => 1 ) );
 			echo "<a href='$ssl_url' class='button-primary woocommerce-save-button'>Test SSL</a>";
 
-			// Display logs
+			// Display logs.
 			echo '<h2>Logs</h2>';
 			echo '<p>' . nl2br( esc_html( $logs ) ) . '</p>';
 			echo '<a href="' . add_query_arg( array( 'clear_logs' => 1 ) ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
@@ -355,7 +355,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function notice_stats() {
-			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string
+			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string.
 			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;

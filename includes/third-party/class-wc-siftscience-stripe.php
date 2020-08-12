@@ -4,7 +4,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( "WC_SiftScience_Stripe" ) ) :
@@ -33,14 +33,14 @@ class WC_SiftScience_Stripe {
 	 * @throws
 	 */
 	public function stripe_payment( $request, $order ) {
-		// Check that the card data is available
+		// Check that the card data is available.
 		if ( ! isset( $request, $request->source, $request->source->card ) ) {
 			return;
 		}
 
 		$card = $request->source->card;
 
-		// check that the card has all the expected data
+		// check that the card has all the expected data.
 		if ( ! isset( $card, $card->last4, $card->cvc_check, $card->address_line1_check, $card->address_zip_check ) ) {
 			return;
 		}
