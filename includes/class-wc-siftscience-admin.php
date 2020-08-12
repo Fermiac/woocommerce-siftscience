@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
-	require_once( 'class-wc-siftscience-options.php' );
+	require_once 'class-wc-siftscience-options.php';
 
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID = 'siftsci';
@@ -22,12 +22,20 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $_stats;
 		private $_comm;
 
+		/**
+		 * Test crap
+		 *
+		 * @param WC_SiftScience_Options $options Test crap.
+		 * @param WC_SiftScience_Comm    $comm    Test crap.
+		 * @param WC_SiftScience_Logger  $logger  Test crap.
+		 * @param WC_SiftScience_Stats   $stats   Yte.
+		 */
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Comm $comm,
 			WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
 			$this->_options = $options;
-			$this->_comm = $comm;
-			$this->_logger = $logger;
-			$this->_stats = $stats;
+			$this->_comm    = $comm;
+			$this->_logger  = $logger;
+			$this->_stats   = $stats;
 		}
 
 		public function check_api() {
