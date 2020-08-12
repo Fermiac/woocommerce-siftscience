@@ -54,7 +54,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$stats   = new WC_SiftScience_Stats( $options, $logger );
 			$comm    = new WC_SiftScience_Comm( $options, $logger );
 
-			// Construct formatting classes
+			// Construct formatting classes.
 			$transaction = new WC_SiftScience_Format_Transaction( $options );
 			$items       = new WC_SiftScience_Format_Items( $options );
 			$login       = new WC_SiftScience_Format_Login( $options );
