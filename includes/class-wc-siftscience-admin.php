@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	require_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-html.php' );
 
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID = 'siftsci';
