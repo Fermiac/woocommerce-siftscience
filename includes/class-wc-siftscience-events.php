@@ -26,8 +26,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		private $_order_map;
 		private $_events;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->_format = new WC_SiftScience_Format( $options, $logger );
+		public function __construct(
+				WC_SiftScience_Comm $comm,
+				WC_SiftScience_Options $options,
+				WC_SiftScience_Format $format,
+				WC_SiftScience_Logger $logger ) {
+			$this->_format = $format;
 			$this->_comm = $comm;
 			$this->_options = $options;
 			$this->_logger = $logger;

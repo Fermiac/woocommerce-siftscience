@@ -26,6 +26,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-instrumentation.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-format.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-wc-siftscience-admin.php' );
@@ -38,11 +39,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 */
 		public function run() {
 			$options = new WC_SiftScience_Options( '1.1.0' );
-			$logger = new WC_SiftScience_Logger( $options );
-			$stats = new WC_SiftScience_Stats( $options, $logger );
-			$comm = new WC_SiftScience_Comm( $options, $logger );
+			$logger  = new WC_SiftScience_Logger( $options );
+			$stats   = new WC_SiftScience_Stats( $options, $logger );
+			$comm    = new WC_SiftScience_Comm( $options, $logger );
 
-			$events = new WC_SiftScience_Events( $comm, $options, $logger );
+			// Construct formatting classes
+			$transaction = new WC_SiftScience_Format_Transaction( $options );
+			$items       = new WC_SiftScience_Format_Items( $options );
+			$login       = new WC_SiftScience_Format_Login( $options );
+			$account     = new WC_SiftScience_Format_Account( $options );
+			$order       = new WC_SiftScience_Format_Order( $items, $transaction, $options, $logger );
+			$cart        = new WC_SiftScience_Format_Cart( $options );
+			$format      = new WC_SiftScience_Format( $transaction, $items, $login, $account, $order, $cart );
+
+			$events = new WC_SiftScience_Events( $comm, $options, $format, $logger );
 			$order = new WC_SiftScience_Orders( $options );
 			$admin = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
 			$api = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
