@@ -29,13 +29,19 @@ if ( ! class_exists( 'WC_SiftScience_Format' ) ) :
 		public $cart;
 		public $transactions;
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
-			$this->transactions = new WC_SiftScience_Format_Transaction( $options );
-			$this->items = new WC_SiftScience_Format_Items( $options );
-			$this->login = new WC_SiftScience_Format_Login( $options );
-			$this->account = new WC_SiftScience_Format_Account( $options );
-			$this->order = new WC_SiftScience_Format_Order( $this->items, $this->transactions, $options, $logger );
-			$this->cart = new WC_SiftScience_Format_Cart( $options );
+		public function __construct(
+				WC_SiftScience_Format_Transaction $transactions,
+				WC_SiftScience_Format_Items $items,
+				WC_SiftScience_Format_Login $login,
+				WC_SiftScience_Format_Account $account,
+				WC_SiftScience_Format_Order $order,
+				WC_SiftScience_Format_Cart $card ) {
+			$this->transactions = $transactions;
+			$this->items = $items;
+			$this->login = $login;
+			$this->account = $account;
+			$this->order = $order;
+			$this->cart = $card;
 		}
 	}
 

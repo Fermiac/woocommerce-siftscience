@@ -26,7 +26,9 @@ if ( ! class_exists( "WC_SiftScience_Comm" ) ) :
 		private $_options;
 		private $_logger;
 
-		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+		public function __construct(
+				WC_SiftScience_Options $options,
+				WC_SiftScience_Logger $logger ) {
 			$this->_options = $options;
 			$this->_logger = $logger;
 		}
