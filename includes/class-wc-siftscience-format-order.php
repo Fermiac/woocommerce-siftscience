@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
 			);
 
-			// only add session id if it exists
+			// only add session id if it exists.
 			$session_id = $this->_options->get_order_session_id( $order );
 			if ( $session_id !== '' ) {
 				$data[ '$session_id' ] = $session_id;
@@ -68,7 +68,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			}
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status.
 		public function update_order_status( $order_id ) {
 			$order = wc_get_order( $order_id );
 			if ( $order === false ) {

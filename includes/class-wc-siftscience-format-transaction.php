@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 			$this->options = $options;
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction.
 		public function create_transaction( $order_id ) {
 			$order = wc_get_order( $order_id );
 			if ( $order === false ) {
@@ -39,7 +39,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 				'$payment_method'     => $this->get_payment_method( $order ),
 			);
 
-			// only add session id if it exists
+			// only add session id if it exists.
 			$session_id = $this->options->get_order_session_id( $order );
 			if ( $session_id !== '' ) {
 				$data[ '$session_id' ] = $session_id;

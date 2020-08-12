@@ -29,7 +29,7 @@ if ( ! class_exists( "WC_SiftScience_Stats" ) ) :
 			if ( defined( 'WP_SIFTSCI_STATS_PERIOD' ) ) {
 				$this->_send_period = WP_SIFTSCI_STATS_PERIOD;
 			} else {
-				$this->_send_period = 60 * 60; //send stats once every hour at most
+				$this->_send_period = 60 * 60; //send stats once every hour at most.
 			}
 		}
 
