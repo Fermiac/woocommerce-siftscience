@@ -39,3 +39,7 @@ You can use a pre-configured Docker image with WordPress and WooCommerce setup f
 Simply run `docker-compose up` from your command line to start this environment.
 You can then navigate to [http://localhost](http://localhost) to try things out.
 The username and password are both set to `wordpress`.
+
+## Linting
+
+https://rcorreia.com/wordpress-development/install-php-linter-windows-10-sublime-text-3/
