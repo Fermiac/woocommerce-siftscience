@@ -351,7 +351,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
-						$this->_logger->log_error( 'Drop down ' . $id . ' connot be empty!' );
+						$this->_logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						break;
 					}
 					// Select and number may have a Description.
@@ -385,7 +385,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function notice_config() {
 			$uri = $_SERVER[ 'REQUEST_URI' ];
-			$is_admin_page = ( strpos( $uri, 'tab=siftsci') > 0 ) ? true : false;
+			$is_admin_page = strpos( $uri, 'tab=siftsci') > 0;
 			if ( $is_admin_page || $this->_options->is_setup() ) {
 				return;
 			}
