@@ -305,11 +305,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @param String $id              HtmlElement ID.
 		 * @param String $title           Element label.
 		 * @param String $desc            Question mark hilper title.
-		 * @param Array  $special_options Element special options.
+		 * @param Array  $element_options Element special options.
 		 *
 		 * @return Array $element         An array of attributes.
 		 */
-		private function get_element( $type, $id, $title = '', $desc = '', $special_options = array() ) {
+		private function get_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
 
 			$element = array(
 				'type' => $type,
@@ -330,9 +330,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				case 'number':
 				case 'select':
-					if ( ! empty( $special_options ) ) {
+					if ( ! empty( $element_options ) ) {
 
-						$element = array_merge( $element, $special_options );
+						$element = array_merge( $element, $element_options );
 					}
 					// Select and number may have a Description.
 				case 'checkbox':
