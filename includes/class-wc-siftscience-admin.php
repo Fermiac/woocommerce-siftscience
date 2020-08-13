@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	require_once( 'class-wc-siftscience-options.php' );
+	require_once( 'class-wc-siftscience-html.php' );
 
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID = 'siftsci';
@@ -182,11 +183,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			foreach ( $stats as $outer_k => $outer_v ) {
 
-				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );				
+				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );
 
 				echo '<table><thead>',
-					 '<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
-					 '</thead><tbody>';
+					'<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
+					'</thead><tbody>';
 
 				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
 					echo '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
@@ -197,34 +198,46 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
 			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
-
+		/**
+		 * This function is filling form element in the HTML page {Reporting}.
+		 *
+		 * @return Array []
+		 */
 		private function get_settings_stats() {
-			$reset_url = add_query_arg( array( 'reset_guid' => 1 ) );
+			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
-				array(
-					'title' => 'Sift Stats and Debug Reporting',
-					'type' => 'title',
-					'desc' => '<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
-					          'All information is anonymous and cannot be traced back to your site. ' .
-					          'For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					          'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor,
-					'id' => 'siftsci_stats_title'
+				$this->get_element(
+					'title',
+					'siftsci_stats_title',
+					'Sift Stats and Debug Reporting',
+					'<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
+					'All information is anonymous and cannot be traced back to your site. For details, click ' .
+					'<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
+					'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor
 				),
-
-				$this->get_check_box( WC_SiftScience_Options::SEND_STATS,
+				$this->get_element(
+					'checkbox',
+					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
 				),
-
-				$this->get_drop_down( WC_SiftScience_Options::LOG_LEVEL_KEY,
+				$this->get_element(
+					'select',
+					WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
-					array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' )
+					array(
+						'options' =>
+							array(
+								2 => 'Errors',
+								1 => 'Errors & Warnings',
+								0 => 'Errors, Warnings & Info',
+							),
+					)
 				),
-
-				$this->get_section_end( 'sifsci_section_main' ),
+				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
 
@@ -249,93 +262,117 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 		}
 
+
 		public function add_settings_page( $pages ) {
 			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
 			return $pages;
 		}
 
+		/**
+		 * This function is filling form element in the main HTML page {Sift sittings}.
+		 *
+		 * @return Array []
+		 */
 		private function get_settings() {
 			return array(
-				$this->get_title( 'siftsci_title', 'Sift Settings' ),
+				$this->get_element( 'title', 'siftsci_title', 'Sift Settings' ),
+				$this->get_element( 'text', WC_SiftScience_Options::API_KEY, 'Rest API Key', 'The API key for production' ),
+				$this->get_element( 'text', WC_SiftScience_Options::JS_KEY, 'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
-				$this->get_text_input( WC_SiftScience_Options::API_KEY,
-					'Rest API Key', 'The API key for production' ),
-
-				$this->get_text_input( WC_SiftScience_Options::JS_KEY,
-					'Javascript Snippet Key', 'Javascript snippet key for production' ),
-
-				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_GOOD,
-					'Good Score Threshold', 'Scores below this value are considered good and shown in green', 30),
-
-				$this->get_number_input( WC_SiftScience_Options::THRESHOLD_BAD,
-					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red', 60 ),
-
-				$this->get_text_input( WC_SiftScience_Options::NAME_PREFIX,
-					'User & Order Name Prefix',
-					'Prefix to give order and user names. '
-					. 'Useful when you have have multiple stores and one Sift account.' ),
-
-				$this->get_check_box( WC_SiftScience_Options::AUTO_SEND_ENABLED,
-					'Automatically Send Data',
-					'Automatically send data to Sift when an order is created'
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::THRESHOLD_GOOD,
+					'Good Score Threshold',
+					'Scores below this value are considered good and shown in green',
+					array( 'default' => 30 )
 				),
 
-				$this->get_number_input( WC_SiftScience_Options::MIN_ORDER_VALUE,
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::THRESHOLD_BAD,
+					'Bad Score Threshold',
+					'Scores above this value are considered bad and shown in red',
+					array( 'default' => 60 )
+				),
+				$this->get_element(
+					'text',
+					WC_SiftScience_Options::NAME_PREFIX,
+					'User & Order Name Prefix',
+					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
+				),
+
+				$this->get_element( 'checkbox', WC_SiftScience_Options::AUTO_SEND_ENABLED, 'Automatically Send Data', 'Automatically send data to Sift when an order is created' ),
+
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Minimum Order Value for Auto Send',
-					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', 0 ),
+					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
+					array( 'default' => 0 )
+				),
 
-				$this->get_section_end( 'sifsci_section_main' ),
+				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
+		/**
+		 * This function sets HTML element attributes according to woocommearce provided library.
+		 *
+		 * @param String $type            Element type name.
+		 * @param String $id              HtmlElement ID.
+		 * @param String $title           Element label.
+		 * @param String $desc            Question mark hilper title.
+		 * @param Array  $element_options Element special options.
+		 *
+		 * @return Array $element         An array of attributes.
+		 */
+		private function get_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
 
-		private function get_title( $id, $title ) {
-			return array( 'title' => $title, 'type' => 'title', 'desc' => '', 'id' => $id );
-		}
-
-		private function get_text_input( $id, $title, $desc ) {
-			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'text',
-				'id' => $id,
+			$element = array(
+				'type' => $type,
+				'id'   => $id,
 			);
-		}
 
-		private function get_number_input( $id, $title, $desc, $default ) {
-			return array(
-				'id' 		=> $id,
-				'title' 	=> $title,
-				'desc' 		=> $desc,
-				'default' 	=> $default,
-				'type' 		=> 'number',
-				'desc_tip' 	=> true
-			);
-		}
+			switch ( $type ) {
+				case 'sectionend':
+					return $element;
+				case 'title':
+					return array_merge(
+						$element,
+						array(
+							'title' => $title,
+							'desc'  => $desc,
+						)
+					);
+				case 'number':
+				case 'select':
+					if ( ! empty( $element_options ) ) {
+						$element = array_merge( $element, $element_options );
+					} elseif ( 'select' === $type ) {
+						$this->_logger->log_error( 'Drop down ' . $id . ' connot be empty!' );
+						break;
+					}
+					// Select and number may have a Description.
+				case 'checkbox':
+				case 'text':
+					if ( ! empty( $desc ) ) {
 
-		private function get_section_end( $id ) {
-			return array( 'type' => 'sectionend', 'id' => $id );
-		}
+						$element = array_merge(
+							$element,
+							array(
+								'desc'     => $desc,
+								'desc_tip' => true,
+							)
+						);
 
-		private function get_check_box( $id, $title, $desc ) {
-			return array(
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'type' => 'checkbox',
-				'id' => $id,
-			);
-		}
+					}
+					$element['title'] = $title;
+					break;
+				default:
+					$this->_logger->log_error( $type . ' is not a valid type!' );
+					break;
+			}
 
-		private function get_drop_down( $id, $title, $desc, $options ) {
-			return array(
-				'id' => $id,
-				'title' => $title,
-				'desc' => $desc,
-				'desc_tip' => true,
-				'options' => $options,
-				'type' => 'select',
-			);
+			return $element;
 		}
 
 		public function settings_notice() {
