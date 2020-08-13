@@ -333,7 +333,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
-						$this->_logger->log_error( 'Drop down connot be empty' );
+						$this->_logger->log_error( 'Drop down ' . $id . ' connot be empty' );
 						break;
 					}
 					// Select and number may have a Description.
