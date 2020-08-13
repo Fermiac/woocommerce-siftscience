@@ -352,7 +352,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					$element['title'] = $title;
 					break;
 				default:
-					error_log( $type . ' is not a valid tyope!!' );
+					$this->_logger->log_error( $type . ' is not a valid type!' );
 					break;
 			}
 
