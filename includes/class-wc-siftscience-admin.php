@@ -198,13 +198,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
 			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
-
+		/**
+		 * This function is filling form element in the HTML page {Reporting}.
+		 *
+		 * @return Array []
+		 */
 		private function get_settings_stats() {
-			$reset_url = add_query_arg( array( 'reset_guid' => 1 ) );
+			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
-
 				$this->get_element(
 					'title',
 					'siftsci_stats_title',
@@ -214,18 +217,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
 					'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor
 				),
-
-				$this->get_element( 'checkbox', WC_SiftScience_Options::SEND_STATS,
+				$this->get_element(
+					'checkbox',
+					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
 				),
-
-				$this->get_element( 'select', WC_SiftScience_Options::LOG_LEVEL_KEY,
+				$this->get_element(
+					'select',
+					WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
-					array( 'options' => array( 2 => 'Errors', 1 => 'Errors & Warnings', 0 => 'Errors, Warnings & Info' ) )
+					array(
+						'options' =>
+							array(
+								2 => 'Errors',
+								1 => 'Errors & Warnings',
+								0 => 'Errors, Warnings & Info',
+							),
+					)
 				),
-
 				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
@@ -251,11 +262,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 		}
 
+
 		public function add_settings_page( $pages ) {
 			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
 			return $pages;
 		}
 
+		/**
+		 * This function is filling form element in the main HTML page {Sift sittings}.
+		 *
+		 * @return Array []
+		 */
 		private function get_settings() {
 			return array(
 				$this->get_element( 'title', 'siftsci_title', 'Sift Settings' ),
@@ -267,7 +284,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
-					array( 'default' => 30) 
+					array( 'default' => 30 )
 				),
 
 				$this->get_element(
@@ -277,7 +294,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Scores above this value are considered bad and shown in red',
 					array( 'default' => 60 )
 				),
-
 				$this->get_element(
 					'text',
 					WC_SiftScience_Options::NAME_PREFIX,
