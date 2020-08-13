@@ -298,34 +298,61 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
-
+		/**
+		 * This function sets HTML element attributes according to woocommearce provided library.
+		 *
+		 * @param String $type            Element type name.
+		 * @param String $id              HtmlElement ID.
+		 * @param String $title           Element label.
+		 * @param String $desc            Question mark hilper title.
+		 * @param Array  $special_options Element special options.
+		 *
+		 * @return Array $element         An array of attributes.
+		 */
 		private function get_element( $type, $id, $title = '', $desc = '', $special_options = array() ) {
-			
-			$element = array( 'type' => $type, 'id' => $id );
+
+			$element = array(
+				'type' => $type,
+				'id'   => $id,
+			);
 
 			switch ( $type ) {
 				case 'sectionend':
 					return $element;
 				case 'title':
-					return array_merge( $element, array( 'title' => $title, 'desc' => $desc ) );
+					return array_merge(
+						$element,
+						array(
+							'title' => $title,
+							'desc'  => $desc,
+						)
+					);
+
 				case 'number':
 				case 'select':
 					if ( ! empty( $special_options ) ) {
 
 						$element = array_merge( $element, $special_options );
 					}
+					// Select and number may have a Description.
 				case 'checkbox':
-				case 'text':	
+				case 'text':
 					if ( ! empty( $desc ) ) {
 
-						$element = array_merge( $element, array( 'desc' => $desc, 'desc_tip' => true ) );
+						$element = array_merge(
+							$element,
+							array(
+								'desc'     => $desc,
+								'desc_tip' => true,
+							)
+						);
 
 					}
 
 					$element['title'] = $title;
 					break;
 				default:
-					error_log( $type . ' is nut supported yet!' );
+					error_log( $type . ' is not a valid tyope!!' );
 					break;
 			}
 
