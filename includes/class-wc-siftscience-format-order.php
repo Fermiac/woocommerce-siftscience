@@ -7,7 +7,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
@@ -23,10 +23,11 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private $_transaction;
 		private $_logger;
 
-		public function __construct( WC_SiftScience_Format_Items $items,
-		                             WC_SiftScience_Format_Transaction $transaction,
-		                             WC_SiftScience_Options $options,
-		                             WC_SiftScience_Logger $logger ) {
+		public function __construct(
+				WC_SiftScience_Format_Items $items,
+				WC_SiftScience_Format_Transaction $transaction,
+				WC_SiftScience_Options $options,
+				WC_SiftScience_Logger $logger ) {
 			$this->_options     = $options;
 			$this->_items       = $items;
 			$this->_transaction = $transaction;
@@ -55,7 +56,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				'$payment_methods'  => $payment_method ? array( $payment_method ) : null,
 			);
 
-			// only add session id if it exists
+			// only add session id if it exists.
 			$session_id = $this->_options->get_order_session_id( $order );
 			if ( $session_id !== '' ) {
 				$data[ '$session_id' ] = $session_id;
@@ -68,7 +69,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			}
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
+		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status.
 		public function update_order_status( $order_id ) {
 			$order = wc_get_order( $order_id );
 			if ( $order === false ) {

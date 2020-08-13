@@ -6,13 +6,12 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 	class WC_SiftScience_Html {
-
 		private static function tag_params( $params, $str_enclose = '"' ) {
 			$result = '';
 			foreach ( $params as $k => $v ) {

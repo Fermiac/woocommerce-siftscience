@@ -7,7 +7,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ! class_exists( "WC_SiftScience_Api" ) ) :
@@ -24,8 +24,12 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		private $_logger;
 		private $_stats;
 
-		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Events $events,
-			WC_SiftScience_Options $options, WC_SiftScience_Logger $logger, WC_SiftScience_Stats $stats ) {
+		public function __construct(
+				WC_SiftScience_Comm $comm,
+				WC_SiftScience_Events $events,
+				WC_SiftScience_Options $options,
+				WC_SiftScience_Logger $logger,
+				WC_SiftScience_Stats $stats ) {
 			$this->_comm = $comm;
 			$this->_events = $events;
 			$this->_options = $options;
