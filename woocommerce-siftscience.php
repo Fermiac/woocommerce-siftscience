@@ -34,6 +34,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-stats.php';
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-instrumentation.php';
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-comm.php';
+	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-html.php';
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-format.php';
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-api.php';
 	require_once dirname( __FILE__ ) . '/includes/class-wc-siftscience-events.php';
@@ -53,6 +54,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$logger  = new WC_SiftScience_Logger( $options );
 			$stats   = new WC_SiftScience_Stats( $options, $logger );
 			$comm    = new WC_SiftScience_Comm( $options, $logger );
+			$html    = new WC_SiftScience_Html();
 
 			// Construct formatting classes.
 			$transaction = new WC_SiftScience_Format_Transaction( $options );
@@ -65,7 +67,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			$events = new WC_SiftScience_Events( $comm, $options, $format, $logger );
 			$order  = new WC_SiftScience_Orders( $options );
-			$admin  = new WC_SiftScience_Admin( $options, $comm, $logger, $stats );
+			$admin  = new WC_SiftScience_Admin( $options, $comm, $html, $logger, $stats );
 			$api    = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
 			$stripe = new WC_SiftScience_Stripe( $events, $logger, $stats );
 

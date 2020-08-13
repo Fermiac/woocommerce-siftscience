@@ -22,16 +22,19 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $_logger;
 		private $_stats;
 		private $_comm;
+		private $html;
 
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Comm $comm,
+				WC_SiftScience_Html $html,
 				WC_SiftScience_Logger $logger,
 				WC_SiftScience_Stats $stats ) {
 			$this->_options = $options;
-			$this->_comm = $comm;
-			$this->_logger = $logger;
-			$this->_stats = $stats;
+			$this->_comm    = $comm;
+			$this->html     = $html;
+			$this->_logger  = $logger;
+			$this->_stats   = $stats;
 		}
 
 		public function check_api() {
