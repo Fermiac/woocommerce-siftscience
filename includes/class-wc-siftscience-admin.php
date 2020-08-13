@@ -331,8 +331,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				case 'number':
 				case 'select':
 					if ( ! empty( $element_options ) ) {
-
 						$element = array_merge( $element, $element_options );
+					} elseif ( 'select' === $type ) {
+						$this->_logger->log_error( 'Drop down connot be empty' );
+						break;
 					}
 					// Select and number may have a Description.
 				case 'checkbox':
