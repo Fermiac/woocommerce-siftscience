@@ -183,11 +183,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			foreach ( $stats as $outer_k => $outer_v ) {
 
-				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );				
+				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );
 
 				echo '<table><thead>',
-					 '<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
-					 '</thead><tbody>';
+					'<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
+					'</thead><tbody>';
 
 				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
 					echo '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
@@ -204,11 +204,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
-				
-				$this->get_element( 'title', 'siftsci_stats_title','Sift Stats and Debug Reporting','<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
-					          'All information is anonymous and cannot be traced back to your site. For details, click ' .
-					          '<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					          'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor  ),
+
+				$this->get_element(
+					'title',
+					'siftsci_stats_title',
+					'Sift Stats and Debug Reporting',
+					'<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
+					'All information is anonymous and cannot be traced back to your site. For details, click ' .
+					'<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
+					'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor
+				),
 
 				$this->get_element( 'checkbox', WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
@@ -254,34 +259,43 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function get_settings() {
 			return array(
 				$this->get_element( 'title', 'siftsci_title', 'Sift Settings' ),
+				$this->get_element( 'text', WC_SiftScience_Options::API_KEY, 'Rest API Key', 'The API key for production' ),
+				$this->get_element( 'text', WC_SiftScience_Options::JS_KEY, 'Javascript Snippet Key', 'Javascript snippet key for production' ),
 
-				$this->get_element( 'text', WC_SiftScience_Options::API_KEY,
-					'Rest API Key', 'The API key for production' ),
-
-				$this->get_element( 'text', WC_SiftScience_Options::JS_KEY,
-					'Javascript Snippet Key', 'Javascript snippet key for production' ),
-
-				$this->get_element( 'number', WC_SiftScience_Options::THRESHOLD_GOOD,
-					'Good Score Threshold', 'Scores below this value are considered good and shown in green', array( 'default' => 30) ),
-
-				$this->get_element( 'number', WC_SiftScience_Options::THRESHOLD_BAD,
-					'Bad Score Threshold', 'Scores above this value are considered bad and shown in red', array( 'default' => 60 ) ),
-
-				$this->get_element( 'text', WC_SiftScience_Options::NAME_PREFIX,
-					'User & Order Name Prefix',
-					'Prefix to give order and user names. '
-					. 'Useful when you have have multiple stores and one Sift account.' ),
-
-				$this->get_element( 'checkbox', WC_SiftScience_Options::AUTO_SEND_ENABLED,
-					'Automatically Send Data',
-					'Automatically send data to Sift when an order is created'
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::THRESHOLD_GOOD,
+					'Good Score Threshold',
+					'Scores below this value are considered good and shown in green',
+					array( 'default' => 30) 
 				),
 
-				$this->get_element( 'number', WC_SiftScience_Options::MIN_ORDER_VALUE,
-					'Minimum Order Value for Auto Send',
-					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.', array( 'default' => 0 ) ),
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::THRESHOLD_BAD,
+					'Bad Score Threshold',
+					'Scores above this value are considered bad and shown in red',
+					array( 'default' => 60 )
+				),
 
-				$this->get_element( 'sectionend','sifsci_section_main' ),
+				$this->get_element(
+					'text',
+					WC_SiftScience_Options::NAME_PREFIX,
+					'User & Order Name Prefix',
+					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
+				),
+
+				$this->get_element( 'checkbox', WC_SiftScience_Options::AUTO_SEND_ENABLED, 'Automatically Send Data', 'Automatically send data to Sift when an order is created' ),
+
+				$this->get_element(
+					'number',
+					WC_SiftScience_Options::MIN_ORDER_VALUE,
+					'Minimum Order Value for Auto Send',
+					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
+					array( 'default' => 0 )
+				),
+
+				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
 
