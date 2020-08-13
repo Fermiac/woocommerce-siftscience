@@ -343,13 +343,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'desc'  => $desc,
 						)
 					);
-
 				case 'number':
 				case 'select':
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
-						$this->_logger->log_error( 'Drop down ' . $id . ' connot be empty' );
+						$this->_logger->log_error( 'Drop down ' . $id . ' connot be empty!' );
 						break;
 					}
 					// Select and number may have a Description.
@@ -366,7 +365,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						);
 
 					}
-
 					$element['title'] = $title;
 					break;
 				default:
