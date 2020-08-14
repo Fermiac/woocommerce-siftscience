@@ -155,13 +155,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_reporting() {
-			if ( isset( $_GET['reset_guid'] ) ) {
-				if ( '1' === $_GET['reset_guid'] ) {
-					$url = remove_query_arg( 'reset_guid' );
-					delete_option( WC_SiftScience_Options::GUID );
-					wp_safe_redirect( $url );
-					exit();
-				}
+			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
+				$url = remove_query_arg( 'reset_guid' );
+				delete_option( WC_SiftScience_Options::GUID );
+				wp_safe_redirect( $url );
+				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
 			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
