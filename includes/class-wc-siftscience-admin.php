@@ -45,11 +45,15 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->logger->log_info( '[api check response] ' . wp_json_encode( $response ) );
 			return isset( $response->status ) && ( 0 === $response->status || 54 === $response->status );
 		}
-
+		/**
+		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
+		 *
+		 * @global Array $current_section
+		 */
 		public function get_sections() {
 			global $current_section;
 			$sections = array(
-				''          => 'Settings',
+				'main'      => 'Settings',
 				'reporting' => 'Reporting',
 				'stats'     => 'Stats',
 				'debug'     => 'Debug',
@@ -58,12 +62,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$tabs = array();
 			foreach ( $sections as $id => $label ) {
 				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
-				$class  = $current_section == $id ? 'current' : '';
-				$tabs[] = "<a href='$url' class='$class'>$label</a>";
+				$class  = $current_section === $id ? 'current' : '';
+				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
 			}
 
 			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
-			echo "<ul class='subsubsub'>$tabs_html</ul><br class='clear' />";
+			echo '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />';
 		}
 
 		public function output_settings_fields() {
