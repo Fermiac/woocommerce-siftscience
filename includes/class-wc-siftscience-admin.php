@@ -48,7 +48,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		/**
 		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
 		 *
-		 * @global Array $current_section
+		 * @global String $current_section
 		 */
 		public function get_sections() {
 			global $current_section;
