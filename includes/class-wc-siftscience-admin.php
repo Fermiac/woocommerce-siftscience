@@ -1,8 +1,10 @@
 <?php
-
-/*
- * Author: Nabeel Sulieman
- * Description: This class handles the plugin's settings page.
+/**
+ * This class handles the plugin's settings page.
+ *
+ * @author Nabeel Sulieman, Rami Jamleh
+ * @package siftsience
+ *
  * License: GPL2
  */
 
@@ -12,16 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
-	require_once( 'class-wc-siftscience-options.php' );
-	require_once( 'class-wc-siftscience-html.php' );
+	require_once 'class-wc-siftscience-options.php';
+	require_once 'class-wc-siftscience-html.php';
 
 	class WC_SiftScience_Admin {
-		private const ADMIN_ID = 'siftsci';
+		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
-		private $_options;
-		private $_logger;
-		private $_stats;
-		private $_comm;
+		private $options;
+		private $logger;
+		private $stats;
+		private $comm;
 		private $html;
 
 		public function __construct(
@@ -30,33 +32,33 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				WC_SiftScience_Html $html,
 				WC_SiftScience_Logger $logger,
 				WC_SiftScience_Stats $stats ) {
-			$this->_options = $options;
-			$this->_comm    = $comm;
-			$this->html     = $html;
-			$this->_logger  = $logger;
-			$this->_stats   = $stats;
+			$this->options = $options;
+			$this->comm    = $comm;
+			$this->html    = $html;
+			$this->logger  = $logger;
+			$this->stats   = $stats;
 		}
 
 		public function check_api() {
 			// try requesting a non-existent user score and see that the response isn't a permission fail.
-			$response = $this->_comm->get_user_score( '_dummy_' . rand( 1000, 9999 ) );
-			$this->_logger->log_info( '[api check response] ' . json_encode( $response ) );
-			return isset( $response->status ) && ( $response->status === 0 || $response->status === 54 );
+			$response = $this->comm->get_user_score( '_dummy_' . wp_rand( 1000, 9999 ) );
+			$this->logger->log_info( '[api check response] ' . wp_json_encode( $response ) );
+			return isset( $response->status ) && ( 0 === $response->status || 54 === $response->status );
 		}
 
 		public function get_sections() {
 			global $current_section;
-			$sections  = array(
-				'' => 'Settings',
+			$sections = array(
+				''          => 'Settings',
 				'reporting' => 'Reporting',
-				'stats' => 'Stats',
-				'debug' => 'Debug',
+				'stats'     => 'Stats',
+				'debug'     => 'Debug',
 			);
 
 			$tabs = array();
 			foreach ( $sections as $id => $label ) {
-				$url = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
-				$class = $current_section == $id ? 'current' : '';
+				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
+				$class  = $current_section == $id ? 'current' : '';
 				$tabs[] = "<a href='$url' class='$class'>$label</a>";
 			}
 
@@ -92,7 +94,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
 			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
-			wp_localize_script( 'wc-siftsci-script', "_siftsci_app_data", $data );
+			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
 		}
 
 		private function styling_checkbox_label( $label_for ) {
@@ -101,37 +103,38 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private static function enqueue_script( $name, $file, $deps ) {
 			$version = time(); // TODO: Make this switchable for dev purposes.
-			$path = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
+			$path    = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
 			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
 
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
-			if ( isset( $_GET[ 'clear_logs' ] ) ) {
-				$url =  remove_query_arg( 'clear_logs' );
-				$fh = fopen( $log_file, 'w' );
+			if ( isset( $_GET['clear_logs'] ) ) {
+				$url = remove_query_arg( 'clear_logs' );
+				$fh  = fopen( $log_file, 'w' );
 				fclose( $fh );
-				wp_redirect( $url );
+				wp_safe_redirect( $url );
 				exit;
 			}
 
-			$GLOBALS[ 'hide_save_button' ] = true;
-			$logs = 'none';
+			$logs                        = 'none';
+			$GLOBALS['hide_save_button'] = true;
+
 			if ( file_exists( $log_file ) ) {
 				$logs = file_get_contents( $log_file );
 			}
 
 			// SSL check logic.
 			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-			if ( isset( $_GET[ 'test_ssl' ] ) ) {
+			if ( isset( $_GET['test_ssl'] ) ) {
 				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 				$data = curl_exec( $ch );
 				curl_close( $ch );
 				$tls_version = json_decode( $data )->tls_version;
-				$data =  "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_redirect( remove_query_arg( 'test_ssl' ) );
+				wp_safe_redirect( remove_query_arg( 'test_ssl' ) );
 				exit;
 			}
 
@@ -152,12 +155,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_reporting() {
-			if ( isset( $_GET[ 'reset_guid' ] ) ) {
-				if ( $_GET[ 'reset_guid' ] == 1 ) {
+			if ( isset( $_GET['reset_guid'] ) ) {
+				if ( '1' === $_GET['reset_guid'] ) {
 					$url = remove_query_arg( 'reset_guid' );
 					delete_option( WC_SiftScience_Options::GUID );
-					wp_redirect( $url );
-					exit(); 
+					wp_safe_redirect( $url );
+					exit();
 				}
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
@@ -165,23 +168,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function output_settings_stats() {
-			$GLOBALS[ 'hide_save_button' ] = true;
-			if ( isset( $_GET[ 'clear_stats' ] ) ) {
+			$GLOBALS['hide_save_button'] = true;
+			if ( isset( $_GET['clear_stats'] ) ) {
 				$url = remove_query_arg( 'clear_stats' );
-				$this->_stats->clear_stats();
-				wp_redirect( $url );
+				$this->stats->clear_stats();
+				wp_safe_redirect( $url );
 				exit;
 			}
 
 			echo '<h2>Statistics</h2>';
 
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
-			if ( $stats === 'none' ) {
+			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
 			}
 
-			$stats = json_decode( $stats , true );
+			$stats = json_decode( $stats, true );
 			ksort( $stats );
 
 			foreach ( $stats as $outer_k => $outer_v ) {
@@ -218,7 +221,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
 					'All information is anonymous and cannot be traced back to your site. For details, click ' .
 					'<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					'Your anonymous id is: ' . $this->_options->get_guid() . $reset_anchor
+					'Your anonymous id is: ' . $this->options->get_guid() . $reset_anchor
 				),
 				$this->get_element(
 					'checkbox',
@@ -351,7 +354,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
-						$this->_logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						break;
 					}
 					// Select and number may have a Description.
@@ -371,7 +374,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					$element['title'] = $title;
 					break;
 				default:
-					$this->_logger->log_error( $type . ' is not a valid type!' );
+					$this->logger->log_error( $type . ' is not a valid type!' );
 					break;
 			}
 
@@ -384,22 +387,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		private function notice_config() {
-			$uri = $_SERVER[ 'REQUEST_URI' ];
-			$is_admin_page = strpos( $uri, 'tab=siftsci') > 0;
-			if ( $is_admin_page || $this->_options->is_setup() ) {
+			$uri           = $_SERVER['REQUEST_URI'];
+			$is_admin_page = strpos( $uri, 'tab=siftsci' ) > 0;
+			if ( $is_admin_page || $this->options->is_setup() ) {
 				return;
 			}
 
 			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 			$here = "<a href='$link'>here</a>";
-			echo "<div class='notice notice-error is-dismissible'>" .
-			     "<p>Sift configuration is invalid. Click $here to update.</p>" .
-			     "</div>";
+			echo <<<NOTICE
+			<div class='notice notice-error is-dismissible'>
+			<p>Sift configuration is invalid. Click $here to update.</p>
+			</div>
+NOTICE;
 		}
-
-		private function notice_stats() {
+			private function notice_stats() {
+			$enabled         = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string.
-			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
@@ -408,34 +412,37 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$value = $_GET[ $set_siftsci_key ];
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
 				$url = remove_query_arg( $set_siftsci_key );
-				wp_redirect( $url );
+				wp_safe_redirect( $url );
 				exit;
 			}
 
+			$link_no  = add_query_arg( array( $set_siftsci_key => 'no' ) );
 			$link_yes = add_query_arg( array( $set_siftsci_key => 'yes' ) );
-			$link_no = add_query_arg( array( $set_siftsci_key => 'no' ) );
-			
+
+			$no  = "<a href='$link_no'>disable</a>";
 			$yes = "<a href='$link_yes'>Enable</a>";
-			$no = "<a href='$link_no'>disable</a>";
 
 			$link_info = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
-			$details = "<a target='_blank' href='$link_info'>more info</a>";
+			$details   = "<a target='_blank' href='$link_info'>more info</a>";
 
 			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
 
-			echo '<div class="notice notice-error is-dismissible">'.
-			     "<p> $message $yes, $no, $details. </p>" .
-			     '</div>';
+			echo <<<IMPROVE
+			<div class="notice notice-error is-dismissible">
+				<p> $message $yes, $no, $details. </p>
+			</div>
+IMPROVE;
 		}
 
 		public function batch_upload() {
-			return "<table class='form-table'><tbody>" .
-			       "<tr valign='top'>" .
-			       "<th scope='row' class='titledesc'><label>Batch Upload</label></th>" .
-			       "<td class='forminp forminp-text'><div id='batch-upload'></div></td>" .
-			       "</tr>" .
-			       "</tbody></table>";
+			return <<<'table'
+			<table class='form-table'><tbody>
+			<tr valign='top'>
+			<th scope='row' class='titledesc'><label>Batch Upload</label></th>
+			<td class='forminp forminp-text'><div id='batch-upload'></div></td>
+			</tr>
+			</tbody></table>
+table;
 		}
 	}
-
 endif;
