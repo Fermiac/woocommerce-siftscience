@@ -218,10 +218,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'title',
 					'siftsci_stats_title',
 					'Sift Stats and Debug Reporting',
-					'<p>Help us improve this plugin by automatically reporting errors and statistics. ' .
-					'All information is anonymous and cannot be traced back to your site. For details, click ' .
-					'<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>' .
-					'Your anonymous id is: ' . $this->options->get_guid() . $reset_anchor
+					<<<TITLE
+					<p>Help us improve this plugin by automatically reporting errors and statistics. All information is anonymous and cannot be traced back to your site. For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.
+					</p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor
+TITLE
 				),
 				$this->get_element(
 					'checkbox',
