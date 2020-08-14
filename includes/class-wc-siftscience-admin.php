@@ -50,9 +50,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			$sections = array(
 				''          => 'Settings',
+				'reporting' => 'Reporting',
 				'stats'     => 'Stats',
 				'debug'     => 'Debug',
-				'reporting' => 'Reporting',
 			);
 
 			$tabs = array();
