@@ -219,15 +219,15 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'siftsci_stats_title',
 					'Sift Stats and Debug Reporting',
 					<<<TITLE
-					<p>Help us improve this plugin by automatically reporting errors and statistics. All information is anonymous and cannot be traced back to your site. For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.
-					</p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor
+					<p> Help us improve this plugin by automatically reporting errors and statistics. All information is anonymous and cannot be traced back to your site. For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>
+					<p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor </p>
 TITLE
 				),
 				$this->get_element(
 					'checkbox',
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
-					'<p>Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
+					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.'
 				),
 				$this->get_element(
 					'select',
