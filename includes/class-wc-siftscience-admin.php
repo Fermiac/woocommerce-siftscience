@@ -227,7 +227,7 @@ TITLE
 					'checkbox',
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
-					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
+					'<p>Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>'
 				),
 				$this->get_element(
 					'select',
