@@ -86,6 +86,12 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 
 			if ( $order_id ) {
 				$user_id = $this->get_user_id( $order_id );
+				if ( false === $user_id ) {
+					return array(
+						'status' => 400,
+						'error'  => 'User not found for order',
+					);
+				}
 			}
 
 			switch ( $action ) {
@@ -159,20 +165,26 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			return $this->list_stats();
 		}
 
-		public function get_orders( $order_ids ) {
+		private function get_orders( $order_ids ) {
 			$result = array();
 			$ids    = explode( ',', $order_ids );
+
 			foreach ( $ids as $order_id ) {
-				$user_id  = $this->get_user_id( $order_id );
+				$user_id = $this->get_user_id( $order_id );
+				if ( false === $user_id ) {
+					continue;
+				}
+
 				$result[] = $this->get_score( $order_id, $user_id );
 			}
 			return $result;
 		}
 
 		private function get_score( $order_id, $user_id ) {
-			$sift              = $this->comm->get_user_score( $user_id );
+
 			$backfill_meta_key = $this->options->get_backfill_meta_key();
-			$is_backfilled     = get_post_meta( $order_id, $backfill_meta_key, true ) === '1';
+			$is_backfilled     = '1' === get_post_meta( $order_id, $backfill_meta_key, true );
+			$sift              = $this->comm->get_user_score( $user_id );
 
 			return array(
 				'order_id'      => $order_id,
@@ -186,10 +198,7 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			$meta = get_post_meta( $order_id, '_customer_user', true );
 
 			if ( false === $meta ) {
-				return array(
-					'status' => 400,
-					'error'  => 'order id not found: ' . $order_id,
-				);
+				return false;
 			}
 
 			return '0' === $meta

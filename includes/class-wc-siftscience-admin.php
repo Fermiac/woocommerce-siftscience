@@ -52,6 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		public function get_sections() {
 			global $current_section;
+			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 			$sections = array(
 				'main'      => 'Settings',
 				'reporting' => 'Reporting',
@@ -62,7 +63,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$tabs = array();
 			foreach ( $sections as $id => $label ) {
 				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
-				$class  = $current_section === $id ? 'current' : '';
+				$class  = $selected_section === $id ? 'current' : '';
 				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
 			}
 
