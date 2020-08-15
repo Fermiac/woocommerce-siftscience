@@ -15,6 +15,8 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
 
+		private $version;
+		private $log_level;
 		private const SCHEMA = 'siftsci_';
 
 		public const GUID    = self::SCHEMA . 'guid';
@@ -34,8 +36,6 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
 		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
 
-		private $version;
-		private $log_level;
 
 		public function __construct( $version = false ) {
 			$this->version = $version;
