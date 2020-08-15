@@ -52,6 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function get_sections() {
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
+
 			$sections = array(
 				'main'      => 'Settings',
 				'reporting' => 'Reporting',
