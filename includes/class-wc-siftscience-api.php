@@ -84,7 +84,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				if ( $user_id === false ) {
 					return array (
 						'status' => 400,
-						'error' => 'User not found for order: ' . $order_id
+						'error' => 'User not found for order',
 					);
 				}
 			}
@@ -157,7 +157,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			return $this->list_stats();
 		}
 
-		public function get_orders( $order_ids ) {
+		private function get_orders( $order_ids ) {
 			$result = array();
 			$ids = explode( ',', $order_ids );
 			foreach( $ids as $order_id ) {
