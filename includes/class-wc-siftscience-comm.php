@@ -54,7 +54,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 				'$abuse_type' => 'payment_abuse',
 			);
 
-			$url  = str_replace( '{user}', urlencode( $user_id ), self::LABELS_URL );
+			$url  = str_replace( '{user}', rawurlencode( $user_id ), self::LABELS_URL );
 			$args = array(
 				'headers' => self::HEADERS,
 				'method'  => 'POST',
