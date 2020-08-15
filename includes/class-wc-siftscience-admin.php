@@ -4,8 +4,7 @@
  *
  * @author Nabeel Sulieman, Rami Jamleh
  * @package siftsience
- *
- * License: GPL2
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
