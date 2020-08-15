@@ -113,7 +113,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 				default:
 					return array(
 						'status' => 400,
-						'error' => 'unknown action: ' . $action
+						'error' => 'unknown action: ' . $action,
 					);
 			}
 
@@ -162,7 +162,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 			$ids = explode( ',', $order_ids );
 			foreach( $ids as $order_id ) {
 				$user_id = $this->get_user_id( $order_id );
-				if ( $user_id === false ) {
+				if ( false === $user_id ) {
 					continue;
 				}
 				$result[] = $this->get_score( $order_id, $user_id );
@@ -172,7 +172,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 
 		private function get_score( $order_id, $user_id ) {
 			$backfill_meta_key = $this->_options->get_backfill_meta_key();
-			$is_backfilled = get_post_meta( $order_id, $backfill_meta_key, true ) === '1';
+			$is_backfilled = '1' === get_post_meta( $order_id, $backfill_meta_key, true ) ;
 			$sift = $this->_comm->get_user_score( $user_id );
 
 			return array(
@@ -186,7 +186,7 @@ if ( ! class_exists( "WC_SiftScience_Api" ) ) :
 		private function get_user_id( $order_id ) {
 			$meta = get_post_meta( $order_id, '_customer_user', true );
 
-			if ( $meta === false ) {
+			if ( false === $meta ) {
 				return false;
 			}
 
