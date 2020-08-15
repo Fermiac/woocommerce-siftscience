@@ -1,9 +1,10 @@
 <?php
-
-/*
- * Author: Nabeel Sulieman
- * Description: This class gets and sets the plugin options.
- * License: GPL2
+/**
+ * This class gets and sets the plugin options.
+ *
+ * @author Nabeel Sulieman, Rami Jamleh
+ * @package siftsience
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,35 +14,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 	class WC_SiftScience_Options {
-		public const API_KEY = 'siftsci_api_key';
-		public const JS_KEY = 'siftsci_js_key';
-		public const NAME_PREFIX = 'siftsci_name_prefix';
-		public const THRESHOLD_GOOD = 'siftsci_threshold_good';
-		public const THRESHOLD_BAD = 'siftsci_threshold_bad';
-		public const AUTO_SEND_ENABLED = 'siftsci_auto_send_enabled';
-		public const MIN_ORDER_VALUE = 'siftsci_min_order_value';
-		public const LOG_LEVEL_KEY = 'siftsci_log_level';
-		public const IS_API_SETUP = 'siftsci_is_api_setup'; 
-		public const STATS = 'siftsci_stats';
-		public const STATS_API = 'https://sift.fermiac.staat.us';
-		public const SEND_STATS = 'siftsci_send_stats';
-		public const STATS_LAST_SENT = 'siftsci_stats_last_sent';
-		public const GUID = 'siftsci_guid';
 
-		private $_version;
-		private $_log_level;
+		private const SCHEMA = 'siftsci_';
+
+		public const GUID    = self::SCHEMA . 'guid';
+		public const API_KEY = self::SCHEMA . 'api_key';
+		public const JS_KEY  = self::SCHEMA . 'js_key';
+		public const STATS   = self::SCHEMA . 'stats';
+
+		public const SEND_STATS  = self::SCHEMA . 'send_stats';
+		public const NAME_PREFIX = self::SCHEMA . 'name_prefix';
+		public const STATS_API   = 'https://sift.fermiac.staat.us';
+
+		public const THRESHOLD_GOOD    = self::SCHEMA . 'threshold_good';
+		public const THRESHOLD_BAD     = self::SCHEMA . 'threshold_bad';
+		public const AUTO_SEND_ENABLED = self::SCHEMA . 'auto_send_enabled';
+		public const MIN_ORDER_VALUE   = self::SCHEMA . 'min_order_value';
+		public const LOG_LEVEL_KEY     = self::SCHEMA . 'log_level';
+		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
+		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
+
+		private $version;
+		private $log_level;
 
 		public function __construct( $version = false ) {
-			$this->_version = $version;
-			$this->_log_level = get_option( self::LOG_LEVEL_KEY, 2 );
+			$this->version = $version;
+			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
 		public function get_log_level() {
-			return $this->_log_level;
+			return $this->log_level;
 		}
 
 		public function get_version() {
-			return $this->_version;
+			return $this->version;
 		}
 
 		public function get_api_key() {
@@ -100,7 +106,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public function get_guid() {
 			$guid = get_option( self::GUID, false );
-			if ( $guid === false ) {
+			if ( false === $guid ) {
 				$guid = $this->generate_guid();
 				update_option( self::GUID, $guid );
 			}
@@ -139,16 +145,19 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 * @return string
 		 */
 		private function generate_guid() {
-			return strtolower( sprintf( '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
-				mt_rand( 0, 65535 ),
-				mt_rand( 0, 65535 ),
-				mt_rand( 0, 65535 ),
-				mt_rand( 16384, 20479 ),
-				mt_rand( 32768, 49151 ),
-				mt_rand( 0, 65535 ),
-				mt_rand( 0, 65535 ),
-				mt_rand( 0, 65535 )
-			) );
+			return strtolower(
+				sprintf(
+					'%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
+					wp_rand( 0, 65535 ),
+					wp_rand( 0, 65535 ),
+					wp_rand( 0, 65535 ),
+					wp_rand( 16384, 20479 ),
+					wp_rand( 32768, 49151 ),
+					wp_rand( 0, 65535 ),
+					wp_rand( 0, 65535 ),
+					wp_rand( 0, 65535 )
+				)
+			);
 		}
 	}
 
