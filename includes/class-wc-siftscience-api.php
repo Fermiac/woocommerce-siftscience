@@ -3,8 +3,8 @@
  * This class handles the API request ( from the React components ).
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience.
- * License: GPL2
+ * @package siftsience
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
