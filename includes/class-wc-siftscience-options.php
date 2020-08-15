@@ -17,6 +17,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		private $version;
 		private $log_level;
+
 		private const SCHEMA = 'siftsci_';
 
 		public const GUID    = self::SCHEMA . 'guid';
