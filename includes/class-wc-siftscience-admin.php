@@ -438,10 +438,10 @@ IMPROVE;
 
 		public function batch_upload() {
 			return <<<'table'
-			<table class='form-table'><tbody>
-			<tr valign='top'>
-			<th scope='row' class='titledesc'><label>Batch Upload</label></th>
-			<td class='forminp forminp-text'><div id='batch-upload'></div></td>
+			<table class="form-table"><tbody>
+			<tr valign="top">
+			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
+			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
 			</tr>
 			</tbody></table>
 table;
