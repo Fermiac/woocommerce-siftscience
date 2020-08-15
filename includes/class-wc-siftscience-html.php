@@ -1,8 +1,10 @@
 <?php
-/*
+/**
  * Author: Nabeel Sulieman
  * Description: This class contains helpers for generating the visual components of the plugin.
  * License: GPL2
+ *
+ * @package SiftScience
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
+	/**
+	 * Class for HTML helpers
+	 */
 	class WC_SiftScience_Html {
+		/**
+		 * Create a tag
+		 *
+		 * @param array  $params Param field.
+		 * @param string $str_enclose string to enclose inside.
+		 *
+		 * @return string resulting html
+		 */
 		private function tag_params( $params, $str_enclose = '"' ) {
 			$result = '';
 			foreach ( $params as $k => $v ) {
