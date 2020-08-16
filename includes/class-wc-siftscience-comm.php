@@ -12,12 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
+
 	require_once 'class-wc-siftscience-options.php';
 
 	class WC_SiftScience_Comm {
 		private const EVENT_URL  = 'https://api.sift.com/v204/events';
-		private const LABELS_URL = 'https://api.sift.com/v204/users/{user}/labels';
 		private const SCORE_URL  = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
+		private const LABELS_URL = 'https://api.sift.com/v204/users/{user}/labels';
 		private const DELETE_URL = 'https://api.sift.com/v204/users/{user}/labels/?api_key={api}&abuse_type=payment_abuse';
 
 		private const HEADERS = array(
@@ -50,7 +51,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 		public function post_label( $user_id, $is_bad ) {
 			$data = array(
 				'$api_key'    => $this->options->get_api_key(),
-				'$is_bad'     => ( $is_bad ? 'true' : 'false' ),
+				'$is_bad'     => ( $is_bad ? true : false ),
 				'$abuse_type' => 'payment_abuse',
 			);
 
@@ -58,7 +59,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			$args = array(
 				'headers' => self::HEADERS,
 				'method'  => 'POST',
-				'body'    => $data
+				'body'    => $data,
 			);
 
 			return $this->send_request( $url, $args );
