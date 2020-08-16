@@ -21,25 +21,24 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		private const SCHEMA = 'siftsci_';
 
 		public const GUID    = self::SCHEMA . 'guid';
-		public const API_KEY = self::SCHEMA . 'api_key';
-		public const JS_KEY  = self::SCHEMA . 'js_key';
 		public const STATS   = self::SCHEMA . 'stats';
+		public const JS_KEY  = self::SCHEMA . 'js_key';
+		public const API_KEY = self::SCHEMA . 'api_key';
 
 		public const SEND_STATS  = self::SCHEMA . 'send_stats';
 		public const NAME_PREFIX = self::SCHEMA . 'name_prefix';
 		public const STATS_API   = 'https://sift.fermiac.staat.us';
 
-		public const THRESHOLD_GOOD    = self::SCHEMA . 'threshold_good';
-		public const THRESHOLD_BAD     = self::SCHEMA . 'threshold_bad';
-		public const AUTO_SEND_ENABLED = self::SCHEMA . 'auto_send_enabled';
-		public const MIN_ORDER_VALUE   = self::SCHEMA . 'min_order_value';
-		public const LOG_LEVEL_KEY     = self::SCHEMA . 'log_level';
 		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
+		public const THRESHOLD_BAD     = self::SCHEMA . 'threshold_bad';
+		public const LOG_LEVEL_KEY     = self::SCHEMA . 'log_level';
+		public const THRESHOLD_GOOD    = self::SCHEMA . 'threshold_good';
+		public const MIN_ORDER_VALUE   = self::SCHEMA . 'min_order_value';
 		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
-
+		public const AUTO_SEND_ENABLED = self::SCHEMA . 'auto_send_enabled';
 
 		public function __construct( $version = false ) {
-			$this->version = $version;
+			$this->version   = $version;
 			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
