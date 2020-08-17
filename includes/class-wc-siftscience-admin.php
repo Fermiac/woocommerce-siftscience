@@ -161,10 +161,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
-				$url = remove_query_arg( 'reset_guid' );
-				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( $url );
-				exit();
+				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_title( wp_unslash( $_GET['reset_guid_nonce'] ) ) ) ) {
+					$url = remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) );
+					delete_option( WC_SiftScience_Options::GUID );
+					wp_safe_redirect( $url );
+					exit();
+				}
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
 			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
@@ -214,6 +216,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function get_settings_stats() {
 			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
+			$reset_url    = wp_nonce_url( $reset_url, -1, 'reset_guid_nonce' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
