@@ -1,9 +1,10 @@
 <?php
-
-/*
- * Author: Nabeel Sulieman
- * Description: This class format woocommerce login and logout events into the Sift format.
- * License: GPL2
+/**
+ * This class format woocommerce login and logout events into the Sift format.
+ *
+ * @author Nabeel Sulieman
+ * @license GPL2
+ * @package siftscience-for-woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,48 +15,82 @@ if ( ! class_exists( 'WC_SiftScience_Format_Login' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 
+	/**
+	 * Class WC_SiftScience_Format_Login
+	 */
 	class WC_SiftScience_Format_Login {
-		private $_options;
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
+		private $options;
 
+		/**
+		 * WC_SiftScience_Format_Login constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 */
 		public function __construct( WC_SiftScience_Options $options ) {
-			$this->_options = $options;
+			$this->options = $options;
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login.
+		/**
+		 * Successful login event
+		 *
+		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @param WP_User $user The user object.
+		 *
+		 * @return array
+		 */
 		public function login_success( WP_User $user ) {
 			$data = array(
 				'$type'         => '$login',
-				'$user_id'      => $this->_options->get_user_id_from_user_id( $user->ID ),
-				'$session_id'   => $this->_options->get_session_id(),
-				'$login_status' => '$success'
+				'$user_id'      => $this->options->get_user_id_from_user_id( $user->ID ),
+				'$session_id'   => $this->options->get_session_id(),
+				'$login_status' => '$success',
 			);
 
 			return apply_filters( 'wc_siftscience_login_success', $data );
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login.
+		/**
+		 * Failed login event
+		 *
+		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @param string $username The attempted username.
+		 *
+		 * @return array
+		 */
 		public function login_failure( $username ) {
 			$data = array(
 				'$type'         => '$login',
 				'$login_status' => '$failure',
-				'$session_id'   => $this->_options->get_session_id(),
+				'$session_id'   => $this->options->get_session_id(),
 			);
 
 			$user = get_user_by( 'login', $username );
 			if ( false !== $user ) {
-				$data[ '$user_id' ] = $this->_options->get_user_id_from_user_id( $user->ID );
+				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user->ID );
 			}
 
 			return apply_filters( 'wc_siftscience_login_failure', $data );
 		}
 
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout.
+		/**
+		 * The logout event
+		 *
+		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
+		 * @param string $user_id Logged out user id.
+		 *
+		 * @return array
+		 */
 		public function logout( $user_id ) {
 			$data = null;
 			if ( null !== $user_id && 0 !== $user_id ) {
 				$data = array(
-					'$type'         => '$logout',
-					'$user_id'      => $this->_options->get_user_id_from_user_id( $user_id ),
+					'$type'    => '$logout',
+					'$user_id' => $this->options->get_user_id_from_user_id( $user_id ),
 				);
 			}
 
