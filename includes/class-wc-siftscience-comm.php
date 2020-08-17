@@ -15,6 +15,9 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 
+	/**
+	 * Class WC_SiftScience_Comm
+	 */
 	class WC_SiftScience_Comm {
 		private const EVENT_URL  = 'https://api.sift.com/v204/events';
 		private const SCORE_URL  = 'https://api.sift.com/v204/score/{user}/?api_key={api}';
@@ -26,9 +29,26 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			'Content-Type' => 'application/json',
 		);
 
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
 		private $options;
+
+		/**
+		 * Logger service
+		 *
+		 * @var WC_SiftScience_Logger
+		 */
 		private $logger;
 
+		/**
+		 * WC_SiftScience_Comm constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 * @param WC_SiftScience_Logger  $logger Logger service.
+		 */
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Logger $logger ) {
@@ -36,6 +56,13 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			$this->logger  = $logger;
 		}
 
+		/**
+		 * Sends event data to Sift
+		 *
+		 * @param array $data The data to send.
+		 *
+		 * @return array|WP_Error
+		 */
 		public function post_event( $data ) {
 			$data['$api_key'] = $this->options->get_api_key();
 
@@ -48,6 +75,14 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			return $this->send_request( self::EVENT_URL, $args );
 		}
 
+		/**
+		 * Sends a good/bad label to Sift
+		 *
+		 * @param string $user_id ID of the user to label.
+		 * @param bool   $is_bad Is bad.
+		 *
+		 * @return array|WP_Error
+		 */
 		public function post_label( $user_id, $is_bad ) {
 			$data = array(
 				'$api_key'    => $this->options->get_api_key(),
@@ -65,12 +100,26 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			return $this->send_request( $url, $args );
 		}
 
+		/**
+		 * Removes the label the user has
+		 *
+		 * @param string $user The user id to remove label for.
+		 *
+		 * @return array|WP_Error
+		 */
 		public function delete_label( $user ) {
 			$api = $this->options->get_api_key();
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user, self::DELETE_URL ) );
 			return $this->send_request( $url, array( 'method' => 'DELETE' ) );
 		}
 
+		/**
+		 * Gets the score of a user from sift
+		 *
+		 * @param string $user_id User's ID as it's saved in sift.
+		 *
+		 * @return array
+		 */
 		public function get_user_score( $user_id ) {
 			$api = $this->options->get_api_key();
 			$url = str_replace( '{api}', $api, str_replace( '{user}', $user_id, self::SCORE_URL ) );
@@ -80,6 +129,14 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			return json_decode( $response['body'] );
 		}
 
+		/**
+		 * Common function for sending request to sift
+		 *
+		 * @param string $url URL to use.
+		 * @param array  $args Arguments of the request.
+		 *
+		 * @return array|WP_Error
+		 */
 		private function send_request( $url, $args = array() ) {
 			$this->logger->log_info( "Sending Request to Sift API: $url" );
 			$this->logger->log_info( $args );
