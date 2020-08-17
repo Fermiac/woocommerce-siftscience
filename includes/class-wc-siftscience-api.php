@@ -18,13 +18,54 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 	require_once 'class-wc-siftscience-logger.php';
 	require_once 'class-wc-siftscience-stats.php';
 
+	/**
+	 * Class WC_SiftScience_Api
+	 */
 	class WC_SiftScience_Api {
+		/**
+		 * Communications service
+		 *
+		 * @var WC_SiftScience_Comm
+		 */
 		private $comm;
+
+		/**
+		 * Events service
+		 *
+		 * @var WC_SiftScience_Events
+		 */
 		private $events;
+
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
 		private $options;
+
+		/**
+		 * Logger service
+		 *
+		 * @var WC_SiftScience_Logger
+		 */
 		private $logger;
+
+		/**
+		 * Stats service
+		 *
+		 * @var WC_SiftScience_Stats
+		 */
 		private $stats;
 
+		/**
+		 * WC_SiftScience_Api constructor.
+		 *
+		 * @param WC_SiftScience_Comm    $comm Communications service.
+		 * @param WC_SiftScience_Events  $events Events service.
+		 * @param WC_SiftScience_Options $options Options service.
+		 * @param WC_SiftScience_Logger  $logger Logger service.
+		 * @param WC_SiftScience_Stats   $stats Stats service.
+		 */
 		public function __construct(
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Events $events,
@@ -38,11 +79,14 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			$this->stats   = $stats;
 		}
 
+		/**
+		 * Handle Ajax calls
+		 */
 		public function handle_ajax() {
 			try {
 				$id     = filter_input( INPUT_GET, 'id' );
 				$action = filter_input( INPUT_GET, 'wcss_action' );
-				$result = $this->handleRequest( $action, $id );
+				$result = $this->handle_request( $action, $id );
 
 				if ( isset( $result['status'] ) ) {
 					http_response_code( $result['status'] );
@@ -69,8 +113,15 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			wp_die();
 		}
 
-		public function handleRequest( $action, $order_id ) {
-
+		/**
+		 * Processes the incoming Ajax request
+		 *
+		 * @param string $action The action to be performed.
+		 * @param string $order_id The ID of the order to perform the action on.
+		 *
+		 * @return array|array[] The request result
+		 */
+		private function handle_request( $action, $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
 					'status' => 401,
@@ -125,6 +176,11 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			return $this->get_score( $order_id, $user_id );
 		}
 
+		/**
+		 * Get all orders
+		 *
+		 * @return int[]|WP_Post[] Posts that were found
+		 */
 		private function get_order_posts() {
 			return get_posts(
 				array(
@@ -135,6 +191,11 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			);
 		}
 
+		/**
+		 * List the summary of stats
+		 *
+		 * @return array[] Stats summary
+		 */
 		private function list_stats() {
 			$backfilled     = array();
 			$not_backfilled = array();
@@ -155,6 +216,11 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			);
 		}
 
+		/**
+		 * Clear all stored back-fill info
+		 *
+		 * @return array[]
+		 */
 		private function clear_all() {
 			$posts    = $this->get_order_posts();
 			$meta_key = $this->options->get_backfill_meta_key();
@@ -165,6 +231,13 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			return $this->list_stats();
 		}
 
+		/**
+		 * Get all order objects referenced in the list of ids
+		 *
+		 * @param string $order_ids List of order ids.
+		 *
+		 * @return array The orders
+		 */
 		private function get_orders( $order_ids ) {
 			$result = array();
 			$ids    = explode( ',', $order_ids );
@@ -180,8 +253,15 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			return $result;
 		}
 
+		/**
+		 * Get the score.
+		 *
+		 * @param string $order_id Order id.
+		 * @param string $user_id User id.
+		 *
+		 * @return array Score information
+		 */
 		private function get_score( $order_id, $user_id ) {
-
 			$backfill_meta_key = $this->options->get_backfill_meta_key();
 			$is_backfilled     = '1' === get_post_meta( $order_id, $backfill_meta_key, true );
 			$sift              = $this->comm->get_user_score( $user_id );
@@ -194,6 +274,13 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 			);
 		}
 
+		/**
+		 * Gets the ID of the user from the order id
+		 *
+		 * @param string $order_id Order ID.
+		 *
+		 * @return false|string The user, or false if none found
+		 */
 		private function get_user_id( $order_id ) {
 			$meta = get_post_meta( $order_id, '_customer_user', true );
 
