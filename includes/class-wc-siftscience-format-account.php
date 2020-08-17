@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class format woocommerce account events into the Sift format.
  *
@@ -16,15 +15,35 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 
+	/**
+	 * Class WC_SiftScience_Format_Account
+	 */
 	class WC_SiftScience_Format_Account {
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
 		private $options;
 
+		/**
+		 * WC_SiftScience_Format_Account constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 */
 		public function __construct( WC_SiftScience_Options $options ) {
 			$this->options = $options;
 		}
 
-		// When doc comment use @link for this site.
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account.
+		/**
+		 * Create account event
+		 *
+		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account
+		 * @param string  $user_id ID of the user.
+		 * @param WP_User $user The user object.
+		 *
+		 * @return array
+		 */
 		public function create_account( $user_id, WP_User $user ) {
 			$data = array(
 				'$type'       => '$create_account',
@@ -37,8 +56,15 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			return apply_filters( 'wc_siftscience_create_account', $data );
 		}
 
-		// When doc comment use @link for this site.
-		// https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-account.
+		/**
+		 * Format update account event
+		 *
+		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-account
+		 * @param string $user_id User's ID.
+		 * @param array  $old_user_data Old user data before change.
+		 *
+		 * @return array
+		 */
 		public function update_account( $user_id, $old_user_data ) {
 			$user = get_userdata( $user_id );
 			$data = array(
@@ -52,6 +78,13 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			return apply_filters( 'wc_siftscience_update_account', $data );
 		}
 
+		/**
+		 * Add session data to user data.
+		 *
+		 * @param string $user_id User's id.
+		 *
+		 * @return array
+		 */
 		public function link_session_to_user( $user_id ) {
 			$data = array(
 				'$type'       => '$link_session_to_user',
@@ -62,6 +95,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Account' ) ) :
 			return apply_filters( 'wc_siftscience_link_session_to_user', $data );
 		}
 
+		/**
+		 * Checks if password has changed
+		 *
+		 * @param string $user_id User id.
+		 * @param array  $old_user_data Old data before change.
+		 *
+		 * @return bool
+		 */
 		private function is_password_changed( $user_id, $old_user_data ) {
 			$user = get_user_by( 'id', $user_id );
 			if ( false === $user || null === $old_user_data ) {
