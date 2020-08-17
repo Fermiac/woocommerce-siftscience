@@ -39,7 +39,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 
 		public function __construct( $version = false ) {
-			$this->version = $version;
+			$this->version   = $version;
 			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
