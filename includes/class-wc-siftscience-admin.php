@@ -234,7 +234,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
-				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_title( wp_unslash( $_GET['reset_guid_nonce'] ) ) ) ) {
+				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_title( wp_unslash( $_GET['reset_guid_nonce'] ) ), 'woocommerce_settings_siftsci' ) ) {
 					$url = remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) );
 					delete_option( WC_SiftScience_Options::GUID );
 					wp_safe_redirect( $url );
@@ -293,7 +293,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function get_settings_stats() {
 			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
-			$reset_url    = wp_nonce_url( $reset_url, -1, 'reset_guid_nonce' );
+			$reset_url    = wp_nonce_url( $reset_url, 'woocommerce_settings_siftsci', 'reset_guid_nonce' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
