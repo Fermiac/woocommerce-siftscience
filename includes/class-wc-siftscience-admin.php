@@ -234,7 +234,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
-				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_title( wp_unslash( $_GET['reset_guid_nonce'] ) ), 'woocommerce_settings_siftsci' ) ) {
+				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['reset_guid_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
 					$url = remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) );
 					delete_option( WC_SiftScience_Options::GUID );
 					wp_safe_redirect( $url );
