@@ -366,9 +366,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$this->send_order_event( $order_id, $type );
 			}
 
-			foreach ( $this->_events as $event ) {
+			foreach ( $this->events as $event ) {
 				if ( null !== $event ) {
-					$this->_comm->post_event( $event );
+					$this->comm->post_event( $event );
 				}
 			}
 
