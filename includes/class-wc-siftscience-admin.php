@@ -16,15 +16,57 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-html.php';
 
+	/**
+	 * Class WC_SiftScience_Admin
+	 */
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
+
+		/**
+		 * The options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
 		private $options;
+
+		/**
+		 * The logger service
+		 *
+		 * @var WC_SiftScience_Logger
+		 */
 		private $logger;
+
+		/**
+		 * The stats service
+		 *
+		 * @var WC_SiftScience_Stats
+		 */
 		private $stats;
+
+		/**
+		 * Communication service
+		 *
+		 * @var WC_SiftScience_Comm
+		 */
 		private $comm;
+
+		/**
+		 * Html service
+		 *
+		 * @var WC_SiftScience_Html
+		 */
 		private $html;
 
+		/**
+		 * WC_SiftScience_Admin constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 * @param WC_SiftScience_Comm    $comm Communication service.
+		 * @param WC_SiftScience_Html    $html HTML service.
+		 * @param WC_SiftScience_Logger  $logger Logger service.
+		 * @param WC_SiftScience_Stats   $stats Stats service.
+		 */
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Comm $comm,
@@ -38,6 +80,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->stats   = $stats;
 		}
 
+		/**
+		 * Checks of the API settings allow for successful communication
+		 *
+		 * @return bool True if successfully communicated
+		 */
 		public function check_api() {
 			// try requesting a non-existent user score and see that the response isn't a permission fail.
 			$response = $this->comm->get_user_score( '_dummy_' . wp_rand( 1000, 9999 ) );
@@ -71,6 +118,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />';
 		}
 
+		/**
+		 * Outputs the settings in the WooCommerce tab
+		 */
 		public function output_settings_fields() {
 			global $current_section;
 			switch ( $current_section ) {
@@ -89,6 +139,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 		}
 
+		/**
+		 * Outputs the main settings page
+		 */
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
@@ -102,16 +155,33 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
 		}
 
+		/**
+		 * Create the HTML for the checkbox
+		 *
+		 * @param string $label_for The ID of the field.
+		 *
+		 * @return string The outputted HTML
+		 */
 		private function styling_checkbox_label( $label_for ) {
 			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for );
 		}
 
+		/**
+		 * Enqueues the a javascript file for inclusion at end of page
+		 *
+		 * @param string $name Name of the script to enqueue.
+		 * @param string $file Filename of the js file.
+		 * @param array  $deps Array of dependencies.
+		 */
 		private static function enqueue_script( $name, $file, $deps ) {
 			$version = time(); // TODO: Make this switchable for dev purposes.
 			$path    = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
 			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
 
+		/**
+		 * Outputs the debug page in settings
+		 */
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 			if ( isset( $_GET['clear_logs'] ) ) {
@@ -159,6 +229,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo '<a href="' . add_query_arg( array( 'clear_logs' => 1 ) ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
 		}
 
+		/**
+		 * Outputs the reporting tab in settings
+		 */
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
 				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_title( wp_unslash( $_GET['reset_guid_nonce'] ) ) ) ) {
@@ -172,6 +245,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
 
+		/**
+		 * Outputs the stats page in settings
+		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
 			if ( isset( $_GET['clear_stats'] ) ) {
@@ -209,6 +285,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
 			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
+
 		/**
 		 * This function is filling form element in the HTML page {Reporting}.
 		 *
@@ -253,6 +330,9 @@ TITLE
 			);
 		}
 
+		/**
+		 * Saves the settings
+		 */
 		public function save_settings() {
 			global $current_section;
 			switch ( $current_section ) {
@@ -274,7 +354,13 @@ TITLE
 			}
 		}
 
-
+		/**
+		 * Adds the settings tabs in Woo configs
+		 *
+		 * @param array $pages The current array of pages.
+		 *
+		 * @return array The resulting pages
+		 */
 		public function add_settings_page( $pages ) {
 			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
 			return $pages;
@@ -326,16 +412,17 @@ TITLE
 				$this->get_element( 'sectionend', 'sifsci_section_main' ),
 			);
 		}
+
 		/**
 		 * This function sets HTML element attributes according to woocommearce provided library.
 		 *
-		 * @param String $type            Element type name.
-		 * @param String $id              HtmlElement ID.
-		 * @param String $title           Element label.
-		 * @param String $desc            Question mark hilper title.
-		 * @param Array  $element_options Element special options.
+		 * @param string $type            Element type name.
+		 * @param string $id              HtmlElement ID.
+		 * @param string $title           Element label.
+		 * @param string $desc            Question mark hilper title.
+		 * @param array  $element_options Element special options.
 		 *
-		 * @return Array $element         An array of attributes.
+		 * @return array $element         An array of attributes.
 		 */
 		private function get_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
 
@@ -387,11 +474,17 @@ TITLE
 			return $element;
 		}
 
+		/**
+		 * Calls the functions to decide if we need to show notices
+		 */
 		public function settings_notice() {
 			$this->notice_config();
 			$this->notice_stats();
 		}
 
+		/**
+		 * Creates the notice for when sift is not correctly configured
+		 */
 		private function notice_config() {
 			$uri           = $_SERVER['REQUEST_URI'];
 			$is_admin_page = strpos( $uri, 'tab=siftsci' ) > 0;
@@ -407,7 +500,11 @@ TITLE
 			</div>
 NOTICE;
 		}
-			private function notice_stats() {
+
+		/**
+		 * Displays the notice for opting in/out of stats
+		 */
+		private function notice_stats() {
 			$enabled         = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 			$set_siftsci_key = 'set_siftsci_stats'; // a reusable string.
 			if ( 'not_set' !== $enabled ) {
@@ -440,6 +537,11 @@ NOTICE;
 IMPROVE;
 		}
 
+		/**
+		 * Creates the HTML for the batch upload control
+		 *
+		 * @return string The HTML for the batch upload control
+		 */
 		public function batch_upload() {
 			return <<<'table'
 			<table class="form-table"><tbody>

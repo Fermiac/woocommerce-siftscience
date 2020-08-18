@@ -12,10 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
-
+	/**
+	 * Class WC_SiftScience_Options
+	 */
 	class WC_SiftScience_Options {
-
+		/**
+		 * The plugin version
+		 *
+		 * @var string
+		 */
 		private $version;
+
+		/**
+		 * The current log level to log at
+		 *
+		 * @var int
+		 */
 		private $log_level;
 
 		private const SCHEMA = 'siftsci_';
@@ -37,74 +49,158 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
 		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
 
-
-		public function __construct( $version = false ) {
-			$this->version = $version;
+		/**
+		 * WC_SiftScience_Options constructor.
+		 *
+		 * @param string $version The version of the plugin.
+		 */
+		public function __construct( $version = 'dev' ) {
+			$this->version   = $version;
 			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
+		/**
+		 * Returns the log level
+		 *
+		 * @return int The current log level
+		 */
 		public function get_log_level() {
 			return $this->log_level;
 		}
 
+		/**
+		 * Get the current version
+		 *
+		 * @return string
+		 */
 		public function get_version() {
 			return $this->version;
 		}
 
+		/**
+		 * Fetches the sift api key
+		 *
+		 * @return string
+		 */
 		public function get_api_key() {
 			return get_option( self::API_KEY );
 		}
 
+		/**
+		 * Gets the meta key for storing backfill state
+		 *
+		 * @return string
+		 */
 		public function get_backfill_meta_key() {
 			return '_wcsiftsci_isbackfill';
 		}
 
+		/**
+		 * Gets the meta key for storing the session
+		 *
+		 * @return string
+		 */
 		public function get_session_meta_key() {
 			return '_wcsiftsci_session';
 		}
 
+		/**
+		 * Gets the sift JS key
+		 *
+		 * @return string
+		 */
 		public function get_js_key() {
 			return get_option( self::JS_KEY );
 		}
 
+		/**
+		 * Gets the prefix used for users and orders in sift
+		 *
+		 * @return string
+		 */
 		public function get_name_prefix() {
 			return get_option( self::NAME_PREFIX, '' );
 		}
 
+		/**
+		 * Gets the threshold for good users (lower is better)
+		 *
+		 * @return int
+		 */
 		public function get_threshold_good() {
 			return get_option( self::THRESHOLD_GOOD, 30 );
 		}
 
+		/**
+		 * Gets the threshold for bad orders (higher is badder)
+		 *
+		 * @return int
+		 */
 		public function get_threshold_bad() {
 			return get_option( self::THRESHOLD_BAD, 60 );
 		}
 
+		/**
+		 * Gets the ID of the current user
+		 *
+		 * @return int|null
+		 */
 		public function get_current_user_id() {
 			return is_user_logged_in() ? wp_get_current_user()->ID : null;
 		}
 
+		/**
+		 * Gets the current session id
+		 *
+		 * @return string
+		 */
 		public function get_session_id() {
 			return session_id();
 		}
 
+		/**
+		 * Checks if API is correctly set up
+		 *
+		 * @return bool
+		 */
 		public function is_setup() {
 			return ( get_option( self::IS_API_SETUP ) === '1' );
 		}
 
+		/**
+		 * Checks if auto-send is enabled
+		 *
+		 * @return bool
+		 */
 		public function auto_send_enabled() {
 			return ( get_option( self::AUTO_SEND_ENABLED ) === 'yes' );
 		}
 
+		/**
+		 * Gets the minimum order value to auto-send
+		 *
+		 * @return double
+		 */
 		public function get_min_order_value() {
-			return get_option( self::MIN_ORDER_VALUE, 0 ) ;
+			return get_option( self::MIN_ORDER_VALUE, 0 );
 		}
 
+		/**
+		 * Gets the path to the React App
+		 *
+		 * @return string
+		 */
 		public function get_react_app_path() {
 			return defined( 'WP_SIFTSCI_DEV' )
 				? WP_SIFTSCI_DEV
-				: plugins_url( "dist/app.js", dirname( __FILE__ ) );
+				: plugins_url( 'dist/app.js', dirname( __FILE__ ) );
 		}
 
+		/**
+		 * Gets (and sets if not already set) the stats guid for the store
+		 *
+		 * @return string
+		 */
 		public function get_guid() {
 			$guid = get_option( self::GUID, false );
 			if ( false === $guid ) {
@@ -115,25 +211,60 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			return $guid;
 		}
 
+		/**
+		 * Fetches the session id of the order
+		 *
+		 * @param WC_Order $order The order to fetch from.
+		 *
+		 * @return string
+		 */
 		public function get_order_session_id( WC_Order $order ) {
 			$session_id = get_post_meta( $order->get_id(), $this->get_session_meta_key(), true );
 			return false === $session_id ? $this->get_session_id() : $session_id;
 		}
 
+		/**
+		 * Gets the user id from the order
+		 *
+		 * @param WC_Order $order The order from which to get the user id.
+		 *
+		 * @return string
+		 */
 		public function get_user_id( WC_Order $order ) {
 			return 0 === $order->get_user_id()
 				? $this->get_user_id_from_order_id( $order->get_id() )
 				: $this->get_user_id_from_user_id( $order->get_user_id() );
 		}
 
+		/**
+		 * Generates the sift-specific order id from the given id
+		 *
+		 * @param string $id The order id.
+		 *
+		 * @return string
+		 */
 		public function get_user_id_from_order_id( $id ) {
 			return $this->get_name_prefix() . 'anon_order_' . $id;
 		}
 
+		/**
+		 * Gets the sift-user id from the WordPress user id
+		 *
+		 * @param string $id The user id.
+		 *
+		 * @return string
+		 */
 		public function get_user_id_from_user_id( $id ) {
 			return $this->get_name_prefix() . 'user_' . $id;
 		}
 
+		/**
+		 * Gets the sift-specific product id
+		 *
+		 * @param string $product_id The product id.
+		 *
+		 * @return string
+		 */
 		public function get_sift_product_id( $product_id ) {
 			return $this->get_name_prefix() . 'product_' . $product_id;
 		}
