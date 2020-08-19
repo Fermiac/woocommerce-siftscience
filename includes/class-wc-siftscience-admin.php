@@ -145,7 +145,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			echo $this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
+			$this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
 			echo $this->batch_upload();
 			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
 
@@ -156,14 +156,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Create the HTML for the checkbox
+		 * Echoing the style rule for the next sibbling of checkbox label to display inline
 		 *
-		 * @param string $label_for The ID of the field.
-		 *
-		 * @return string The outputted HTML
+		 * @param string $label_for same of The ID of the checkbox html validation.
 		 */
 		private function styling_checkbox_label( $label_for ) {
-			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for );
+			$allowed_html =
+					array(
+						'style' => array( 'type' => array() ),
+						'label' => array( 'for' => array() ),
+					);
+			echo wp_kses( sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for ), $allowed_html );
 		}
 
 		/**
@@ -240,7 +243,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
-			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
+			$this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
 
 		/**
