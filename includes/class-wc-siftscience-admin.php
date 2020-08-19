@@ -32,6 +32,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'class' => array(),
 			),
 			'br'    => array( 'class' => array() ),
+			'span'  => array( 'style' => array() ),
+			'table' => array(),
+			'thead' => array(),
+			'th'    => array(
+				'scope'   => array(),
+				'colspan' => array(),
+				'style'   => array(),
+			),
+			'tbody' => array(),
+			'td'    => array( 'style' => array() ),
+			'tr'    => array(),
 		);
 
 		/**
@@ -286,22 +297,32 @@ table;
 			$stats = json_decode( $stats, true );
 			ksort( $stats );
 
+			$stats_tables = '';
+
 			foreach ( $stats as $outer_k => $outer_v ) {
 
 				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );
 
-				echo '<table><thead>',
-					'<tr><th scope="colgroup" colspan="2" style="text-align:left">' . $outer_k . ':</th></tr>',
-					'</thead><tbody>';
+				$stats_tables .= <<< STATS_TABLE
+				<table><thead>
+					<tr>
+						<th scope="colgroup" colspan="2" style="text-align:left"> $outer_k: </th>
+					</tr>
+				</thead>
+				<tbody>
+STATS_TABLE;
 
 				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
-					echo '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
+					$stats_tables .= '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
 				}
 
-				echo '</tbody></table><br>';
+				$stats_tables .= '</tbody></table><br>';
 			}
+
+			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
+
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
-			echo '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
+			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
 
 		/**
