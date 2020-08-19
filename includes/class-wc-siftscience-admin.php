@@ -145,18 +145,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		/**
 		 * Outputs the main settings page
+		 * Creates the HTML table for the batch upload control
 		 */
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
 			$this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
-			echo $this->batch_upload();
-			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
+
+			echo <<<'table'
+			<table class="form-table"><tbody>
+			<tr valign="top">
+			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
+			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
+			</tr>
+			</tbody></table>
+table;
 
 			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
 			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
-			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
+			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
 		}
 
 		/**
@@ -165,7 +173,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @param string $label_for same of The ID of the checkbox html validation.
 		 */
 		private function styling_checkbox_label( $label_for ) {
-			echo wp_kses( sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for ), self::ALLOWED_HTML );
+			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
+			echo wp_kses( sprintf( $html, $label_for ), self::ALLOWED_HTML );
 		}
 
 		/**
@@ -537,22 +546,6 @@ NOTICE;
 				<p> $message $yes, $no, $details. </p>
 			</div>
 IMPROVE;
-		}
-
-		/**
-		 * Creates the HTML for the batch upload control
-		 *
-		 * @return string The HTML for the batch upload control
-		 */
-		public function batch_upload() {
-			return <<<'table'
-			<table class="form-table"><tbody>
-			<tr valign="top">
-			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
-			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
-			</tr>
-			</tbody></table>
-table;
 		}
 	}
 endif;
