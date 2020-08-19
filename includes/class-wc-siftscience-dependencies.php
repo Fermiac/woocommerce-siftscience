@@ -1,6 +1,8 @@
 <?php
 /**
- * @package sift-for-woo
+ * This class builds all the components in the order needed for dependencies
+ *
+ * @package siftscience
  * @author Nabeel Sulieman, Rami Jamleh
  */
 
@@ -23,16 +25,71 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 	require_once dirname( __FILE__ ) . '/class-wc-siftscience-orders.php';
 	require_once dirname( __FILE__ ) . '/third-party/class-wc-siftscience-stripe.php';
 
+	/**
+	 * Class WC_SiftScience_Dependencies
+	 */
 	class WC_SiftScience_Dependencies {
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
 		public $options;
+
+		/**
+		 * Logging service
+		 *
+		 * @var WC_SiftScience_Logger
+		 */
 		public $logger;
+
+		/**
+		 * Stats service
+		 *
+		 * @var WC_SiftScience_Stats
+		 */
 		public $stats;
+
+		/**
+		 * Events service
+		 *
+		 * @var WC_SiftScience_Events
+		 */
 		public $events;
+
+		/**
+		 * Order service
+		 *
+		 * @var WC_SiftScience_Orders
+		 */
 		public $orders;
+
+		/**
+		 * Admin functionality
+		 *
+		 * @var WC_SiftScience_Admin
+		 */
 		public $admin;
+
+		/**
+		 * API service
+		 *
+		 * @var WC_SiftScience_Api
+		 */
 		public $api;
+
+		/**
+		 * Stripe payment method functionality
+		 *
+		 * @var WC_SiftScience_Stripe
+		 */
 		public $stripe;
 
+		/**
+		 * WC_SiftScience_Dependencies constructor.
+		 *
+		 * @param string $version Version of the plugin.
+		 */
 		public function __construct( $version ) {
 			$options = new WC_SiftScience_Options( $version );
 			$logger  = new WC_SiftScience_Logger( $options );
