@@ -164,7 +164,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$allowed_html =
 					array(
 						'style' => array( 'type' => array() ),
-						'label' => array( 'for' => array() ),
 					);
 			echo wp_kses( sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for ), $allowed_html );
 		}
