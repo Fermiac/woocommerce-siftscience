@@ -23,6 +23,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
 
+		private const ALLOWED_HTML = array(
+			'style' => array( 'type' => array() ),
+			'ul'    => array( 'class' => array() ),
+			'li'    => array(),
+			'a'     => array(
+				'href'  => array(),
+				'class' => array(),
+			),
+			'br'    => array( 'class' => array() ),
+		);
+
 		/**
 		 * The options service
 		 *
@@ -115,7 +126,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
-			echo '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />';
+			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', self::ALLOWED_HTML );
 		}
 
 		/**
@@ -141,29 +152,36 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		/**
 		 * Outputs the main settings page
+		 * Creates the HTML table for the batch upload control
 		 */
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings() );
 
-			echo $this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
-			echo $this->batch_upload();
-			$data = array( 'api' => admin_url( 'admin-ajax.php' ) );
+			$this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
+
+			echo <<<'table'
+			<table class="form-table"><tbody>
+			<tr valign="top">
+			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
+			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
+			</tr>
+			</tbody></table>
+table;
 
 			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
 			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
-			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
+			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
 		}
 
 		/**
-		 * Create the HTML for the checkbox
+		 * Echoing the style rule for the next sibbling of checkbox label to display inline
 		 *
-		 * @param string $label_for The ID of the field.
-		 *
-		 * @return string The outputted HTML
+		 * @param string $label_for same of The ID of the checkbox html validation.
 		 */
 		private function styling_checkbox_label( $label_for ) {
-			return sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for );
+			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
+			echo wp_kses( sprintf( $html, $label_for ), self::ALLOWED_HTML );
 		}
 
 		/**
@@ -242,7 +260,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				}
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
-			echo $this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
+			$this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
 
 		/**
@@ -535,22 +553,6 @@ NOTICE;
 				<p> $message $yes, $no, $details. </p>
 			</div>
 IMPROVE;
-		}
-
-		/**
-		 * Creates the HTML for the batch upload control
-		 *
-		 * @return string The HTML for the batch upload control
-		 */
-		public function batch_upload() {
-			return <<<'table'
-			<table class="form-table"><tbody>
-			<tr valign="top">
-			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
-			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
-			</tr>
-			</tbody></table>
-table;
 		}
 	}
 endif;
