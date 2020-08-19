@@ -23,6 +23,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
 
+		private const ALLOWED_HTML = array(
+			'style' => array( 'type' => array() ),
+		);
+
 		/**
 		 * The options service
 		 *
@@ -161,11 +165,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @param string $label_for same of The ID of the checkbox html validation.
 		 */
 		private function styling_checkbox_label( $label_for ) {
-			$allowed_html =
-					array(
-						'style' => array( 'type' => array() ),
-					);
-			echo wp_kses( sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for ), $allowed_html );
+			echo wp_kses( sprintf( '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>', $label_for ), self::ALLOWED_HTML );
 		}
 
 		/**
