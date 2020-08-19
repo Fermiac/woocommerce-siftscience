@@ -25,6 +25,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private const ALLOWED_HTML = array(
 			'style' => array( 'type' => array() ),
+			'ul'    => array( 'class' => array() ),
+			'li'    => array(),
+			'a'     => array(
+				'href'  => array(),
+				'class' => array(),
+			),
+			'br'    => array( 'class' => array() ),
 		);
 
 		/**
@@ -119,7 +126,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
-			echo '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />';
+			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', self::ALLOWED_HTML );
 		}
 
 		/**
