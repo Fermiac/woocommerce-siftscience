@@ -24,26 +24,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const ADMIN_LABEL = 'Sift';
 
 		private const ALLOWED_HTML = array(
-			'style' => array( 'type' => array() ),
-			'p'     => array(),
-			'ul'    => array( 'class' => array() ),
 			'li'    => array(),
+			'table' => array(),
+			'thead' => array(),
+			'tbody' => array(),
+			'p'     => array(),
+			'tr'    => array(),
+			'br'    => array( 'class' => array() ),
+			'td'    => array( 'style' => array() ),
+			'span'  => array( 'style' => array() ),
+			'style' => array( 'type' => array() ),
+			'ul'    => array( 'class' => array() ),
 			'a'     => array(
 				'href'  => array(),
 				'class' => array(),
 			),
-			'br'    => array( 'class' => array() ),
-			'span'  => array( 'style' => array() ),
-			'table' => array(),
-			'thead' => array(),
 			'th'    => array(
 				'scope'   => array(),
 				'colspan' => array(),
 				'style'   => array(),
 			),
-			'tbody' => array(),
-			'td'    => array( 'style' => array() ),
-			'tr'    => array(),
 		);
 
 		/**
