@@ -29,97 +29,39 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 	 * Class WC_SiftScience_Dependencies
 	 */
 	class WC_SiftScience_Dependencies {
-		/**
-		 * Options service
-		 *
-		 * @var WC_SiftScience_Options
-		 */
-		public $options;
+		private $cache = array();
 
-		/**
-		 * Logging service
-		 *
-		 * @var WC_SiftScience_Logger
-		 */
-		public $logger;
+		public function __construct() {
+			$options = new WC_SiftScience_Options();
+			$logger = new WC_SiftScience_Logger( $options );
+			$cache[ 'WC_SiftScience_Options' ] = $options;
+			$cache[ 'WC_SiftScience_Logger' ] = $logger;
+		}
 
-		/**
-		 * Stats service
-		 *
-		 * @var WC_SiftScience_Stats
-		 */
-		public $stats;
+		public function get( $class ) {
+			if ( ! class_exists( $class ) ) {
+				$this->logger->log_error( "Class {$class} does not exist" );
+				return null;
+			}
 
-		/**
-		 * Events service
-		 *
-		 * @var WC_SiftScience_Events
-		 */
-		public $events;
+			if ( ! isset( $this->cache[ $class ] ) ) {
+				$this->cache[ $class ] = $this->build( $class );
+			}
 
-		/**
-		 * Order service
-		 *
-		 * @var WC_SiftScience_Orders
-		 */
-		public $orders;
+			return $this->cache[ $class ];
+		}
 
-		/**
-		 * Admin functionality
-		 *
-		 * @var WC_SiftScience_Admin
-		 */
-		public $admin;
+		private function build( $class ) {
+			$r = new ReflectionClass( $class );
+			$c = $r->getConstructor();
 
-		/**
-		 * API service
-		 *
-		 * @var WC_SiftScience_Api
-		 */
-		public $api;
+			$args = array();
+			foreach ( $c->getParameters() as $p ) {
+				$t = ( string ) $p->getType();
+				$args[] = $this->get( $t );
+			}
 
-		/**
-		 * Stripe payment method functionality
-		 *
-		 * @var WC_SiftScience_Stripe
-		 */
-		public $stripe;
-
-		/**
-		 * WC_SiftScience_Dependencies constructor.
-		 *
-		 * @param string $version Version of the plugin.
-		 */
-		public function __construct( $version ) {
-			$options = new WC_SiftScience_Options( $version );
-			$logger  = new WC_SiftScience_Logger( $options );
-			$stats   = new WC_SiftScience_Stats( $options, $logger );
-			$comm    = new WC_SiftScience_Comm( $options, $logger );
-			$html    = new WC_SiftScience_Html();
-
-			// Construct formatting classes.
-			$transaction = new WC_SiftScience_Format_Transaction( $options );
-			$items       = new WC_SiftScience_Format_Items( $options );
-			$login       = new WC_SiftScience_Format_Login( $options );
-			$account     = new WC_SiftScience_Format_Account( $options );
-			$order       = new WC_SiftScience_Format_Order( $items, $transaction, $options, $logger );
-			$cart        = new WC_SiftScience_Format_Cart( $options );
-			$format      = new WC_SiftScience_Format( $transaction, $items, $login, $account, $order, $cart );
-
-			$events = new WC_SiftScience_Events( $comm, $options, $format, $logger );
-			$orders = new WC_SiftScience_Orders( $options );
-			$admin  = new WC_SiftScience_Admin( $options, $comm, $html, $logger, $stats );
-			$api    = new WC_SiftScience_Api( $comm, $events, $options, $logger, $stats );
-			$stripe = new WC_SiftScience_Stripe( $events, $logger, $stats );
-
-			$this->options = $options;
-			$this->logger  = $logger;
-			$this->stats   = $stats;
-			$this->events  = $events;
-			$this->orders  = $orders;
-			$this->admin   = $admin;
-			$this->api     = $api;
-			$this->stripe  = $stripe;
+			return $r->newInstance( $args );
 		}
 	}
 endif;

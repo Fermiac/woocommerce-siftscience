@@ -35,20 +35,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * Class WC_SiftScience_Plugin Main class for the Sift plugin
 	 */
 	class WC_SiftScience_Plugin {
-		private const PLUGIN_VERSION = '1.1.0';
+		public const PLUGIN_VERSION = '1.1.0';
 
 		/**
 		 * Initialize all the classes and hook into everything
 		 */
 		public function run() {
-			$deps = new WC_SiftScience_Dependencies( self::PLUGIN_VERSION );
+			$deps = new WC_SiftScience_Dependencies();
+
+			$l = $deps->get( 'WC_SiftScience_Logger' );
+			$s = $deps->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.
-			$events = new WC_SiftScience_Instrumentation( $deps->events, $deps->logger, $deps->stats );
-			$orders = new WC_SiftScience_Instrumentation( $deps->orders, $deps->logger, $deps->stats );
-			$admin  = new WC_SiftScience_Instrumentation( $deps->admin, $deps->logger, $deps->stats );
-			$api    = new WC_SiftScience_Instrumentation( $deps->api, $deps->logger, $deps->stats );
-			$stripe = new WC_SiftScience_Instrumentation( $deps->stripe, $deps->logger, $deps->stats );
+			$events = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Events' ), $l, $s );
+			$orders = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Orders' ), $l, $s );
+			$admin  = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Admin' ), $l, $s );
+			$api    = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Api' ), $l, $s );
+			$stripe = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Stripe' ), $l, $s );
 
 			// Admin hooks.
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );

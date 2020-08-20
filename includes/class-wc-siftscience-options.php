@@ -51,11 +51,9 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		/**
 		 * WC_SiftScience_Options constructor.
-		 *
-		 * @param string $version The version of the plugin.
 		 */
-		public function __construct( $version = 'dev' ) {
-			$this->version   = $version;
+		public function __construct() {
+			$this->version   = WC_SiftScience_Plugin::PLUGIN_VERSION;
 			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
 		}
 
