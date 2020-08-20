@@ -279,11 +279,13 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
-			if ( isset( $_GET['clear_stats'] ) ) {
-				$url = remove_query_arg( 'clear_stats' );
-				$this->stats->clear_stats();
-				wp_safe_redirect( $url );
-				exit;
+			if ( isset( $_GET['clear_stats'] ) && '1' === $_GET['clear_stats'] ) {
+				if ( isset( $_GET['clear_stats_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['clear_stats_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
+					$url = remove_query_arg( array( 'clear_stats', 'clear_stats_nonce' ) );
+					$this->stats->clear_stats();
+					wp_safe_redirect( $url );
+					exit;
+				}
 			}
 
 			echo '<h2>Statistics</h2>';
@@ -322,7 +324,9 @@ STATS_TABLE;
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
-			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
+			$url = wp_nonce_url( $url, 'woocommerce_settings_siftsci', 'clear_stats_nonce' );
+			
+      echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
 
 		/**
