@@ -264,9 +264,8 @@ table;
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
 				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['reset_guid_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
-					$url = remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) );
 					delete_option( WC_SiftScience_Options::GUID );
-					wp_safe_redirect( $url );
+					wp_safe_redirect( remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) ) );
 					exit();
 				}
 			}
@@ -281,9 +280,8 @@ table;
 			$GLOBALS['hide_save_button'] = true;
 			if ( isset( $_GET['clear_stats'] ) && '1' === $_GET['clear_stats'] ) {
 				if ( isset( $_GET['clear_stats_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['clear_stats_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
-					$url = remove_query_arg( array( 'clear_stats', 'clear_stats_nonce' ) );
 					$this->stats->clear_stats();
-					wp_safe_redirect( $url );
+					wp_safe_redirect( remove_query_arg( array( 'clear_stats', 'clear_stats_nonce' ) ) );
 					exit;
 				}
 			}
