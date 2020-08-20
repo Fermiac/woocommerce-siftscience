@@ -164,7 +164,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 * @return bool
 		 */
 		public function is_setup() {
-			return ( get_option( self::IS_API_SETUP ) === '1' );
+			return ( '1' === get_option( self::IS_API_SETUP ) );
 		}
 
 		/**
