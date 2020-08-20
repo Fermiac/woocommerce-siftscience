@@ -25,6 +25,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 		private const ALLOWED_HTML = array(
 			'style' => array( 'type' => array() ),
+			'p'     => array(),
 			'ul'    => array( 'class' => array() ),
 			'li'    => array(),
 			'a'     => array(
@@ -213,15 +214,17 @@ table;
 		 */
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
-			if ( isset( $_GET['clear_logs'] ) ) {
-				$url = remove_query_arg( 'clear_logs' );
-				$fh  = fopen( $log_file, 'w' );
-				fclose( $fh );
-				wp_safe_redirect( $url );
-				exit;
+			if ( isset( $_GET['clear_logs'] ) && '1' === $_GET['clear_logs'] ) {
+				if ( isset( $_GET['clear_logs_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['clear_logs_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
+					$fh  = fopen( $log_file, 'w' );
+					fclose( $fh );
+					wp_safe_redirect( remove_query_arg( array( 'clear_logs', 'clear_logs_nonce' ) ) );
+					exit;
+				}
 			}
 
-			$logs                        = 'none';
+			$logs = 'none';
+
 			$GLOBALS['hide_save_button'] = true;
 
 			if ( file_exists( $log_file ) ) {
@@ -230,16 +233,18 @@ table;
 
 			// SSL check logic.
 			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-			if ( isset( $_GET['test_ssl'] ) ) {
-				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
-				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-				$data = curl_exec( $ch );
-				curl_close( $ch );
-				$tls_version = json_decode( $data )->tls_version;
-				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
-				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( remove_query_arg( 'test_ssl' ) );
-				exit;
+			if ( isset( $_GET['test_ssl'] ) && '1' === $_GET['test_ssl'] ) {
+				if ( isset( $_GET['test_ssl_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['test_ssl_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
+					$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
+					curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+					$data = curl_exec( $ch );
+					curl_close( $ch );
+					$tls_version = json_decode( $data )->tls_version;
+					$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+					set_transient( 'wc-siftsci-ssl-log', $data );
+					wp_safe_redirect( remove_query_arg( array( 'test_ssl', 'test_ssl_nonce' ) ) );
+					exit;
+				}
 			}
 
 			echo '<h2>SSL Check</h2>';
@@ -247,15 +252,19 @@ table;
 			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
 			if ( false !== $ssl_data ) {
 				delete_transient( 'wc-siftsci-ssl-log' );
-				echo $ssl_data;
+				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
 			}
 			$ssl_url = add_query_arg( array( 'test_ssl' => 1 ) );
-			echo "<a href='$ssl_url' class='button-primary woocommerce-save-button'>Test SSL</a>";
+			$ssl_url = wp_nonce_url( $ssl_url, 'woocommerce_settings_siftsci', 'test_ssl_nonce' );
+			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
 
 			// Display logs.
 			echo '<h2>Logs</h2>';
-			echo '<p>' . nl2br( esc_html( $logs ) ) . '</p>';
-			echo '<a href="' . add_query_arg( array( 'clear_logs' => 1 ) ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
+			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
+
+			$log_url = add_query_arg( array( 'clear_logs' => 1 ) );
+			$log_url = wp_nonce_url( $log_url, 'woocommerce_settings_siftsci', 'clear_logs_nonce' );
+			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
 		}
 
 		/**
@@ -264,9 +273,8 @@ table;
 		private function output_settings_reporting() {
 			if ( isset( $_GET['reset_guid'] ) && '1' === $_GET['reset_guid'] ) {
 				if ( isset( $_GET['reset_guid_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['reset_guid_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
-					$url = remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) );
 					delete_option( WC_SiftScience_Options::GUID );
-					wp_safe_redirect( $url );
+					wp_safe_redirect( remove_query_arg( array( 'reset_guid', 'reset_guid_nonce' ) ) );
 					exit();
 				}
 			}
@@ -281,9 +289,8 @@ table;
 			$GLOBALS['hide_save_button'] = true;
 			if ( isset( $_GET['clear_stats'] ) && '1' === $_GET['clear_stats'] ) {
 				if ( isset( $_GET['clear_stats_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['clear_stats_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
-					$url = remove_query_arg( array( 'clear_stats', 'clear_stats_nonce' ) );
 					$this->stats->clear_stats();
-					wp_safe_redirect( $url );
+					wp_safe_redirect( remove_query_arg( array( 'clear_stats', 'clear_stats_nonce' ) ) );
 					exit;
 				}
 			}
