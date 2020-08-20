@@ -31,6 +31,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			'p'     => array(),
 			'tr'    => array(),
 			'br'    => array( 'class' => array() ),
+			'div'   => array( 'class' => array() ),
 			'td'    => array( 'style' => array() ),
 			'span'  => array( 'style' => array() ),
 			'style' => array( 'type' => array() ),
@@ -536,19 +537,22 @@ TITLE
 		 * Creates the notice for when sift is not correctly configured
 		 */
 		private function notice_config() {
-			$uri           = $_SERVER['REQUEST_URI'];
-			$is_admin_page = strpos( $uri, 'tab=siftsci' ) > 0;
-			if ( $is_admin_page || $this->options->is_setup() ) {
-				return;
+			if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+				$uri           = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+				$is_admin_page = strpos( $uri, 'tab=siftsci' );
+				if ( false === $is_admin_page || $this->options->is_setup() ) {
+					return;
+				}
 			}
 
-			$link = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
-			$here = "<a href='$link'>here</a>";
-			echo <<<NOTICE
-			<div class='notice notice-error is-dismissible'>
-			<p>Sift configuration is invalid. Click $here to update.</p>
+			$link   = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
+			$anchor = '<a href="' . $link . '">here</a>';
+			$notice = <<<NOTICE
+			<div class="notice notice-error is-dismissible">
+			<p>Sift configuration is invalid. Click $anchor to update.</p>
 			</div>
 NOTICE;
+			echo wp_kses( $notice, self::ALLOWED_HTML );
 		}
 
 		/**
