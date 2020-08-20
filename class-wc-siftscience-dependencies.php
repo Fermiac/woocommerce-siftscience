@@ -62,11 +62,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				return null;
 			}
 
-			if ( ! isset( $this->cache[ $class ] ) ) {
-				return $this->cache[ $class ] = $this->build( $class );
+			if ( isset( $this->cache[ $class ] ) ) {
+				return $this->cache[ $class ];
 			}
 
-			return $this->cache[ $class ];
+			$result = $this->build( $class );
+
+			$this->cache[ $class ] = $result;
+			return $result;
 		}
 
 		/**
@@ -75,10 +78,19 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 * @param string $class Type to build.
 		 *
 		 * @return object An instance of the type specified
-		 * @throws ReflectionException
 		 */
 		private function build( $class ) {
-			$r = new ReflectionClass( $class );
+			$r = null;
+			try {
+				$r = new ReflectionClass( $class );
+			} catch ( ReflectionException $ex ) {
+				// @codingStandardsIgnoreStart
+				error_log( "WC_SiftScience_Dependencies: Failed to create ReflectionClass for [$class]" );
+				// @codingStandardsIgnoreEnd
+
+				return null;
+			}
+
 			$c = $r->getConstructor();
 
 			if ( null === $c ) {
@@ -87,8 +99,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 			$args = array();
 			foreach ( $c->getParameters() as $p ) {
-				$t = ( string ) $p->getType();
+				$t = (string) $p->getType();
 				$a = $this->get( $t );
+
 				$args[] = $a;
 			}
 
