@@ -99,10 +99,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 			$args = array();
 			foreach ( $c->getParameters() as $p ) {
-				$t = (string) $p->getType();
-				$a = $this->get( $t );
-
-				$args[] = $a;
+				$args[] = $this->get( (string) $p->getType() );
 			}
 
 			return $r->newInstanceArgs( $args );
