@@ -95,7 +95,10 @@ if ( ! class_exists( 'WC_SiftScience_Logger' ) ) :
 			}
 
 			$date = gmdate( 'Y-m-d H:i:s' );
+
+			// @codingStandardsIgnoreStart
 			error_log( "[$date] $message\n\n", 3, $this->log_path );
+			// @codingStandardsIgnoreEnd
 		}
 	}
 
