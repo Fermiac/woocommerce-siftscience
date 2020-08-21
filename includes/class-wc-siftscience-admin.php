@@ -20,13 +20,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	 * Class WC_SiftScience_Admin
 	 */
 	class WC_SiftScience_Admin {
-		private const ADMIN_ID    = 'siftsci';
-		private const ADMIN_LABEL = 'Sift';
-
-		private const NONCE_DATA = array(
-			'suffix' => '_nonce',
-			'hook'   => 'woocommerce_settings_siftsci',
-		);
+		private const ADMIN_ID     = 'siftsci';
+		private const ADMIN_LABEL  = 'Sift';
+		private const NONCE_SUFFIX = '_nonce';
+		private const NONCE_HOOK   = 'woocommerce_settings_siftsci';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
@@ -222,10 +219,10 @@ table;
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
-			if ( $this->is_get_valid( 'clear_logs', self::NONCE_DATA['hook'], '1' ) ) {
+			if ( $this->is_get_valid( 'clear_logs', self::NONCE_HOOK, '1' ) ) {
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
-				wp_safe_redirect( remove_query_arg( array( 'clear_logs', 'clear_logs' . self::NONCE_DATA['suffix'] ) ) );
+				wp_safe_redirect( remove_query_arg( array( 'clear_logs', 'clear_logs' . self::NONCE_SUFFIX ) ) );
 				exit;
 			}
 
@@ -239,7 +236,7 @@ table;
 
 			// SSL check logic.
 			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-			if ( $this->is_get_valid( 'test_ssl', self::NONCE_DATA['hook'], '1' ) ) {
+			if ( $this->is_get_valid( 'test_ssl', self::NONCE_HOOK, '1' ) ) {
 				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 				$data = curl_exec( $ch );
@@ -247,7 +244,7 @@ table;
 				$tls_version = json_decode( $data )->tls_version;
 				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( remove_query_arg( array( 'test_ssl', 'test_ssl' . self::NONCE_DATA['suffix'] ) ) );
+				wp_safe_redirect( remove_query_arg( array( 'test_ssl', 'test_ssl' . self::NONCE_SUFFIX ) ) );
 				exit;
 			}
 
@@ -259,7 +256,7 @@ table;
 				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
 			}
 			$ssl_url = add_query_arg( array( 'test_ssl' => 1 ) );
-			$ssl_url = wp_nonce_url( $ssl_url, self::NONCE_DATA['hook'], 'test_ssl' . self::NONCE_DATA['suffix'] );
+			$ssl_url = wp_nonce_url( $ssl_url, self::NONCE_HOOK, 'test_ssl' . self::NONCE_SUFFIX );
 			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
 
 			// Display logs.
@@ -267,7 +264,7 @@ table;
 			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
 
 			$log_url = add_query_arg( array( 'clear_logs' => 1 ) );
-			$log_url = wp_nonce_url( $log_url, self::NONCE_DATA['hook'], 'clear_logs' . self::NONCE_DATA['suffix'] );
+			$log_url = wp_nonce_url( $log_url, self::NONCE_HOOK, 'clear_logs' . self::NONCE_SUFFIX );
 			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
 		}
 
@@ -275,9 +272,9 @@ table;
 		 * Outputs the reporting tab in settings
 		 */
 		private function output_settings_reporting() {
-			if ( $this->is_get_valid( 'reset_guid', self::NONCE_DATA['hook'], '1' ) ) {
+			if ( $this->is_get_valid( 'reset_guid', self::NONCE_HOOK, '1' ) ) {
 				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( remove_query_arg( array( 'reset_guid', 'reset_guid' . self::NONCE_DATA['suffix'] ) ) );
+				wp_safe_redirect( remove_query_arg( array( 'reset_guid', 'reset_guid' . self::NONCE_SUFFIX ) ) );
 				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
@@ -289,9 +286,9 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
-			if ( $this->is_get_valid( 'clear_stats', self::NONCE_DATA['hook'], '1' ) ) {
+			if ( $this->is_get_valid( 'clear_stats', self::NONCE_HOOK, '1' ) ) {
 				$this->stats->clear_stats();
-				wp_safe_redirect( remove_query_arg( array( 'clear_stats', 'clear_stats' . self::NONCE_DATA['suffix'] ) ) );
+				wp_safe_redirect( remove_query_arg( array( 'clear_stats', 'clear_stats' . self::NONCE_SUFFIX ) ) );
 				exit;
 			}
 
@@ -331,7 +328,7 @@ STATS_TABLE;
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
-			$url = wp_nonce_url( $url, self::NONCE_DATA['hook'], 'clear_stats' . self::NONCE_DATA['suffix'] );
+			$url = wp_nonce_url( $url, self::NONCE_HOOK, 'clear_stats' . self::NONCE_SUFFIX );
 
 			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
@@ -343,7 +340,7 @@ STATS_TABLE;
 		 */
 		private function get_settings_stats() {
 			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
-			$reset_url    = wp_nonce_url( $reset_url, self::NONCE_DATA['hook'], 'reset_guid' . self::NONCE_DATA['suffix'] );
+			$reset_url    = wp_nonce_url( $reset_url, self::NONCE_HOOK, 'reset_guid' . self::NONCE_SUFFIX );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
@@ -565,18 +562,18 @@ NOTICE;
 			}
 
 			if ( isset( $_GET[ $set_siftsci_key ] )
-				&& isset( $_GET[ $set_siftsci_key . self::NONCE_DATA['suffix'] ] )
-				&& wp_verify_nonce( sanitize_key( $_GET[ $set_siftsci_key . self::NONCE_DATA['suffix'] ] ), 'settings_notice' ) ) {
+				&& isset( $_GET[ $set_siftsci_key . self::NONCE_SUFFIX ] )
+				&& wp_verify_nonce( sanitize_key( $_GET[ $set_siftsci_key . self::NONCE_SUFFIX ] ), 'settings_notice' ) ) {
 				$value = sanitize_key( $_GET[ $set_siftsci_key ] );
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
-				wp_safe_redirect( remove_query_arg( array( $set_siftsci_key, $set_siftsci_key . self::NONCE_DATA['suffix'] ) ) );
+				wp_safe_redirect( remove_query_arg( array( $set_siftsci_key, $set_siftsci_key . self::NONCE_SUFFIX ) ) );
 				exit;
 			}
 
 			$link_no  = add_query_arg( array( $set_siftsci_key => 'no' ) );
-			$link_no  = wp_nonce_url( $link_no, 'settings_notice', $set_siftsci_key . self::NONCE_DATA['suffix'] );
+			$link_no  = wp_nonce_url( $link_no, 'settings_notice', $set_siftsci_key . self::NONCE_SUFFIX );
 			$link_yes = add_query_arg( array( $set_siftsci_key => 'yes' ) );
-			$link_yes = wp_nonce_url( $link_yes, 'settings_notice', $set_siftsci_key . self::NONCE_DATA['suffix'] );
+			$link_yes = wp_nonce_url( $link_yes, 'settings_notice', $set_siftsci_key . self::NONCE_SUFFIX );
 
 			$no  = "<a href='$link_no'>disable</a>";
 			$yes = "<a href='$link_yes'>Enable</a>";
@@ -604,7 +601,7 @@ IMPROVE;
 		 */
 		private function is_get_valid( $var_name, $hook, $compare_value ) {
 			$result     = false;
-			$nonce_name = $var_name . self::NONCE_DATA['suffix'];
+			$nonce_name = $var_name . self::NONCE_SUFFIX;
 
 			if ( isset( $_GET[ $var_name ] ) && $compare_value === $_GET[ $var_name ] ) {
 				if ( isset( $_GET[ $nonce_name ] ) && wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook ) ) {
