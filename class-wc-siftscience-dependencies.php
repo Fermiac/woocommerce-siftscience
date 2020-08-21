@@ -99,10 +99,9 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 			$args = array();
 
-			$php_version = explode( '.', phpversion() );
-			$php_version = (int) ( $php_version[0] . $php_version[1] );
+			$php_version = (float) phpversion();
 
-			if ( 71 > $php_version ) {
+			if ( 7.1 > $php_version ) {
 				foreach ( $c->getParameters() as $p ) {
 					$args[] = $this->get( (string) $p->getType() );
 				}
