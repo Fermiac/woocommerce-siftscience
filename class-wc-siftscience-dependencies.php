@@ -98,8 +98,15 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 			}
 
 			$args = array();
+
+			$php_version = explode( '.', phpversion() );
+
 			foreach ( $c->getParameters() as $p ) {
-				$args[] = $this->get( $p->getType()->getName() );
+				if ( 7 >= $php_version[0] && 1 <= $php_version[1] ) {
+					$args[] = $this->get( $p->getType()->getName() );
+				} else {
+					$args[] = $this->get( (string) $p->getType() );
+				}
 			}
 
 			return $r->newInstanceArgs( $args );
