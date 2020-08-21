@@ -3,7 +3,7 @@
  * This class handles the API request ( from the React components ).
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

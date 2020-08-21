@@ -2,8 +2,8 @@
 /**
  * This class contains helpers for generating the visual components of the plugin.
  *
- * @package siftscience
  * @author Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

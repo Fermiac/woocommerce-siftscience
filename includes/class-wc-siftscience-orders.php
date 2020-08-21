@@ -1,9 +1,9 @@
 <?php
 /**
- * Author: Nabeel Sulieman
- * Description: This class handles the display of Sift feedback icons in order list and order view.
+ * This class handles the display of Sift feedback icons in order list and order view.
  *
- * @package WC_SiftScience_Orders
+ * @author Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 
