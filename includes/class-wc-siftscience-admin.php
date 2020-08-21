@@ -602,7 +602,7 @@ IMPROVE;
 		 *
 		 * @return Boolen $result if the get var with it nonce are valid
 		 */
-		private function is_get_valid( $var_name, $hook, $compare_value = '' ) {
+		private function is_get_valid( $var_name, $hook, $compare_value ) {
 			$result     = false;
 			$nonce_name = $var_name . self::NONCE_DATA['suffix'];
 
