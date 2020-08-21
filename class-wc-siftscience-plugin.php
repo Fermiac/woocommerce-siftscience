@@ -29,6 +29,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 
 	require_once dirname( __FILE__ ) . '/class-wc-siftscience-dependencies.php';
+	WC_SiftScience_Dependencies::require_all_php_files( dirname( __FILE__ ) . '/includes' );
 
 	/**
 	 * Class WC_SiftScience_Plugin Main class for the Sift plugin
@@ -41,10 +42,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 */
 		public function run() {
 			$deps = new WC_SiftScience_Dependencies();
-			$deps->require_all_php_files( dirname( __FILE__ ) . '/includes' );
 
+			/** @var WC_SiftScience_Options $o */
 			$o = $deps->get( 'WC_SiftScience_Options' );
+
+			/** @var WC_SiftScience_Logger $l */
 			$l = $deps->get( 'WC_SiftScience_Logger' );
+
+			/** @var WC_SiftScience_Stats $s */
 			$s = $deps->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.

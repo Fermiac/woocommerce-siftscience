@@ -29,7 +29,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		 *
 		 * @param string $dir The directory to scan for php files.
 		 */
-		public function require_all_php_files( $dir ) {
+		public static function require_all_php_files( $dir ) {
 			foreach ( scandir( $dir ) as $f ) {
 				if ( '.' === $f || '..' === $f ) {
 					continue;
@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 				$full_name = $dir . '/' . $f;
 
 				if ( is_dir( $full_name ) ) {
-					$this->require_all_php_files( $full_name );
+					self::require_all_php_files( $full_name );
 					continue;
 				}
 
