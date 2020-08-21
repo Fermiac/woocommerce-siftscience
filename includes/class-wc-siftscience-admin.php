@@ -259,7 +259,7 @@ table;
 				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
 			}
 			$ssl_url = add_query_arg( array( 'test_ssl' => 1 ) );
-			$ssl_url = wp_nonce_url( $ssl_url, 'woocommerce_settings_siftsci', 'test_ssl' . self::NONCE_DATA['suffix'] );
+			$ssl_url = wp_nonce_url( $ssl_url, self::NONCE_DATA['hook'], 'test_ssl' . self::NONCE_DATA['suffix'] );
 			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
 
 			// Display logs.
@@ -267,7 +267,7 @@ table;
 			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
 
 			$log_url = add_query_arg( array( 'clear_logs' => 1 ) );
-			$log_url = wp_nonce_url( $log_url, 'woocommerce_settings_siftsci', 'clear_logs' . self::NONCE_DATA['suffix'] );
+			$log_url = wp_nonce_url( $log_url, self::NONCE_DATA['hook'], 'clear_logs' . self::NONCE_DATA['suffix'] );
 			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
 		}
 
@@ -331,7 +331,7 @@ STATS_TABLE;
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
 			$url = add_query_arg( array( 'clear_stats' => 1 ) );
-			$url = wp_nonce_url( $url, 'woocommerce_settings_siftsci', 'clear_stats' . self::NONCE_DATA['suffix'] );
+			$url = wp_nonce_url( $url, self::NONCE_DATA['hook'], 'clear_stats' . self::NONCE_DATA['suffix'] );
 
 			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
@@ -343,7 +343,7 @@ STATS_TABLE;
 		 */
 		private function get_settings_stats() {
 			$reset_url    = add_query_arg( array( 'reset_guid' => 1 ) );
-			$reset_url    = wp_nonce_url( $reset_url, 'woocommerce_settings_siftsci', 'reset_guid' . self::NONCE_DATA['suffix'] );
+			$reset_url    = wp_nonce_url( $reset_url, self::NONCE_DATA['hook'], 'reset_guid' . self::NONCE_DATA['suffix'] );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
