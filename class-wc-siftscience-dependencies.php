@@ -101,10 +101,12 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 
 			$php_version = explode( '.', phpversion() );
 
-			foreach ( $c->getParameters() as $p ) {
-				if ( 7 >= $php_version[0] && 1 <= $php_version[1] ) {
+			if ( 7 >= $php_version[0] && 1 <= $php_version[1] ) {
+				foreach ( $c->getParameters() as $p ) {
 					$args[] = $this->get( $p->getType()->getName() );
-				} else {
+				}
+			} else {
+				foreach ( $c->getParameters() as $p ) {
 					$args[] = $this->get( (string) $p->getType() );
 				}
 			}
