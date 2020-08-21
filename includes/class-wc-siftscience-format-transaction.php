@@ -4,7 +4,7 @@
  *
  * @author Nabeel Sulieman
  * @license GPL2
- * @package sift-for-woo
+ * @package sift-for-woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

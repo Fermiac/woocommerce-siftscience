@@ -3,7 +3,7 @@
  * This class registers all hooks related to events that are reported to Sift events.
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

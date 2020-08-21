@@ -1,10 +1,9 @@
 <?php
 /**
- * Author: Nabeel Sulieman
- * Description: This class handles sending anonymous stats and error messages
-
- * @package WC_SiftScience_Stats
- * @class WC_SiftScience_Stats
+ * This class handles sending anonymous stats and error messages
+ *
+ * @author Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

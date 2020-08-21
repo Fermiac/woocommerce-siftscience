@@ -2,7 +2,7 @@
 /**
  * Additional functionality related to the WooCommerce Stripe Gateway plugin
  *
- * @package WC_SiftScience_Stripe
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

@@ -2,7 +2,7 @@
 /**
  * Description: This class handles logging in a central way
  *
- * @package siftscience
+ * @package sift-for-woocommerce
  * @author Nabeel Sulieman, Rami Jamleh
  * @license GPL2
  */
