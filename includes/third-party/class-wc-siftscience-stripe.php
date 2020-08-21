@@ -2,6 +2,7 @@
 /**
  * Additional functionality related to the WooCommerce Stripe Gateway plugin
  *
+ * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce
  * @license GPL2
  */

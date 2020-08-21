@@ -3,8 +3,8 @@
  * This class is used to format various data for the Sift API.
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @license GPL2
  * @package sift-for-woocommerce
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -2,9 +2,9 @@
 /**
  * This class format woocommerce login and logout events into the Sift format.
  *
- * @author Nabeel Sulieman
- * @license GPL2
+ * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -2,10 +2,9 @@
 /**
  * WordPress Plugin: SiftScience for WooCommerce
  *
- * @author Nabeel Sulieman, Rami Jamleh
+ * @author Nabeel Sulieman, Rami Jamleh, Lucas Svec
  * @package sift-for-woocommerce
  * @license GPL2
- * @copyright 2020 Your Name or Company Name
  *
  * @wordpress-plugin
  * Plugin Name: Sift for WooCommerce
