@@ -223,7 +223,7 @@ table;
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
 			if ( $this->is_get_valid( 'clear_logs', self::NONCE_DATA['hook'], '1' ) ) {
-				$fh  = fopen( $log_file, 'w' );
+				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
 				wp_safe_redirect( remove_query_arg( array( 'clear_logs', 'clear_logs' . self::NONCE_DATA['suffix'] ) ) );
 				exit;
@@ -564,9 +564,10 @@ NOTICE;
 				return;
 			}
 
-			if ( $this->is_get_valid( $set_siftsci_key, 'settings_notice' ) ) {
-				// phpcs:ignore error, warning
-				$value = $_GET[ $set_siftsci_key ];
+			if ( isset( $_GET[ $set_siftsci_key ] )
+				&& isset( $_GET[ $set_siftsci_key . self::NONCE_DATA['suffix'] ] )
+				&& wp_verify_nonce( sanitize_key( $_GET[ $set_siftsci_key . self::NONCE_DATA['suffix'] ] ), 'settings_notice' ) ) {
+				$value = sanitize_key( $_GET[ $set_siftsci_key ] );
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
 				wp_safe_redirect( remove_query_arg( array( $set_siftsci_key, $set_siftsci_key . self::NONCE_DATA['suffix'] ) ) );
 				exit;
@@ -604,11 +605,8 @@ IMPROVE;
 		private function is_get_valid( $var_name, $hook, $compare_value = '' ) {
 			$result     = false;
 			$nonce_name = $var_name . self::NONCE_DATA['suffix'];
-			$get_valid  = '' !== $compare_value
-				? isset( $_GET[ $var_name ] ) && $compare_value === $_GET[ $var_name ]
-				: isset( $_GET[ $var_name ] );
 
-			if ( true === $get_valid ) {
+			if ( isset( $_GET[ $var_name ] ) && $compare_value === $_GET[ $var_name ] ) {
 				if ( isset( $_GET[ $nonce_name ] ) && wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook ) ) {
 					$result = true;
 				}
