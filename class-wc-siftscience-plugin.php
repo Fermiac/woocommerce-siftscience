@@ -43,13 +43,25 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		public function run() {
 			$deps = new WC_SiftScience_Dependencies();
 
-			/** @var WC_SiftScience_Options $o */
+			/**
+			 * Options class.
+			 *
+			 * @var WC_SiftScience_Options $o
+			 */
 			$o = $deps->get( 'WC_SiftScience_Options' );
 
-			/** @var WC_SiftScience_Logger $l */
+			/**
+			 * Logger service.
+			 *
+			 * @var WC_SiftScience_Logger $l
+			 */
 			$l = $deps->get( 'WC_SiftScience_Logger' );
 
-			/** @var WC_SiftScience_Stats $s */
+			/**
+			 * Stats service.
+			 *
+			 * @var WC_SiftScience_Stats $s
+			 */
 			$s = $deps->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.
