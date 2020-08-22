@@ -94,7 +94,7 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 
 				$response = wp_json_encode( $result );
 				$this->logger->log_info( '[ajax response] ' . $response );
-				echo $response;
+				echo wp_kses( $response, array() );
 			} catch ( Exception $error ) {
 				$this->logger->log_exception( $error );
 				$this->stats->send_error( $error );
