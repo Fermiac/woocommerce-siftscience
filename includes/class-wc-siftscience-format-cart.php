@@ -2,9 +2,9 @@
 /**
  * This class format woocommerce cart events into the Sift format.
  *
- * @author Nabeel Sulieman
- * @license GPL2
+ * @author Nabeel Sulieman, Rami Jamleh
  * @package siftscience-for-woocommerce
+ * @license GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

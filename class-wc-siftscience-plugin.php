@@ -2,10 +2,9 @@
 /**
  * WordPress Plugin: SiftScience for WooCommerce
  *
- * @package           WC_SiftScience
- * @author            Your Name
- * @copyright         2019 Your Name or Company Name
- * @license           GPL-2.0-or-later
+ * @author Nabeel Sulieman, Rami Jamleh, Lucas Svec
+ * @package sift-for-woocommerce
+ * @license GPL2
  *
  * @wordpress-plugin
  * Plugin Name: Sift for WooCommerce
@@ -30,6 +29,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 
 	require_once dirname( __FILE__ ) . '/class-wc-siftscience-dependencies.php';
+	WC_SiftScience_Dependencies::require_all_php_files( dirname( __FILE__ ) . '/includes' );
 
 	/**
 	 * Class WC_SiftScience_Plugin Main class for the Sift plugin
@@ -42,10 +42,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 */
 		public function run() {
 			$deps = new WC_SiftScience_Dependencies();
-			$deps->require_all_php_files( dirname( __FILE__ ) . '/includes' );
 
+			/**
+			 * Options class.
+			 *
+			 * @var WC_SiftScience_Options $o
+			 */
 			$o = $deps->get( 'WC_SiftScience_Options' );
+
+			/**
+			 * Logger service.
+			 *
+			 * @var WC_SiftScience_Logger $l
+			 */
 			$l = $deps->get( 'WC_SiftScience_Logger' );
+
+			/**
+			 * Stats service.
+			 *
+			 * @var WC_SiftScience_Stats $s
+			 */
 			$s = $deps->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.

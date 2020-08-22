@@ -3,7 +3,7 @@
  * This class wraps a class and logs any exceptions thrown and collects various metrics
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftscience-for-woo
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

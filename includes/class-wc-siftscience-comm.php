@@ -3,7 +3,7 @@
  * This class handles communication with Sift
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

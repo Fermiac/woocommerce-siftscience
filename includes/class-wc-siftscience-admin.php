@@ -3,7 +3,7 @@
  * This class handles the plugin's settings page.
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 
@@ -220,9 +220,11 @@ table;
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
 			if ( $this->get_value( 'clear_logs', self::NONCE_HOOK, '1' ) ) {
+				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
 				wp_safe_redirect( remove_query_arg( array( 'clear_logs', $this->get_nonce_suffix( 'clear_logs' ) ) ) );
+				// @codingStandardsIgnoreEnd
 				exit;
 			}
 
@@ -231,18 +233,25 @@ table;
 			$GLOBALS['hide_save_button'] = true;
 
 			if ( file_exists( $log_file ) ) {
+				// @codingStandardsIgnoreStart
 				$logs = file_get_contents( $log_file );
+				// @codingStandardsIgnoreEnd
 			}
 
-			// SSL check logic.
-			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 			if ( $this->get_value( 'test_ssl', self::NONCE_HOOK, '1' ) ) {
+				// SSL check logic.
+				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
+				// @codingStandardsIgnoreStart
 				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 				$data = curl_exec( $ch );
 				curl_close( $ch );
+				// @codingStandardsIgnoreEnd
+
 				$tls_version = json_decode( $data )->tls_version;
-				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+
+				$data = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+
 				set_transient( 'wc-siftsci-ssl-log', $data );
 				wp_safe_redirect( remove_query_arg( array( 'test_ssl', $this->get_nonce_suffix( 'test_ssl' ) ) ) );
 				exit;

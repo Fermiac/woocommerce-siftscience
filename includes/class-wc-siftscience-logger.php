@@ -1,9 +1,9 @@
 <?php
 /**
- * Description: This class handles logging in a central way
+ * This class handles logging in a central way
  *
- * @package siftscience
  * @author Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Author: Nabeel Sulieman
- * Description: This class handles the display of Sift feedback icons in order list and order view.
+ * This class handles the display of Sift feedback icons in order list and order view.
  *
- * @package WC_SiftScience_Orders
+ * @author Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 
@@ -20,6 +20,14 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 	 * Class WC_SiftScience_Orders
 	 */
 	class WC_SiftScience_Orders {
+		private const ALLOWED_HTML = array(
+			'div' => array(
+				'id'      => array(),
+				'class'   => array(),
+				'data-id' => array(),
+			),
+		);
+
 		/**
 		 * The options service
 		 *
@@ -43,9 +51,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		 */
 		public function create_row( $column ) {
 			if ( 'siftsci' === $column ) {
-				global $post;
-				$id = $post->ID;
-				echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'></div>\n";
+				$this->output_order_control_div();
 			}
 		}
 
@@ -109,10 +115,18 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		 * Display the siftscience div for the VueJS control
 		 */
 		public function display_siftsci_box() {
-			global $post;
-			$id = $post->ID;
-			echo "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'></div>\n";
+			$this->output_order_control_div();
 			$this->add_react_app();
+		}
+
+		/**
+		 * Outputs the div for the Order Control VueJS component
+		 */
+		private function output_order_control_div() {
+			global $post;
+			$id   = $post->ID;
+			$html = "<div class='siftsci-order' id='siftsci-order-$id' data-id='$id'></div>\n";
+			echo wp_kses( $html, self::ALLOWED_HTML );
 		}
 	}
 

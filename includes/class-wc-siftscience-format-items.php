@@ -2,9 +2,9 @@
 /**
  * This class format woocommerce items into the Sift format.
  *
- * @author  Nabeel Sulieman
+ * @author  Nabeel Sulieman, Rami Jamleh
+ * @package sift-for-woocommerce
  * @license GPL2
- * @package siftscience-for-woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

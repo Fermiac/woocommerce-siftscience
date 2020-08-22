@@ -3,7 +3,7 @@
  * This class gets and sets the plugin options.
  *
  * @author Nabeel Sulieman, Rami Jamleh
- * @package siftsience
+ * @package sift-for-woocommerce
  * @license GPL2
  */
 
