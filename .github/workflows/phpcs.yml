@@ -27,7 +27,7 @@ jobs:
       run: docker run -v ${{ github.workspace }}/.:/wcs -i nabsul/wordpress-phpcs:latest phpcs /wcs --extensions=php > ${{ github.workspace }}/phpcs-results.txt
 
     - uses: actions/upload-artifact@v2
-      if: ${{ failure() }}
+      if: always()
       with:
         name: phpcs-results
         path: ${{ github.workspace }}/phpcs-results.txt
