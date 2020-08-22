@@ -217,8 +217,10 @@ table;
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 			if ( isset( $_GET['clear_logs'] ) && '1' === $_GET['clear_logs'] ) {
 				if ( isset( $_GET['clear_logs_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['clear_logs_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
-					$fh  = fopen( $log_file, 'w' );
+					// @codingStandardsIgnoreStart
+					$fh = fopen( $log_file, 'w' );
 					fclose( $fh );
+					// @codingStandardsIgnoreEnd
 					wp_safe_redirect( remove_query_arg( array( 'clear_logs', 'clear_logs_nonce' ) ) );
 					exit;
 				}
@@ -229,17 +231,21 @@ table;
 			$GLOBALS['hide_save_button'] = true;
 
 			if ( file_exists( $log_file ) ) {
+				// @codingStandardsIgnoreStart
 				$logs = file_get_contents( $log_file );
+				// @codingStandardsIgnoreEnd
 			}
 
 			// SSL check logic.
 			// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 			if ( isset( $_GET['test_ssl'] ) && '1' === $_GET['test_ssl'] ) {
 				if ( isset( $_GET['test_ssl_nonce'] ) && wp_verify_nonce( sanitize_key( $_GET['test_ssl_nonce'] ), 'woocommerce_settings_siftsci' ) ) {
+					// @codingStandardsIgnoreStart
 					$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
 					curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 					$data = curl_exec( $ch );
 					curl_close( $ch );
+					// @codingStandardsIgnoreEnd
 					$tls_version = json_decode( $data )->tls_version;
 					$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 					set_transient( 'wc-siftsci-ssl-log', $data );
