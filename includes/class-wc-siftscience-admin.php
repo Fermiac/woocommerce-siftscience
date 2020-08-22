@@ -632,7 +632,7 @@ IMPROVE;
 		 * @param String $get_var_value the assigned value.
 		 * @param String $hook          the related nonce hook.
 		 *
-		 * @return Sting bounded link with a get vat and it's nonce.
+		 * @return Sting bounded link with a get var and it's nonce.
 		 */
 		private function bound_nonce_url( $get_var_name, $get_var_value, $hook ) {
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
