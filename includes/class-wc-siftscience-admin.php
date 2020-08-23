@@ -222,7 +222,7 @@ table;
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
-				wp_safe_redirect( remove_query_arg( array( 'clear_logs', $this->get_nonce_name( 'clear_logs' ) ) ) );
+				wp_safe_redirect( $this->unbound_nonce_url( 'clear_logs' ) );
 				// @codingStandardsIgnoreEnd
 				exit;
 			}
@@ -252,7 +252,7 @@ table;
 				$data = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( remove_query_arg( array( 'test_ssl', $this->get_nonce_name( 'test_ssl' ) ) ) );
+				wp_safe_redirect( $this->unbound_nonce_url( 'test_ssl' ) );
 				exit;
 			}
 
@@ -281,7 +281,7 @@ table;
 		private function output_settings_reporting() {
 			if ( $this->get_value( 'reset_guid', self::NONCE_HOOK, '1' ) ) {
 				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( remove_query_arg( array( 'reset_guid', $this->get_nonce_name( 'reset_guid' ) ) ) );
+				wp_safe_redirect( $this->unbound_nonce_url( 'reset_guid' ) );
 				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
@@ -295,7 +295,7 @@ table;
 			$GLOBALS['hide_save_button'] = true;
 			if ( $this->get_value( 'clear_stats', self::NONCE_HOOK, '1' ) ) {
 				$this->stats->clear_stats();
-				wp_safe_redirect( remove_query_arg( array( 'clear_stats', $this->get_nonce_name( 'clear_stats' ) ) ) );
+				wp_safe_redirect( $this->unbound_nonce_url( 'clear_stats' ) );
 				exit;
 			}
 
@@ -344,8 +344,7 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_stats() {
-			$reset_url    = $this->bound_nonce_url( 'reset_guid', '1', self::NONCE_HOOK );
-			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
+			$reset_anchor = ' <a href="' . $this->bound_nonce_url( 'reset_guid', '1', self::NONCE_HOOK ) . '">Reset</a>';
 
 			return array(
 				$this->get_element(
@@ -572,7 +571,7 @@ NOTICE;
 			$value = $this->get_value( $set_siftsci_key, $sift_key_hook );
 			if ( false !== $value ) {
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
-				wp_safe_redirect( remove_query_arg( array( $set_siftsci_key, $this->get_nonce_name( $set_siftsci_key ) ) ) );
+				wp_safe_redirect( $this->unbound_nonce_url( $set_siftsci_key ) );
 				exit;
 			}
 
@@ -638,6 +637,16 @@ IMPROVE;
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
 			$url = wp_nonce_url( $url, $hook, $this->get_nonce_name( $get_var_name ) );
 			return $url;
+		}
+		/**
+		 * Retunning a URL dispatching the required GET var and the nonce related
+		 *
+		 * @param Sttring $get_var_name the required GET variable.
+		 *
+		 * @return String the dispached URL from the GET var and it's nonce.
+		 */
+		private function unbound_nonce_url( $get_var_name ) {
+			return remove_query_arg( array( $get_var_name, $this->get_nonce_name( $get_var_name ) ) );
 		}
 	}
 endif;
