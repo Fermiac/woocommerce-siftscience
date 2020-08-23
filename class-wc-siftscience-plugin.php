@@ -41,35 +41,35 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Initialize all the classes and hook into everything
 		 */
 		public function run() {
-			$deps = new WC_SiftScience_Dependencies();
+			$dependencies = new WC_SiftScience_Dependencies();
 
 			/**
 			 * Options class.
 			 *
-			 * @var WC_SiftScience_Options $o
+			 * @var WC_SiftScience_Options $options
 			 */
-			$o = $deps->get( 'WC_SiftScience_Options' );
+			$options = $dependencies->get( 'WC_SiftScience_Options' );
 
 			/**
 			 * Logger service.
 			 *
-			 * @var WC_SiftScience_Logger $l
+			 * @var WC_SiftScience_Logger $logger
 			 */
-			$l = $deps->get( 'WC_SiftScience_Logger' );
+			$logger = $dependencies->get( 'WC_SiftScience_Logger' );
 
 			/**
 			 * Stats service.
 			 *
-			 * @var WC_SiftScience_Stats $s
+			 * @var WC_SiftScience_Stats $stats
 			 */
-			$s = $deps->get( 'WC_SiftScience_Stats' );
+			$stats = $dependencies->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.
-			$events = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Events' ), $l, $s );
-			$orders = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Orders' ), $l, $s );
-			$admin  = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Admin' ), $l, $s );
-			$api    = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Api' ), $l, $s );
-			$stripe = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Stripe' ), $l, $s );
+			$events = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Events' ), $logger, $stats );
+			$orders = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Orders' ), $logger, $stats );
+			$admin  = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Admin' ), $logger, $stats );
+			$api    = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Api' ), $logger, $stats );
+			$stripe = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Stripe' ), $logger, $stats );
 
 			// Admin hooks.
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );
@@ -94,7 +94,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'woocommerce_add_to_cart', array( $events, 'add_to_cart' ), 100 );
 			add_action( 'woocommerce_remove_cart_item', array( $events, 'remove_from_cart' ), 100 );
 
-			if ( $o->auto_send_enabled() ) {
+			if ( $options->auto_send_enabled() ) {
 				add_action( 'woocommerce_checkout_order_processed', array( $events, 'create_order' ), 100 );
 			}
 
@@ -107,7 +107,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'wp_ajax_wc_siftscience_action', array( $api, 'handle_ajax' ), 100 );
 
 			// Run stats update at shutdown.
-			add_action( 'shutdown', array( $s, 'shutdown' ) );
+			add_action( 'shutdown', array( $stats, 'shutdown' ) );
 
 			// Stripe.
 			add_action( 'wc_gateway_stripe_process_payment', array( $stripe, 'stripe_payment' ), 10, 2 );
