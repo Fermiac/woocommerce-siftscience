@@ -405,18 +405,6 @@ TITLE
 		}
 
 		/**
-		 * Adds the settings tabs in Woo configs
-		 *
-		 * @param array $pages The current array of pages.
-		 *
-		 * @return array The resulting pages
-		 */
-		public function add_settings_page( $pages ) {
-			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
-			return $pages;
-		}
-
-		/**
 		 * This function is filling form element in the main HTML page {Sift sittings}.
 		 *
 		 * @return Array []

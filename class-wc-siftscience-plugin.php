@@ -72,7 +72,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$stripe = new WC_SiftScience_Instrumentation( $deps->get( 'WC_SiftScience_Stripe' ), $l, $s );
 
 			// Admin hooks.
-			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );
 			add_filter( 'woocommerce_sections_siftsci', array( $admin, 'get_sections' ) );
 			add_action( 'woocommerce_settings_siftsci', array( $admin, 'output_settings_fields' ) );
 			add_action( 'woocommerce_settings_save_siftsci', array( $admin, 'save_settings' ) );
@@ -112,6 +111,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			// Stripe.
 			add_action( 'wc_gateway_stripe_process_payment', array( $stripe, 'stripe_payment' ), 10, 2 );
 			add_filter( 'wc_siftscience_order_payment_method', array( $stripe, 'order_payment_method' ), 10, 2 );
+
+			// Setup closures.
+			add_filter( // This hook-handler adds the sift tab to the woocommearce plugin.
+				'woocommerce_settings_tabs_array',
+				function( $pages ) {
+					$pages['siftsci'] = 'Sift';
+					return $pages;
+				},
+				30
+			);
 		}
 	}
 
