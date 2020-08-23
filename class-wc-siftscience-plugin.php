@@ -121,6 +121,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				},
 				30
 			);
+
+			add_filter( // This hook handler changes nonce life span to 4 hours.
+				'nonce_life',
+				function () {
+					return 4 * HOUR_IN_SECONDS;
+				}
+			);
 		}
 	}
 
