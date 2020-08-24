@@ -604,7 +604,8 @@ IMPROVE;
 			// Check that nonce is valid and input value exists.
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
 				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook );
-			if ( ! $is_valid_input ) {
+
+			if ( false === $is_valid_input ) {
 				return false;
 			}
 
