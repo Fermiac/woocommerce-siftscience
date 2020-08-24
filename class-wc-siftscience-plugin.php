@@ -112,6 +112,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			// Stripe.
 			add_action( 'wc_gateway_stripe_process_payment', array( $stripe, 'stripe_payment' ), 10, 2 );
 			add_filter( 'wc_siftscience_order_payment_method', array( $stripe, 'order_payment_method' ), 10, 2 );
+
+			// require ''hooks.php;
 		}
 	}
 
