@@ -218,7 +218,7 @@ table;
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
-			if ( $this->get_value( 'clear_logs', self::NONCE_HOOK, '1' ) ) {
+			if ( '1' === $this->get_value( 'clear_logs', self::NONCE_HOOK ) ) {
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
@@ -237,7 +237,7 @@ table;
 				// @codingStandardsIgnoreEnd
 			}
 
-			if ( $this->get_value( 'test_ssl', self::NONCE_HOOK, '1' ) ) {
+			if ( '1' === $this->get_value( 'test_ssl', self::NONCE_HOOK ) ) {
 				// SSL check logic.
 				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 				// @codingStandardsIgnoreStart
@@ -279,7 +279,7 @@ table;
 		 * Outputs the reporting tab in settings
 		 */
 		private function output_settings_reporting() {
-			if ( $this->get_value( 'reset_guid', self::NONCE_HOOK, '1' ) ) {
+			if ( '1' === $this->get_value( 'reset_guid', self::NONCE_HOOK ) ) {
 				delete_option( WC_SiftScience_Options::GUID );
 				wp_safe_redirect( $this->unbound_nonce_url( 'reset_guid' ) );
 				exit();
@@ -293,7 +293,7 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
-			if ( $this->get_value( 'clear_stats', self::NONCE_HOOK, '1' ) ) {
+			if ( '1' === $this->get_value( 'clear_stats', self::NONCE_HOOK ) ) {
 				$this->stats->clear_stats();
 				wp_safe_redirect( $this->unbound_nonce_url( 'clear_stats' ) );
 				exit;
@@ -595,25 +595,22 @@ IMPROVE;
 		 *
 		 * @param String $var_name the  get variable name.
 		 * @param String $hook the hook in which the nonce was created for.
-		 * @param String $compare_value the value to compare against.
 		 *
-		 * @return Mixed $result if the get var and it's nonce are valid return it's value else return false.
+		 * @return String|False $result if the get var and it's nonce are valid return it's value else return false.
 		 */
-		private function get_value( $var_name, $hook, $compare_value = '' ) {
-			$result     = false;
+		private function get_value( $var_name, $hook ) {
 			$nonce_name = $this->get_nonce_name( $var_name );
 
-			if ( isset( $_GET[ $nonce_name ] ) && wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook ) ) {
-				if ( '' === $compare_value ) {
-					if ( isset( $_GET[ $var_name ] ) ) {
-						$result = sanitize_key( $_GET[ $var_name ] );
-					}
-				} elseif ( isset( $_GET[ $var_name ] ) && $compare_value === $_GET[ $var_name ] ) {
-					$result = true;
-				}
+			// Check that nonce is valid and input value exists.
+			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
+				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook );
+			if ( ! $is_valid_input ) {
+				return false;
 			}
-			return $result;
+
+			return sanitize_key( $_GET[ $var_name ] );
 		}
+
 		/**
 		 * This function attaches '_nonce' to the get variable name
 		 *
@@ -631,7 +628,7 @@ IMPROVE;
 		 * @param String $get_var_value the assigned value.
 		 * @param String $hook          the related nonce hook.
 		 *
-		 * @return Sting bounded link with a get var and it's nonce.
+		 * @return String bounded link with a get var and it's nonce.
 		 */
 		private function bound_nonce_url( $get_var_name, $get_var_value, $hook ) {
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
@@ -641,9 +638,9 @@ IMPROVE;
 		/**
 		 * Retunning a URL dispatching the required GET var and the nonce related
 		 *
-		 * @param Sttring $get_var_name the required GET variable.
+		 * @param String $get_var_name the required GET variable.
 		 *
-		 * @return String the dispached URL from the GET var and it's nonce.
+		 * @return String the dispatched URL from the GET var and it's nonce.
 		 */
 		private function unbound_nonce_url( $get_var_name ) {
 			return remove_query_arg( array( $get_var_name, $this->get_nonce_name( $get_var_name ) ) );
