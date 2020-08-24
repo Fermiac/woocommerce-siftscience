@@ -562,7 +562,7 @@ NOTICE;
 
 			// Reusable strings.
 			$set_siftsci_key = 'set_siftsci_stats';
-			$sift_key_hook   = 'settings_notice';
+			$sift_key_hook   = 'admin_notices';
 
 			if ( 'not_set' !== $enabled ) {
 				return;
