@@ -22,7 +22,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
-		private const VAR_KEY_STATS = 'set_siftsci_stats';
+		private const GET_VAR_CLEAR_STATS = 'clear_stats';
+		private const GET_VAR_SET_STATS = 'set_siftsci_stats';
+		private const GET_VAR_RESET_GUID = 'reset_guid';
+		private const GET_VAR_TEST_SSL = 'test_ssl';
+		private const GET_VAR_CLEAR_LOGS = 'clear_logs';
 		private const NONCE_ACTION_PREFIX  = 'woocommerce_settings_nonce_';
 
 		private const ALLOWED_HTML = array(
@@ -219,11 +223,11 @@ table;
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
-			if ( '1' === $this->get_value( 'clear_logs' ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
-				wp_safe_redirect( $this->unbound_nonce_url( 'clear_logs' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
 				// @codingStandardsIgnoreEnd
 				exit;
 			}
@@ -238,7 +242,7 @@ table;
 				// @codingStandardsIgnoreEnd
 			}
 
-			if ( '1' === $this->get_value( 'test_ssl' ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
 				// SSL check logic.
 				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 				// @codingStandardsIgnoreStart
@@ -253,7 +257,7 @@ table;
 				$data = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( $this->unbound_nonce_url( 'test_ssl' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
 				exit;
 			}
 
@@ -265,14 +269,14 @@ table;
 				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
 			}
 
-			$ssl_url = $this->bound_nonce_url( 'test_ssl', '1' );
+			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
 			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
 
 			// Display logs.
 			echo '<h2>Logs</h2>';
 			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
 
-			$log_url = $this->bound_nonce_url( 'clear_logs', '1' );
+			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
 			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
 		}
 
@@ -280,9 +284,9 @@ table;
 		 * Outputs the reporting tab in settings
 		 */
 		private function output_settings_reporting() {
-			if ( '1' === $this->get_value( 'reset_guid' ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
 				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( $this->unbound_nonce_url( 'reset_guid' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
@@ -294,9 +298,9 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
-			if ( '1' === $this->get_value( 'clear_stats' ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
 				$this->stats->clear_stats();
-				wp_safe_redirect( $this->unbound_nonce_url( 'clear_stats' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
 				exit;
 			}
 
@@ -335,7 +339,7 @@ STATS_TABLE;
 
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
-			$url = $this->bound_nonce_url( 'clear_stats', '1' );
+			$url = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
 			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
 
@@ -345,7 +349,7 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_stats() {
-			$reset_url = $this->bound_nonce_url( 'reset_guid', '1' );
+			$reset_url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
@@ -570,15 +574,15 @@ NOTICE;
 				return;
 			}
 
-			$value = $this->get_value( self::VAR_KEY_STATS, self::NONCE_ACTION_STATS );
+			$value = $this->get_value( self::GET_VAR_SET_STATS, self::NONCE_ACTION_STATS );
 			if ( false !== $value ) {
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
-				wp_safe_redirect( $this->unbound_nonce_url( self::VAR_KEY_STATS ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
 				exit;
 			}
 
-			$no_url = $this->bound_nonce_url( self::VAR_KEY_STATS, 'no' );
-			$yes_url = $this->bound_nonce_url( self::VAR_KEY_STATS, 'yes' );
+			$no_url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'no' );
+			$yes_url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'yes' );
 
 			$no_anchor  = '<a href="' . $no_url . '">Disable</a>';
 			$yes_anchor = '<a href="' . $yes_url . '">Enable</a>';
