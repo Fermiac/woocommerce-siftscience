@@ -574,18 +574,15 @@ NOTICE;
 				return;
 			}
 
-			$value = $this->get_value( self::GET_VAR_SET_STATS, self::NONCE_ACTION_STATS );
+			$value = $this->get_value( self::GET_VAR_SET_STATS );
 			if ( false !== $value ) {
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
 				exit;
 			}
 
-			$no_url  = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'no' );
-			$yes_url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'yes' );
-
-			$no_anchor  = '<a href="' . $no_url . '">Disable</a>';
-			$yes_anchor = '<a href="' . $yes_url . '">Enable</a>';
+			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
+			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
 
 			$link_info      = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details_anchor = '<a target="_blank" href="' . $link_info . '">more info</a>';
@@ -599,6 +596,20 @@ NOTICE;
 IMPROVE;
 			echo wp_kses( $improve, self::ALLOWED_HTML );
 		}
+
+		/**
+		 * Gets the anchor HTML for the enable/disable links for stats
+		 *
+		 * @param string $text The text to display in the anchor.
+		 * @param string $value The get param value to put in the URL.
+		 *
+		 * @return string
+		 */
+		private function get_stats_anchor( $text, $value ) {
+			$url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, $value );
+			return "<a href='{$url}'>{$text}</a>";
+		}
+
 		/**
 		 * This function will validate GET var with its nonce
 		 *
@@ -655,6 +666,7 @@ IMPROVE;
 			$url = wp_nonce_url( $url, $this->get_action_name( $get_var_name ), $this->get_nonce_name( $get_var_name ) );
 			return $url;
 		}
+
 		/**
 		 * Retunning a URL dispatching the required GET var and the nonce related
 		 *
