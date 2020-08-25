@@ -27,7 +27,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_RESET_GUID  = 'wc_sift_reset_guid';
 		private const GET_VAR_TEST_SSL    = 'wc_sift_test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = 'wc_sift_clear_logs';
-		private const NONCE_ACTION_PREFIX = 'wc_sift_nonce_';
+		private const NONCE_ACTION_PREFIX = 'nonce_action_';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
