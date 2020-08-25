@@ -20,9 +20,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	 * Class WC_SiftScience_Admin
 	 */
 	class WC_SiftScience_Admin {
-		private const ADMIN_ID    = 'siftsci';
-		private const ADMIN_LABEL = 'Sift';
-		private const NONCE_HOOK  = 'woocommerce_settings_siftsci';
+		private const ADMIN_ID            = 'siftsci';
+		private const ADMIN_LABEL         = 'Sift';
+		private const GET_VAR_SET_STATS   = 'wc_sift_send_stats';
+		private const GET_VAR_CLEAR_STATS = 'wc_sift_clear_stats';
+		private const GET_VAR_RESET_GUID  = 'wc_sift_reset_guid';
+		private const GET_VAR_TEST_SSL    = 'wc_sift_test_ssl';
+		private const GET_VAR_CLEAR_LOGS  = 'wc_sift_clear_logs';
+		private const NONCE_ACTION_PREFIX = 'nonce_action_';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
@@ -218,11 +223,11 @@ table;
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
 
-			if ( '1' === $this->get_value( 'clear_logs', self::NONCE_HOOK ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
 				fclose( $fh );
-				wp_safe_redirect( $this->unbound_nonce_url( 'clear_logs' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
 				// @codingStandardsIgnoreEnd
 				exit;
 			}
@@ -237,7 +242,7 @@ table;
 				// @codingStandardsIgnoreEnd
 			}
 
-			if ( '1' === $this->get_value( 'test_ssl', self::NONCE_HOOK ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
 				// SSL check logic.
 				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 				// @codingStandardsIgnoreStart
@@ -252,7 +257,7 @@ table;
 				$data = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( $this->unbound_nonce_url( 'test_ssl' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
 				exit;
 			}
 
@@ -264,14 +269,14 @@ table;
 				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
 			}
 
-			$ssl_url = $this->bound_nonce_url( 'test_ssl', '1', self::NONCE_HOOK );
+			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
 			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
 
 			// Display logs.
 			echo '<h2>Logs</h2>';
 			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
 
-			$log_url = $this->bound_nonce_url( 'clear_logs', '1', self::NONCE_HOOK );
+			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
 			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
 		}
 
@@ -279,9 +284,9 @@ table;
 		 * Outputs the reporting tab in settings
 		 */
 		private function output_settings_reporting() {
-			if ( '1' === $this->get_value( 'reset_guid', self::NONCE_HOOK ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
 				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( $this->unbound_nonce_url( 'reset_guid' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
 			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
@@ -293,9 +298,9 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
-			if ( '1' === $this->get_value( 'clear_stats', self::NONCE_HOOK ) ) {
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
 				$this->stats->clear_stats();
-				wp_safe_redirect( $this->unbound_nonce_url( 'clear_stats' ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
 				exit;
 			}
 
@@ -334,7 +339,7 @@ STATS_TABLE;
 
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
-			$url = $this->bound_nonce_url( 'clear_stats', '1', self::NONCE_HOOK );
+			$url = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
 			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
 		}
 
@@ -344,7 +349,8 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_stats() {
-			$reset_anchor = ' <a href="' . $this->bound_nonce_url( 'reset_guid', '1', self::NONCE_HOOK ) . '">Reset</a>';
+			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
+			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
 				$this->get_element(
@@ -352,7 +358,11 @@ STATS_TABLE;
 					'siftsci_stats_title',
 					'Sift Stats and Debug Reporting',
 					<<<TITLE
-					<p> Help us improve this plugin by automatically reporting errors and statistics. All information is anonymous and cannot be traced back to your site. For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.</p>
+					<p> 
+						Help us improve this plugin by automatically reporting errors and statistics. 
+						All information is anonymous and cannot be traced back to your site. 
+						For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.
+					</p>
 					<p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor </p>
 TITLE
 				),
@@ -560,23 +570,19 @@ NOTICE;
 		private function notice_stats() {
 			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 
-			// Reusable strings.
-			$set_siftsci_key = 'set_siftsci_stats';
-			$sift_key_hook   = 'admin_notices';
-
 			if ( 'not_set' !== $enabled ) {
 				return;
 			}
 
-			$value = $this->get_value( $set_siftsci_key, $sift_key_hook );
+			$value = $this->get_value( self::GET_VAR_SET_STATS );
 			if ( false !== $value ) {
 				update_option( WC_SiftScience_Options::SEND_STATS, $value );
-				wp_safe_redirect( $this->unbound_nonce_url( $set_siftsci_key ) );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
 				exit;
 			}
 
-			$no_anchor  = '<a href="' . $this->bound_nonce_url( $set_siftsci_key, 'no', $sift_key_hook ) . '">Disable</a>';
-			$yes_anchor = '<a href="' . $this->bound_nonce_url( $set_siftsci_key, 'yes', $sift_key_hook ) . '">Enable</a>';
+			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
+			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
 
 			$link_info      = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$details_anchor = '<a target="_blank" href="' . $link_info . '">more info</a>';
@@ -590,20 +596,33 @@ NOTICE;
 IMPROVE;
 			echo wp_kses( $improve, self::ALLOWED_HTML );
 		}
+
+		/**
+		 * Gets the anchor HTML for the enable/disable links for stats
+		 *
+		 * @param string $text The text to display in the anchor.
+		 * @param string $value The get param value to put in the URL.
+		 *
+		 * @return string
+		 */
+		private function get_stats_anchor( $text, $value ) {
+			$url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, $value );
+			return "<a href='{$url}'>{$text}</a>";
+		}
+
 		/**
 		 * This function will validate GET var with its nonce
 		 *
 		 * @param String $var_name the  get variable name.
-		 * @param String $hook the hook in which the nonce was created for.
 		 *
 		 * @return String|False $result if the get var and it's nonce are valid return it's value else return false.
 		 */
-		private function get_value( $var_name, $hook ) {
+		private function get_value( $var_name ) {
 			$nonce_name = $this->get_nonce_name( $var_name );
 
 			// Check that nonce is valid and input value exists.
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
-				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $hook );
+				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_action_name( $var_name ) );
 
 			if ( false === $is_valid_input ) {
 				return false;
@@ -622,20 +641,32 @@ IMPROVE;
 		private function get_nonce_name( $get_var ) {
 			return $get_var . '_nonce';
 		}
+
+		/**
+		 * This function auto-generates the nonce action name based on the get variable name
+		 *
+		 * @param String $get_var the GET array variable.
+		 *
+		 * @return String concatenated nonce name.
+		 */
+		private function get_action_name( $get_var ) {
+			return self::NONCE_ACTION_PREFIX . $get_var;
+		}
+
 		/**
 		 * Creates a variable URL with it's nonce respectivly
 		 *
 		 * @param String $get_var_name  the GET variable.
 		 * @param String $get_var_value the assigned value.
-		 * @param String $hook          the related nonce hook.
 		 *
 		 * @return String bounded link with a get var and it's nonce.
 		 */
-		private function bound_nonce_url( $get_var_name, $get_var_value, $hook ) {
+		private function bound_nonce_url( $get_var_name, $get_var_value ) {
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
-			$url = wp_nonce_url( $url, $hook, $this->get_nonce_name( $get_var_name ) );
+			$url = wp_nonce_url( $url, $this->get_action_name( $get_var_name ), $this->get_nonce_name( $get_var_name ) );
 			return $url;
 		}
+
 		/**
 		 * Retunning a URL dispatching the required GET var and the nonce related
 		 *
