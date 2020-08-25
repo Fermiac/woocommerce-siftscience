@@ -20,14 +20,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	 * Class WC_SiftScience_Admin
 	 */
 	class WC_SiftScience_Admin {
-		private const ADMIN_ID    = 'siftsci';
-		private const ADMIN_LABEL = 'Sift';
+		private const ADMIN_ID            = 'siftsci';
+		private const ADMIN_LABEL         = 'Sift';
 		private const GET_VAR_CLEAR_STATS = 'clear_stats';
-		private const GET_VAR_SET_STATS = 'set_siftsci_stats';
-		private const GET_VAR_RESET_GUID = 'reset_guid';
-		private const GET_VAR_TEST_SSL = 'test_ssl';
-		private const GET_VAR_CLEAR_LOGS = 'clear_logs';
-		private const NONCE_ACTION_PREFIX  = 'woocommerce_settings_nonce_';
+		private const GET_VAR_SET_STATS   = 'set_siftsci_stats';
+		private const GET_VAR_RESET_GUID  = 'reset_guid';
+		private const GET_VAR_TEST_SSL    = 'test_ssl';
+		private const GET_VAR_CLEAR_LOGS  = 'clear_logs';
+		private const NONCE_ACTION_PREFIX = 'woocommerce_settings_nonce_';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
@@ -349,7 +349,7 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_stats() {
-			$reset_url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
+			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
@@ -581,7 +581,7 @@ NOTICE;
 				exit;
 			}
 
-			$no_url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'no' );
+			$no_url  = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'no' );
 			$yes_url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'yes' );
 
 			$no_anchor  = '<a href="' . $no_url . '">Disable</a>';
