@@ -22,7 +22,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID            = 'siftsci';
 		private const ADMIN_LABEL         = 'Sift';
-		private const NONCE_ACTION_PREFIX = 'nonce_action_';
 
 		private const GET_VAR_PREFIX      = 'wc_sift_';
 		private const GET_VAR_SET_STATS   = self::GET_VAR_PREFIX . 'send_stats';
@@ -618,7 +617,7 @@ IMPROVE;
 
 			// Check that nonce is valid and input value exists.
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
-				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_action_name( $var_name ) );
+				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_nonce_name( $var_name ) );
 
 			if ( false === $is_valid_input ) {
 				return false;
@@ -639,17 +638,6 @@ IMPROVE;
 		}
 
 		/**
-		 * This function auto-generates the nonce action name based on the get variable name
-		 *
-		 * @param String $get_var the GET array variable.
-		 *
-		 * @return String concatenated nonce name.
-		 */
-		private function get_action_name( $get_var ) {
-			return self::NONCE_ACTION_PREFIX . $get_var;
-		}
-
-		/**
 		 * Creates a variable URL with it's nonce respectivly
 		 *
 		 * @param String $get_var_name  the GET variable.
@@ -659,7 +647,7 @@ IMPROVE;
 		 */
 		private function bound_nonce_url( $get_var_name, $get_var_value ) {
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
-			$url = wp_nonce_url( $url, $this->get_action_name( $get_var_name ), $this->get_nonce_name( $get_var_name ) );
+			$url = wp_nonce_url( $url, $this->get_nonce_name( $get_var_name ), $this->get_nonce_name( $get_var_name ) );
 			return $url;
 		}
 
