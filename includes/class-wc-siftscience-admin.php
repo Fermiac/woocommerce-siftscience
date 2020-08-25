@@ -607,12 +607,11 @@ IMPROVE;
 		 * @return String|False $result if the get var and it's nonce are valid return it's value else return false.
 		 */
 		private function get_value( $var_name ) {
-			$action = self::NONCE_ACTION_PREFIX . $var_name;
 			$nonce_name = $this->get_nonce_name( $var_name );
 
 			// Check that nonce is valid and input value exists.
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
-				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $action );
+				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_action_name( $var_name ) );
 
 			if ( false === $is_valid_input ) {
 				return false;
@@ -631,6 +630,18 @@ IMPROVE;
 		private function get_nonce_name( $get_var ) {
 			return $get_var . '_nonce';
 		}
+
+		/**
+		 * This function auto-generates the nonce action name based on the get variable name
+		 *
+		 * @param String $get_var the GET array variable.
+		 *
+		 * @return String concatenated nonce name.
+		 */
+		private function get_action_name( $get_var ) {
+			return self::NONCE_ACTION_PREFIX . $get_var;
+		}
+
 		/**
 		 * Creates a variable URL with it's nonce respectivly
 		 *
@@ -640,9 +651,8 @@ IMPROVE;
 		 * @return String bounded link with a get var and it's nonce.
 		 */
 		private function bound_nonce_url( $get_var_name, $get_var_value ) {
-			$action = self::NONCE_ACTION_PREFIX . $get_var_name;
 			$url = add_query_arg( array( $get_var_name => $get_var_value ) );
-			$url = wp_nonce_url( $url, $action, $this->get_nonce_name( $get_var_name ) );
+			$url = wp_nonce_url( $url, $this->get_action_name( $get_var_name ), $this->get_nonce_name( $get_var_name ) );
 			return $url;
 		}
 		/**
