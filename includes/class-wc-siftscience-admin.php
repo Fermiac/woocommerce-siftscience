@@ -22,12 +22,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID            = 'siftsci';
 		private const ADMIN_LABEL         = 'Sift';
-		private const GET_VAR_SET_STATS   = 'wc_sift_send_stats';
-		private const GET_VAR_CLEAR_STATS = 'wc_sift_clear_stats';
-		private const GET_VAR_RESET_GUID  = 'wc_sift_reset_guid';
-		private const GET_VAR_TEST_SSL    = 'wc_sift_test_ssl';
-		private const GET_VAR_CLEAR_LOGS  = 'wc_sift_clear_logs';
 		private const NONCE_ACTION_PREFIX = 'nonce_action_';
+
+		private const GET_VAR_PREFIX      = 'wc_sift_';
+		private const GET_VAR_SET_STATS   = self::GET_VAR_PREFIX . 'send_stats';
+		private const GET_VAR_CLEAR_STATS = self::GET_VAR_PREFIX . 'clear_stats';
+		private const GET_VAR_RESET_GUID  = self::GET_VAR_PREFIX . 'reset_guid';
+		private const GET_VAR_TEST_SSL    = self::GET_VAR_PREFIX . 'test_ssl';
+		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_PREFIX . 'clear_logs';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
