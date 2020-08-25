@@ -22,12 +22,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 	class WC_SiftScience_Admin {
 		private const ADMIN_ID            = 'siftsci';
 		private const ADMIN_LABEL         = 'Sift';
-		private const GET_VAR_CLEAR_STATS = 'clear_stats';
-		private const GET_VAR_SET_STATS   = 'set_siftsci_stats';
-		private const GET_VAR_RESET_GUID  = 'reset_guid';
-		private const GET_VAR_TEST_SSL    = 'test_ssl';
-		private const GET_VAR_CLEAR_LOGS  = 'clear_logs';
-		private const NONCE_ACTION_PREFIX = 'woocommerce_settings_nonce_';
+		private const GET_VAR_SET_STATS   = 'wc_sift_send_stats';
+		private const GET_VAR_CLEAR_STATS = 'wc_sift_clear_stats';
+		private const GET_VAR_RESET_GUID  = 'wc_sift_reset_guid';
+		private const GET_VAR_TEST_SSL    = 'wc_sift_test_ssl';
+		private const GET_VAR_CLEAR_LOGS  = 'wc_sift_clear_logs';
+		private const NONCE_ACTION_PREFIX = 'wc_sift_nonce_';
 
 		private const ALLOWED_HTML = array(
 			'li'    => array(),
