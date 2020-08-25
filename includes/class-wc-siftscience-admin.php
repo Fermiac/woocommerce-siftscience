@@ -245,16 +245,10 @@ table;
 			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
 				// SSL check logic.
 				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-				// @codingStandardsIgnoreStart
-				$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
-				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-				$data = curl_exec( $ch );
-				curl_close( $ch );
-				// @codingStandardsIgnoreEnd
-
-				$tls_version = json_decode( $data )->tls_version;
-
-				$data = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $data</p>\n";
+				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
+				$body        = $response['body'];
+				$tls_version = json_decode( $body )->tls_version;
+				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $body</p>\n";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
