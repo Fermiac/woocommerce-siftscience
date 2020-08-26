@@ -125,12 +125,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 		/**
 		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
-		 *
-		 * @global String $current_section
 		 */
 		public function get_sections() {
-			global $current_section;
-			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
 			$sections = array(
 				'main'      => 'Settings',
@@ -139,15 +135,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'debug'     => 'Debug',
 			);
 
-			$tabs = array();
-			foreach ( $sections as $id => $label ) {
-				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
-				$class  = $selected_section === $id ? 'current' : '';
-				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
-			}
-
-			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
-			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', self::ALLOWED_HTML );
+			$this->html->display_sections( $sections, self::ADMIN_ID, self::ALLOWED_HTML );
 		}
 
 		/**
