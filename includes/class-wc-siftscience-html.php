@@ -18,21 +18,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	 * Class WC_SiftScience_Html
 	 */
 	class WC_SiftScience_Html {
-		/**
-		 * Generates HTML attribute tags from the key-values of an array
-		 *
-		 * @param array  $params The attributes to convert.
-		 * @param string $str_enclose Single or double quotes.
-		 *
-		 * @return string The attributes to be inserted in the HTML tag
-		 */
-		private function tag_params( $params, $str_enclose = '"' ) {
-			$result = '';
-			foreach ( $params as $k => $v ) {
-				$result .= " $k=$str_enclose$v$str_enclose";
-			}
-			return $result;
-		}
+
 	}
 
 endif;
