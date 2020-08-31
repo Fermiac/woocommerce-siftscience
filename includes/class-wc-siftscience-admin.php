@@ -568,17 +568,7 @@ NOTICE;
 			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
 			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
 
-			$link_info      = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
-			$details_anchor = '<a target="_blank" href="' . $link_info . '">more info</a>';
-
-			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
-
-			$improve = <<<IMPROVE
-			<div class="notice notice-error is-dismissible">
-				<p> $message $yes_anchor, $no_anchor, $details_anchor. </p>
-			</div>
-IMPROVE;
-			echo wp_kses( $improve, self::ALLOWED_HTML );
+			$this->html->display_improve_message( $yes_anchor, $no_anchor, self::ALLOWED_HTML );
 		}
 
 		/**

@@ -42,6 +42,26 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
 			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', $allowed_html );
 		}
+		/**
+		 * This function displayes a booystrap notice for improveing plugin.
+		 *
+		 * @param stting $yes_anchor   the enabled anchor.
+		 * @param string $no_anchor    the disabled anchor.
+		 * @param Array  $allowed_html the alloed HTML tags.
+		 */
+		public function display_improve_message( $yes_anchor, $no_anchor, $allowed_html ) {
+
+			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
+
+			$details_anchor = '<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>';
+
+			$improve = <<<IMPROVE
+			<div class="notice notice-error is-dismissible">
+				<p> $message $yes_anchor, $no_anchor, $details_anchor. </p>
+			</div>
+IMPROVE;
+			echo wp_kses( $improve, $allowed_html );
+		}
 
 	}
 
