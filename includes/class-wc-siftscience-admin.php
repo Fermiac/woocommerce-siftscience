@@ -164,7 +164,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * Creates the HTML table for the batch upload control
 		 */
 		private function output_settings_main() {
-			WC_Admin_Settings::output_fields( $this->get_settings() );
+			WC_Admin_Settings::output_fields( $this->get_settings_main() );
 
 			$this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
 
@@ -272,7 +272,7 @@ table;
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
-			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
+			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 			$this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
 		}
 
@@ -281,6 +281,7 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
+
 			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
 				$this->stats->clear_stats();
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
@@ -331,7 +332,7 @@ STATS_TABLE;
 		 *
 		 * @return Array []
 		 */
-		private function get_settings_stats() {
+		private function get_settings_reporting() {
 			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
@@ -380,7 +381,7 @@ TITLE
 			global $current_section;
 			switch ( $current_section ) {
 				case '':
-					WC_Admin_Settings::save_fields( $this->get_settings() );
+					WC_Admin_Settings::save_fields( $this->get_settings_main() );
 					$is_api_working = $this->check_api();
 					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
 					if ( $is_api_working ) {
@@ -414,7 +415,7 @@ TITLE
 		 *
 		 * @return Array []
 		 */
-		private function get_settings() {
+		private function get_settings_main() {
 			return array(
 				$this->get_element( 'title', 'siftsci_title', 'Sift Settings' ),
 				$this->get_element( 'text', WC_SiftScience_Options::API_KEY, 'Rest API Key', 'The API key for production' ),
