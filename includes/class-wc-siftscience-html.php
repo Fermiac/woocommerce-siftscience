@@ -88,11 +88,30 @@ IMPROVE;
 		/**
 		 * Echoing the style rule for the next sibbling of checkbox label to display inline
 		 *
-		 * @param string $label_for same of The ID of the checkbox html validation.
+		 * @param string $label_for same of The ID of the checkbox [html validation].
 		 */
 		public function styling_checkbox_label( $label_for ) {
 			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
 			echo wp_kses( sprintf( $html, $label_for ), $this->allowed_tags );
+		}
+
+		/**
+		 *
+		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
+		 */
+		public function display_batch_table() {
+			echo <<<'BATCH_TABLE'
+			<table class="form-table">
+				<tbody>
+					<tr valign="top">
+						<th scope="row" class="titledesc">Batch Upload</th>
+						<td class="forminp forminp-text">
+							<div id="batch-upload"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+BATCH_TABLE;
 		}
 
 	}
