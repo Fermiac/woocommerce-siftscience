@@ -125,12 +125,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 		/**
 		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
-		 *
-		 * @global String $current_section
 		 */
 		public function get_sections() {
-			global $current_section;
-			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
 			$sections = array(
 				'main'      => 'Settings',
@@ -139,15 +135,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'debug'     => 'Debug',
 			);
 
-			$tabs = array();
-			foreach ( $sections as $id => $label ) {
-				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . self::ADMIN_ID . '&section=' . sanitize_title( $id ) );
-				$class  = $selected_section === $id ? 'current' : '';
-				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
-			}
-
-			$tabs_html = '<li>' . join( ' | </li>', $tabs ) . '</li>';
-			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', self::ALLOWED_HTML );
+			$this->html->display_sections( $sections, self::ADMIN_ID, self::ALLOWED_HTML );
 		}
 
 		/**
@@ -176,9 +164,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * Creates the HTML table for the batch upload control
 		 */
 		private function output_settings_main() {
-			WC_Admin_Settings::output_fields( $this->get_settings() );
-
-			$this->styling_checkbox_label( WC_SiftScience_Options::AUTO_SEND_ENABLED );
+			WC_Admin_Settings::output_fields( $this->get_settings_main() );
 
 			echo <<<'table'
 			<table class="form-table"><tbody>
@@ -193,16 +179,6 @@ table;
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
 			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
-		}
-
-		/**
-		 * Echoing the style rule for the next sibbling of checkbox label to display inline
-		 *
-		 * @param string $label_for same of The ID of the checkbox html validation.
-		 */
-		private function styling_checkbox_label( $label_for ) {
-			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
-			echo wp_kses( sprintf( $html, $label_for ), self::ALLOWED_HTML );
 		}
 
 		/**
@@ -284,8 +260,7 @@ table;
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
-			WC_Admin_Settings::output_fields( $this->get_settings_stats() );
-			$this->styling_checkbox_label( WC_SiftScience_Options::SEND_STATS );
+			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 		}
 
 		/**
@@ -293,6 +268,7 @@ table;
 		 */
 		private function output_settings_stats() {
 			$GLOBALS['hide_save_button'] = true;
+
 			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
 				$this->stats->clear_stats();
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
@@ -343,13 +319,14 @@ STATS_TABLE;
 		 *
 		 * @return Array []
 		 */
-		private function get_settings_stats() {
+		private function get_settings_reporting() {
+
 			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
 
 			return array(
-				$this->get_element(
-					'title',
+				$this->create_element(
+					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_stats_title',
 					'Sift Stats and Debug Reporting',
 					<<<TITLE
@@ -361,14 +338,16 @@ STATS_TABLE;
 					<p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor </p>
 TITLE
 				),
-				$this->get_element(
-					'checkbox',
+
+				$this->create_element(
+					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.'
 				),
-				$this->get_element(
-					'select',
+
+				$this->create_element(
+					WC_SiftScience_Html::WC_SELECT_ELEMENT,
 					WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
@@ -381,7 +360,11 @@ TITLE
 							),
 					)
 				),
-				$this->get_element( 'sectionend', 'sifsci_section_main' ),
+
+				$this->create_element(
+					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					'sifsci_section_reporting'
+				),
 			);
 		}
 
@@ -392,7 +375,7 @@ TITLE
 			global $current_section;
 			switch ( $current_section ) {
 				case '':
-					WC_Admin_Settings::save_fields( $this->get_settings() );
+					WC_Admin_Settings::save_fields( $this->get_settings_main() );
 					$is_api_working = $this->check_api();
 					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
 					if ( $is_api_working ) {
@@ -426,45 +409,69 @@ TITLE
 		 *
 		 * @return Array []
 		 */
-		private function get_settings() {
+		private function get_settings_main() {
 			return array(
-				$this->get_element( 'title', 'siftsci_title', 'Sift Settings' ),
-				$this->get_element( 'text', WC_SiftScience_Options::API_KEY, 'Rest API Key', 'The API key for production' ),
-				$this->get_element( 'text', WC_SiftScience_Options::JS_KEY, 'Javascript Snippet Key', 'Javascript snippet key for production' ),
+				$this->create_element(
+					WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					'siftsci_title',
+					'Sift Settings'
+				),
 
-				$this->get_element(
-					'number',
+				$this->create_element(
+					WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					WC_SiftScience_Options::API_KEY,
+					'Rest API Key',
+					'The API key for production'
+				),
+
+				$this->create_element(
+					WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					WC_SiftScience_Options::JS_KEY,
+					'Javascript Snippet Key',
+					'Javascript snippet key for production'
+				),
+
+				$this->create_element(
+					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
 					array( 'default' => 30 )
 				),
 
-				$this->get_element(
-					'number',
+				$this->create_element(
+					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::THRESHOLD_BAD,
 					'Bad Score Threshold',
 					'Scores above this value are considered bad and shown in red',
 					array( 'default' => 60 )
 				),
-				$this->get_element(
-					'text',
+				$this->create_element(
+					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
 				),
 
-				$this->get_element( 'checkbox', WC_SiftScience_Options::AUTO_SEND_ENABLED, 'Automatically Send Data', 'Automatically send data to Sift when an order is created' ),
+				$this->create_element(
+					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+					WC_SiftScience_Options::AUTO_SEND_ENABLED,
+					'Automatically Send Data',
+					'Automatically send data to Sift when an order is created'
+				),
 
-				$this->get_element(
-					'number',
+				$this->create_element(
+					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Minimum Order Value for Auto Send',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
 					array( 'default' => 0 )
 				),
 
-				$this->get_element( 'sectionend', 'sifsci_section_main' ),
+				$this->create_element(
+					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					'sifsci_section_main'
+				),
 			);
 		}
 
@@ -479,7 +486,7 @@ TITLE
 		 *
 		 * @return array $element         An array of attributes.
 		 */
-		private function get_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
+		private function create_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
 
 			$element = array(
 				'type' => $type,
@@ -497,16 +504,18 @@ TITLE
 							'desc'  => $desc,
 						)
 					);
+				case 'checkbox':
+					$this->html->styling_checkbox_label( $id, self::ALLOWED_HTML );
+					// Append a style tag for that checkbox.
 				case 'number':
 				case 'select':
-					if ( ! empty( $element_options ) ) {
+					if ( 'checkbox' !== $type && ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
 						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						break;
 					}
 					// Select and number may have a Description.
-				case 'checkbox':
 				case 'text':
 					if ( ! empty( $desc ) ) {
 
@@ -579,17 +588,7 @@ NOTICE;
 			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
 			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
 
-			$link_info      = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
-			$details_anchor = '<a target="_blank" href="' . $link_info . '">more info</a>';
-
-			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
-
-			$improve = <<<IMPROVE
-			<div class="notice notice-error is-dismissible">
-				<p> $message $yes_anchor, $no_anchor, $details_anchor. </p>
-			</div>
-IMPROVE;
-			echo wp_kses( $improve, self::ALLOWED_HTML );
+			$this->html->display_improve_message( $yes_anchor, $no_anchor, self::ALLOWED_HTML );
 		}
 
 		/**
