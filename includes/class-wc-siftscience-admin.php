@@ -168,14 +168,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function output_settings_main() {
 			WC_Admin_Settings::output_fields( $this->get_settings_main() );
 
-			echo <<<'table'
-			<table class="form-table"><tbody>
-			<tr valign="top">
-			<th scope="row" class="titledesc"><label>Batch Upload</label></th>
-			<td class="forminp forminp-text"><div id="batch-upload"></div></td>
-			</tr>
-			</tbody></table>
-table;
+			$this->html->display_batch_table();
 
 			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
