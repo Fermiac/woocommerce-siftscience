@@ -70,7 +70,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 *
 		 * @param stting $yes_anchor   the enabled anchor.
 		 * @param string $no_anchor    the disabled anchor.
-		 * @param Array  $allowed_html the alloed HTML tags.
 		 */
 		public function display_improve_message( $yes_anchor, $no_anchor ) {
 
@@ -90,7 +89,6 @@ IMPROVE;
 		 * Echoing the style rule for the next sibbling of checkbox label to display inline
 		 *
 		 * @param string $label_for same of The ID of the checkbox html validation.
-		 * @param Array  $allowed_html the alloed HTML tags.
 		 */
 		public function styling_checkbox_label( $label_for ) {
 			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
