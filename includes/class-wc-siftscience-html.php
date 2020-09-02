@@ -20,22 +20,38 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	 */
 	class WC_SiftScience_Html {
 
+		/**
+		 * The allowed HTML tags
+		 *
+		 * @var Array $allowed_tags Set from admin for escaping output.
+		 */
+		private $allowed_tags;
+
 		public const WC_TITLE_ELEMENT      = 'title';
 		public const WC_TEXT_ELEMENT       = 'text';
 		public const WC_NUMBER_ELEMENT     = 'number';
 		public const WC_SELECT_ELEMENT     = 'select';
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
+
+		/**
+		 * A setter for allowed_html field
+		 *
+		 * @param Array $tags the tags set frp WC_SiftScience_admin.
+		 */
+		public function set_allowed_tags( $tags ) {
+			$this->allowed_tags = $tags;
+		}
+
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section
 		 *
 		 * @param Array  $sections     the sections to be displayed.
 		 * @param String $admin_id     The admin Id.
-		 * @param Array  $allowed_html the alloed HTML tags.
 		 *
 		 * @global String $current_section
 		 */
-		public function display_sections( $sections, $admin_id, $allowed_html ) {
+		public function display_sections( $sections, $admin_id ) {
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
@@ -47,16 +63,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			}
 
 			$tabs_html = '<li>' . join( ' | </li><li>', $tabs ) . '</li>';
-			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', $allowed_html );
+			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', $this->allowed_tags );
 		}
 		/**
 		 * This function displayes a booystrap notice for improveing plugin.
 		 *
 		 * @param stting $yes_anchor   the enabled anchor.
 		 * @param string $no_anchor    the disabled anchor.
-		 * @param Array  $allowed_html the alloed HTML tags.
 		 */
-		public function display_improve_message( $yes_anchor, $no_anchor, $allowed_html ) {
+		public function display_improve_message( $yes_anchor, $no_anchor ) {
 
 			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
 
@@ -67,18 +82,17 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<p> $message $yes_anchor, $no_anchor, $details_anchor. </p>
 			</div>
 IMPROVE;
-			echo wp_kses( $improve, $allowed_html );
+			echo wp_kses( $improve, $this->allowed_tags );
 		}
 
 		/**
 		 * Echoing the style rule for the next sibbling of checkbox label to display inline
 		 *
 		 * @param string $label_for same of The ID of the checkbox html validation.
-		 * @param Array  $allowed_html the alloed HTML tags.
 		 */
-		public function styling_checkbox_label( $label_for, $allowed_html ) {
+		public function styling_checkbox_label( $label_for ) {
 			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
-			echo wp_kses( sprintf( $html, $label_for ), $allowed_html );
+			echo wp_kses( sprintf( $html, $label_for ), $this->allowed_tags );
 		}
 
 	}

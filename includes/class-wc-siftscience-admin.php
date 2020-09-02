@@ -110,6 +110,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->html    = $html;
 			$this->logger  = $logger;
 			$this->stats   = $stats;
+
+			$this->html->set_allowed_tags( self::ALLOWED_HTML );
 		}
 
 		/**
@@ -135,7 +137,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'debug'     => 'Debug',
 			);
 
-			$this->html->display_sections( $sections, self::ADMIN_ID, self::ALLOWED_HTML );
+			$this->html->display_sections( $sections, self::ADMIN_ID );
 		}
 
 		/**
@@ -505,7 +507,7 @@ TITLE
 						)
 					);
 				case 'checkbox':
-					$this->html->styling_checkbox_label( $id, self::ALLOWED_HTML );
+					$this->html->styling_checkbox_label( $id );
 					// Append a style tag for that checkbox.
 				case 'number':
 				case 'select':
@@ -588,7 +590,7 @@ NOTICE;
 			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
 			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
 
-			$this->html->display_improve_message( $yes_anchor, $no_anchor, self::ALLOWED_HTML );
+			$this->html->display_improve_message( $yes_anchor, $no_anchor );
 		}
 
 		/**
