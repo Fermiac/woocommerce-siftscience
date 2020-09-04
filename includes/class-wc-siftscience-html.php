@@ -63,7 +63,20 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			}
 
 			$tabs_html = '<li>' . join( ' | </li><li>', $tabs ) . '</li>';
-			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', $this->allowed_tags );
+
+			$allowed_html = array(
+				'li' => array(),
+				'a'  => array(
+					'href'  => array(),
+					'class' => array(),
+				),
+			);
+			?>
+			<ul class="subsubsub">
+				<?php echo wp_kses( $tabs_html, $allowed_html ); ?>
+			</ul>
+			<br class="clear" />
+			<?php
 		}
 		/**
 		 * This function displayes a booystrap notice for improveing plugin.
@@ -71,11 +84,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param stting $yes_anchor   the enabled anchor.
 		 * @param string $no_anchor    the disabled anchor.
 		 */
-		public function display_improve_message( $yes_anchor, $no_anchor ) {?>
+		public function display_improve_message( $yes_anchor, $no_anchor ) {
+			?>
 			<div class="notice notice-info is-dismissible">
 				<p> 
 					Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.
-					<?php echo wp_kses( "$yes_anchor, $no_anchor,", $this->allowed_tags ); ?>
+					<?php echo wp_kses( "$yes_anchor, $no_anchor,", array( 'a' => array( 'href' => array() ) ) ); ?>
 					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>. 
 				</p>
 			</div>
