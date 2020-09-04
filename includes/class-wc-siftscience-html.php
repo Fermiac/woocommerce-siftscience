@@ -54,26 +54,29 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public function display_sections( $sections, $admin_id ) {
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
-
-			$tabs = array();
-			foreach ( $sections as $id => $label ) {
-				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . $admin_id . '&section=' . sanitize_title( $id ) );
-				$class  = $selected_section === $id ? 'current' : '';
-				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
-			}
-
-			$tabs_html = '<li>' . join( " | </li>\n<li>", $tabs ) . '</li>' . PHP_EOL;
-
-			$allowed_html = array(
-				'li' => array(),
-				'a'  => array(
-					'href'  => array(),
-					'class' => array(),
-				),
-			);
 			?>
 			<ul class="subsubsub">
-				<?php echo wp_kses( $tabs_html, $allowed_html ); ?>
+
+			<?php
+			$i = 0;
+			foreach ( $sections as $id => $label ) :
+				$url   = admin_url( 'admin.php?page=wc-settings&tab=' . $admin_id . '&section=' . sanitize_title( $id ) );
+				$class = $selected_section === $id ? 'current' : '';
+
+				?>
+					<li>
+						<a 
+							href="<?php echo wp_kses( $url, array() ); ?>" 
+							class="<?php echo wp_kses( $class, array() ); ?>"> 
+							<?php echo wp_kses( $label, array() ); ?>
+						</a>
+					</li>
+				<?php
+				if ( ++$i < count( $sections ) ) {
+					echo '|';
+				}
+			endforeach;
+			?>
 			</ul>
 			<br class="clear" />
 			<?php
@@ -108,7 +111,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			?>
 			<style type="text/css">
 				<?php echo wp_kses( $selector, array() ); ?>{
-					display:inline;
+					display: inline;
 				}
 			</style>
 			<?php
