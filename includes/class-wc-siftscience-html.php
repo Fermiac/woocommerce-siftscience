@@ -54,16 +54,33 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public function display_sections( $sections, $admin_id ) {
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
+			?>
 
-			$tabs = array();
-			foreach ( $sections as $id => $label ) {
-				$url    = admin_url( 'admin.php?page=wc-settings&tab=' . $admin_id . '&section=' . sanitize_title( $id ) );
-				$class  = $selected_section === $id ? 'current' : '';
-				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
-			}
+		<ul class="subsubsub">
+			<?php
+			$i = count( $sections );
+			foreach ( $sections as $id => $label ) :
+				$url   = admin_url( 'admin.php?page=wc-settings&tab=' . $admin_id . '&section=' . sanitize_title( $id ) );
+				$class = $selected_section === $id ? 'current' : '';
 
-			$tabs_html = '<li>' . join( ' | </li><li>', $tabs ) . '</li>';
-			echo wp_kses( '<ul class="subsubsub">' . $tabs_html . '</ul><br class="clear" />', $this->allowed_tags );
+				?>
+
+			<li>
+				<a 
+					href="<?php echo wp_kses( $url, array() ); ?>" 
+					class="<?php echo wp_kses( $class, array() ); ?>"> 
+					<?php echo wp_kses( $label, array() ) . PHP_EOL; ?>
+				</a>
+			</li>
+				<?php
+				if ( 0 < --$i ) {
+					echo '|';
+				}
+			endforeach;
+			?>
+			</ul>
+			<br class="clear" />
+			<?php
 		}
 		/**
 		 * This function displayes a booystrap notice for improveing plugin.
@@ -71,11 +88,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param stting $yes_anchor   the enabled anchor.
 		 * @param string $no_anchor    the disabled anchor.
 		 */
-		public function display_improve_message( $yes_anchor, $no_anchor ) {?>
+		public function display_improve_message( $yes_anchor, $no_anchor ) {
+			?>
 			<div class="notice notice-info is-dismissible">
 				<p> 
 					Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.
-					<?php echo wp_kses( "$yes_anchor, $no_anchor,", $this->allowed_tags ); ?>
+					<?php echo wp_kses( "$yes_anchor, $no_anchor,", array( 'a' => array( 'href' => array() ) ) ); ?>
 					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>. 
 				</p>
 			</div>
@@ -89,12 +107,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function styling_checkbox_label( $label_for ) {
 
-			$selector = "label[for=$label_for]+*"
+			$selector = "label[for=$label_for]+*";
 
 			?>
 			<style type="text/css">
 				<?php echo wp_kses( $selector, array() ); ?>{
-					display:inline;
+					display: inline;
 				}
 			</style>
 			<?php

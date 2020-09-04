@@ -31,21 +31,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
 		private const ALLOWED_HTML = array(
-			'li'    => array(),
 			'table' => array(),
 			'thead' => array(),
 			'tbody' => array(),
-			'p'     => array(),
 			'tr'    => array(),
-			'br'    => array( 'class' => array() ),
-			'div'   => array( 'class' => array() ),
 			'td'    => array( 'style' => array() ),
 			'span'  => array( 'style' => array() ),
-			'ul'    => array( 'class' => array() ),
-			'a'     => array(
-				'class' => array(),
-				'href'  => array(),
-			),
 			'th'    => array(
 				'scope'   => array(),
 				'colspan' => array(),
