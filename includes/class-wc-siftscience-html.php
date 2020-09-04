@@ -99,8 +99,7 @@ IMPROVE;
 		 *
 		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
 		 */
-		public function display_batch_table() {
-			echo <<<'BATCH_TABLE'
+		public function display_batch_table() {?>
 			<table class="form-table">
 				<tbody>
 					<tr valign="top">
@@ -111,7 +110,7 @@ IMPROVE;
 					</tr>
 				</tbody>
 			</table>
-BATCH_TABLE;
+			<?php
 		}
 
 	}
