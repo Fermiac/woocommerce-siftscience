@@ -67,9 +67,9 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 			<li>
 				<a 
-					href="<?php echo wp_kses( $url, array() ); ?>" 
-					class="<?php echo wp_kses( $class, array() ); ?>"> 
-					<?php echo wp_kses( $label, array() ) . PHP_EOL; ?>
+					href="<?php echo esc_attr( $url ); ?>" 
+					class="<?php echo esc_attr( $class ); ?>"> 
+					<?php echo esc_textarea( $label ) . PHP_EOL; ?>
 				</a>
 			</li>
 				<?php
@@ -109,7 +109,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 			?>
 			<style type="text/css">
-				<?php echo wp_kses( 'label[for=' . $label_for . ']+*', array() ); ?>{
+				<?php echo esc_attr( 'label[for=' . $label_for . ']+*' ); ?>{
 					display: inline;
 				}
 			</style>
