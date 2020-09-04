@@ -58,7 +58,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 		<ul class="subsubsub">
 			<?php
-			$i = 0;
+			$i = count( $sections );
 			foreach ( $sections as $id => $label ) :
 				$url   = admin_url( 'admin.php?page=wc-settings&tab=' . $admin_id . '&section=' . sanitize_title( $id ) );
 				$class = $selected_section === $id ? 'current' : '';
@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				</a>
 			</li>
 				<?php
-				if ( ++$i < count( $sections ) ) {
+				if ( 0 < --$i ) {
 					echo '|';
 				}
 			endforeach;
