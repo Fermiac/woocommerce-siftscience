@@ -107,11 +107,9 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function styling_checkbox_label( $label_for ) {
 
-			$selector = "label[for=$label_for]+*";
-
 			?>
 			<style type="text/css">
-				<?php echo wp_kses( $selector, array() ); ?>{
+				<?php echo wp_kses( 'label[for=' . $label_for . ']+*', array() ); ?>{
 					display: inline;
 				}
 			</style>
@@ -134,6 +132,25 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					</tr>
 				</tbody>
 			</table>
+			<?php
+		}
+		/**
+		 * This function displayes Reporting header info recieving the anonymous id from the admin class
+		 *
+		 * @param String $anonymous_id the id sent from admin genarated by options.
+		 * @param String $reset_anchor anchor tag to reset the anonymous id.
+		 */
+		public function display_reporting_text( $anonymous_id, $reset_anchor ) {
+			?>
+
+			<h2>Debug and Reoprting</h2>
+			<p> 
+				Help us improve this plugin by automatically reporting errors and statistics.<br /> 
+				All information is anonymous and cannot be traced back to your site.<br />
+				For details, <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">click here</a>.
+			</p>
+			<p> Your anonymous id is: <?php echo wp_kses( $anonymous_id . ' ' . $reset_anchor, array( 'a' => array( 'href' => array() ) ) ); ?></p>
+
 			<?php
 		}
 
