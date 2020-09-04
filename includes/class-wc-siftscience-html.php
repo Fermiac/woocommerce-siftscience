@@ -75,9 +75,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			<div class="notice notice-info is-dismissible">
 				<p> 
 					Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.
-					<?php
-					echo wp_kses( "$yes_anchor, $no_anchor,", $this->allowed_tags );
-					?>
+					<?php echo wp_kses( "$yes_anchor, $no_anchor,", $this->allowed_tags ); ?>
 					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>. 
 				</p>
 			</div>
@@ -90,15 +88,21 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param string $label_for same of The ID of the checkbox [html validation].
 		 */
 		public function styling_checkbox_label( $label_for ) {
-			$html = '<style type="text/css">label[for="%1$s"]+p{display:inline}</style>';
-			echo wp_kses( sprintf( $html, $label_for ), $this->allowed_tags );
+			?>
+			<style type="text/css">
+				label[for=<?php echo wp_kses( $label_for, array() ); ?>]+*{
+					display:inline;
+				}
+			</style>
+			<?php
 		}
 
 		/**
 		 *
 		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
 		 */
-		public function display_batch_table() {?>
+		public function display_batch_table() {
+			?>
 			<table class="form-table">
 				<tbody>
 					<tr valign="top">
