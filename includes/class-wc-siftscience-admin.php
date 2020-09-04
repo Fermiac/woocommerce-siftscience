@@ -41,12 +41,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			'div'   => array( 'class' => array() ),
 			'td'    => array( 'style' => array() ),
 			'span'  => array( 'style' => array() ),
-			'style' => array( 'type' => array() ),
 			'ul'    => array( 'class' => array() ),
 			'a'     => array(
-				'class'  => array(),
-				'href'   => array(),
-				'target' => array(),
+				'class' => array(),
+				'href'  => array(),
 			),
 			'th'    => array(
 				'scope'   => array(),
