@@ -244,6 +244,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
+			$url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
+
+			$reset_anchor = '<a href="' . $url . '">Reset</a>';
+			$anonymous_id = $this->options->get_guid();
+
+			$this->html->display_reporting_text( $anonymous_id, $reset_anchor );
 			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 		}
 
@@ -305,22 +311,11 @@ STATS_TABLE;
 		 */
 		private function get_settings_reporting() {
 
-			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-			$reset_anchor = ' <a href="' . $reset_url . '">Reset</a>';
-
 			return array(
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
-					'siftsci_stats_title',
-					'Sift Stats and Debug Reporting',
-					<<<TITLE
-					<p> 
-						Help us improve this plugin by automatically reporting errors and statistics. 
-						All information is anonymous and cannot be traced back to your site. 
-						For details, click <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.
-					</p>
-					<p> Your anonymous id is: {$this->options->get_guid()} $reset_anchor </p>
-TITLE
+					'siftsci_title_reporting',
+					'Sift Debug & Reporting form'
 				),
 
 				$this->create_element(
