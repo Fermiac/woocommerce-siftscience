@@ -149,7 +149,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				All information is anonymous and cannot be traced back to your site.<br />
 				For details, <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">click here</a>.
 			</p>
-			<p> Your anonymous id is: <?php echo wp_kses( $anonymous_id . ' ' . $reset_anchor, array( 'a' => array( 'href' => array() ) ) ); ?></p>
+			<p> Your <em>anonymous id</em> is: <?php echo wp_kses( $anonymous_id . ' ' . $reset_anchor, array( 'a' => array( 'href' => array() ) ) ); ?></p>
 
 			<?php
 		}
