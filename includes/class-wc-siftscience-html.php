@@ -135,7 +135,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			<?php
 		}
 		/**
-		 * This function displayes Reporting header info recieving the anonymous id from the admin class
+		 * This function displayes Reporting header receiving the anonymous id from the admin class
 		 *
 		 * @param String $anonymous_id the id sent from admin genarated by options.
 		 * @param String $reset_anchor anchor tag to reset the anonymous id.
