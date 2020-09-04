@@ -88,9 +88,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param string $label_for same of The ID of the checkbox [html validation].
 		 */
 		public function styling_checkbox_label( $label_for ) {
+
+			$selector = "label[for=$label_for]+*"
+
 			?>
 			<style type="text/css">
-				label[for=<?php echo wp_kses( $label_for, array() ); ?>]+*{
+				<?php echo wp_kses( $selector, array() ); ?>{
 					display:inline;
 				}
 			</style>
