@@ -103,7 +103,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function styling_checkbox_label( $label_for ) {
 
-			$selector = "label[for=$label_for]+*"
+			$selector = "label[for=$label_for]+*";
 
 			?>
 			<style type="text/css">
