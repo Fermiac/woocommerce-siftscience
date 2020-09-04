@@ -55,8 +55,8 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 			?>
-			<ul class="subsubsub">
 
+		<ul class="subsubsub">
 			<?php
 			$i = 0;
 			foreach ( $sections as $id => $label ) :
@@ -64,13 +64,14 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				$class = $selected_section === $id ? 'current' : '';
 
 				?>
-					<li>
-						<a 
-							href="<?php echo wp_kses( $url, array() ); ?>" 
-							class="<?php echo wp_kses( $class, array() ); ?>"> 
-							<?php echo wp_kses( $label, array() ); ?>
-						</a>
-					</li>
+
+			<li>
+				<a 
+					href="<?php echo wp_kses( $url, array() ); ?>" 
+					class="<?php echo wp_kses( $class, array() ); ?>"> 
+					<?php echo wp_kses( $label, array() ) . PHP_EOL; ?>
+				</a>
+			</li>
 				<?php
 				if ( ++$i < count( $sections ) ) {
 					echo '|';
