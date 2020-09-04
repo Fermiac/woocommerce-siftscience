@@ -62,7 +62,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				$tabs[] = '<a href="' . $url . '" class="' . $class . '">' . $label . '</a>';
 			}
 
-			$tabs_html = '<li>' . join( ' | </li><li>', $tabs ) . '</li>';
+			$tabs_html = '<li>' . join( " | </li>\n<li>", $tabs ) . '</li>' . PHP_EOL;
 
 			$allowed_html = array(
 				'li' => array(),
