@@ -71,18 +71,17 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param stting $yes_anchor   the enabled anchor.
 		 * @param string $no_anchor    the disabled anchor.
 		 */
-		public function display_improve_message( $yes_anchor, $no_anchor ) {
-
-			$message = 'Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.';
-
-			$details_anchor = '<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>';
-
-			$improve = <<<IMPROVE
-			<div class="notice notice-error is-dismissible">
-				<p> $message $yes_anchor, $no_anchor, $details_anchor. </p>
+		public function display_improve_message( $yes_anchor, $no_anchor ) {?>
+			<div class="notice notice-info is-dismissible">
+				<p> 
+					Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.
+					<?php
+					echo wp_kses( "$yes_anchor, $no_anchor,", $this->allowed_tags );
+					?>
+					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>. 
+				</p>
 			</div>
-IMPROVE;
-			echo wp_kses( $improve, $this->allowed_tags );
+			<?php
 		}
 
 		/**

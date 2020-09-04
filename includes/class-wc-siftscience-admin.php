@@ -44,9 +44,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			'style' => array( 'type' => array() ),
 			'ul'    => array( 'class' => array() ),
 			'a'     => array(
-				'class'  => array(),
-				'href'   => array(),
-				'target' => array(),
+				'class' => array(),
+				'href'  => array(),
 			),
 			'th'    => array(
 				'scope'   => array(),
