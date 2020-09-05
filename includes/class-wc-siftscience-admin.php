@@ -322,7 +322,10 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
-					'Send the plugin developers statistics and error details. More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.'
+					'Send the plugin developers statistics and error details.',
+					array(
+						'desc_tip' => 'More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
+					)
 				),
 
 				$this->create_element(
@@ -415,7 +418,12 @@ STATS_TABLE;
 					WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
-					array( 'default' => 30 )
+					array(
+						'default' => 30,
+						'min'     => 0,
+						'max'     => 100,
+						'step'    => 1,
+					)
 				),
 
 				$this->create_element(
@@ -423,7 +431,12 @@ STATS_TABLE;
 					WC_SiftScience_Options::THRESHOLD_BAD,
 					'Bad Score Threshold',
 					'Scores above this value are considered bad and shown in red',
-					array( 'default' => 60 )
+					array(
+						'default' => 60,
+						'min'     => 0,
+						'max'     => 100,
+						'step'    => 1,
+					)
 				),
 				$this->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
@@ -444,7 +457,11 @@ STATS_TABLE;
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Auto Send Minimum Value',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
-					array( 'default' => 0 )
+					array(
+						'default' => 0,
+						'min'     => 0,
+						'step'    => 1,
+					)
 				),
 
 				$this->create_element(
@@ -456,56 +473,87 @@ STATS_TABLE;
 
 		/**
 		 * This function sets HTML element attributes according to woocommearce provided library.
+		 * desc_tip Mixed [bool:false] (default)
+		 *     field type of checkbox; the desc text is going next to the control
+		 *     field type of select, number or text; the desc text is going underneath control
+		 * desc_tip Mixed [bool:true]
+		 *     field type of check box; the desc text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
+		 * desc_tip Mixed [string]
+		 *     field type of checkbox; the text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc tip
+		 * note: currently desc_tip can only be added as element_options
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
-		 * @param string $title           Element label.
-		 * @param string $desc            Question mark hilper title.
+		 * @param string $label           Element label.
+		 * @param string $desc            Description text.
 		 * @param array  $element_options Element special options.
 		 *
 		 * @return array $element         An array of attributes.
+		 * @since 1.1.0
 		 */
-		private function create_element( $type, $id, $title = '', $desc = '', $element_options = array() ) {
+		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
 
-			$element = array(
-				'type' => $type,
-				'id'   => $id,
-			);
+			$element = array();
+
+			$custom_attributes = array(); // array flattener.
 
 			switch ( $type ) {
-				case 'sectionend':
-					return $element;
-				case 'title':
-					return array_merge(
-						$element,
-						array(
-							'title' => $title,
-							'desc'  => $desc,
-						)
-					);
-				case 'number':
-				case 'select':
+
+				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
+					if ( isset( $element_options['min'] ) ) {
+						$custom_attributes['min'] = $element_options['min'];
+						unset( $element_options['min'] );
+					}
+					if ( isset( $element_options['max'] ) ) {
+						$custom_attributes['max'] = $element_options['max'];
+						unset( $element_options['max'] );
+					}
+					if ( isset( $element_options['step'] ) ) {
+						$custom_attributes['step'] = $element_options['step'];
+						unset( $element_options['step'] );
+					}
+					// Number field min, nax and step values saved and unseted to avoid duplicates.
+
+				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
+				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
-					} elseif ( 'select' === $type ) {
+					} elseif ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
 						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						break;
 					}
-					// Select and number may have a Description.
-				case 'text':
-				case 'checkbox':
+					// $element_options added.
+
+				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
+				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
-
 						$element['desc'] = $desc;
+					}
 
+					if ( ! empty( $label ) ) {
+						$element['title'] = $label;
 					}
-					if ( ! empty( $title ) ) {
-						$element['title'] = $title;
-					}
+					// All Whats left to add is id and type.
+
+				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
+					$element = array_merge(
+						$element,
+						array(
+							'type' => $type,
+							'id'   => $id,
+						)
+					);
 					break;
+
 				default:
 					$this->logger->log_error( $type . ' is not a valid type!' );
 					break;
+			}
+
+			if ( ! empty( $custom_attributes ) ) {
+				$element['custom_attributes'] = $custom_attributes;
 			}
 
 			return $element;
