@@ -315,7 +315,7 @@ STATS_TABLE;
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
-					'Sift Debug & Reporting sittings'
+					'Sift Debug & Reporting Settings'
 				),
 
 				$this->create_element(
@@ -442,7 +442,7 @@ STATS_TABLE;
 				$this->create_element(
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
-					'Auto Send minimum Value',
+					'Auto Send Minimum Value',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
 					array( 'default' => 0 )
 				),
