@@ -325,7 +325,7 @@ STATS_TABLE;
 					'Send the plugin developers statistics and error details.',
 					array(
 						'desc_tip' => 'More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
-					),
+					)
 				),
 
 				$this->create_element(
