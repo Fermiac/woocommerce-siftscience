@@ -101,22 +101,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		}
 
 		/**
-		 * Echoing the style rule for the next sibbling of checkbox label to display inline
-		 *
-		 * @param string $label_for same of The ID of the checkbox [html validation].
-		 */
-		public function styling_checkbox_label( $label_for ) {
-
-			?>
-			<style type="text/css">
-				<?php echo esc_attr( 'label[for=' . $label_for . ']+*' ); ?>{
-					display: inline;
-				}
-			</style>
-			<?php
-		}
-
-		/**
 		 *
 		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
 		 */
@@ -143,7 +127,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public function display_reporting_text( $anonymous_id, $reset_anchor ) {
 			?>
 
-			<h2>Debug and Reoprting</h2>
+			<h2>Notice</h2>
 			<p> 
 				Help us improve this plugin by automatically reporting errors and statistics.<br /> 
 				All information is anonymous and cannot be traced back to your site.<br />

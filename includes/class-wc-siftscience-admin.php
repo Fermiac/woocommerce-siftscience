@@ -315,7 +315,7 @@ STATS_TABLE;
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
-					'Sift Debug & Reporting form'
+					'Sift Debug & Reporting Settings'
 				),
 
 				$this->create_element(
@@ -442,7 +442,7 @@ STATS_TABLE;
 				$this->create_element(
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
-					'Minimum Order Value for Auto Send',
+					'Auto Send Minimum Value',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
 					array( 'default' => 0 )
 				),
@@ -483,12 +483,9 @@ STATS_TABLE;
 							'desc'  => $desc,
 						)
 					);
-				case 'checkbox':
-					$this->html->styling_checkbox_label( $id );
-					// Append a style tag for that checkbox.
 				case 'number':
 				case 'select':
-					if ( 'checkbox' !== $type && ! empty( $element_options ) ) {
+					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					} elseif ( 'select' === $type ) {
 						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
@@ -496,18 +493,15 @@ STATS_TABLE;
 					}
 					// Select and number may have a Description.
 				case 'text':
+				case 'checkbox':
 					if ( ! empty( $desc ) ) {
 
-						$element = array_merge(
-							$element,
-							array(
-								'desc'     => $desc,
-								'desc_tip' => true,
-							)
-						);
+						$element['desc'] = $desc;
 
 					}
-					$element['title'] = $title;
+					if ( ! empty( $title ) ) {
+						$element['title'] = $title;
+					}
 					break;
 				default:
 					$this->logger->log_error( $type . ' is not a valid type!' );
