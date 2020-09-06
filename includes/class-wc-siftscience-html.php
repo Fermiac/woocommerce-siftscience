@@ -69,7 +69,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<a 
 					href="<?php echo esc_attr( $url ); ?>" 
 					class="<?php echo esc_attr( $class ); ?>"> 
-					<?php echo esc_textarea( $label ) . PHP_EOL; ?>
+					<?php echo esc_html( $label ) . PHP_EOL; ?>
 				</a>
 			</li>
 				<?php
@@ -135,10 +135,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		/**
 		 * This function displayes Reporting header receiving the anonymous id from the admin class
 		 *
-		 * @param String $anonymous_id the id sent from admin genarated by options.
-		 * @param String $reset_anchor anchor tag to reset the anonymous id.
+		 * @param String $anonymous_id The id sent from admin genarated by options.
+		 * @param String $reset_url    A url to reset the anonymous id.
 		 */
-		public function display_reporting_text( $anonymous_id, $reset_anchor ) {
+		public function display_reporting_text( $anonymous_id, $reset_url ) {
 			?>
 
 			<h2>Notice</h2>
@@ -147,7 +147,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				All information is anonymous and cannot be traced back to your site.<br />
 				For details, <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">click here</a>.
 			</p>
-			<p> Your <em>anonymous id</em> is: <?php echo wp_kses( $anonymous_id . ' ' . $reset_anchor, array( 'a' => array( 'href' => array() ) ) ); ?></p>
+			<p> Your <em>anonymous id</em> is: <?php echo esc_html( $anonymous_id ); ?> <a href="<?php echo esc_url( $reset_url ); ?>"></a></p>
 
 			<?php
 		}

@@ -244,12 +244,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
-			$url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-
-			$reset_anchor = '<a href="' . $url . '">Reset</a>';
+			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$anonymous_id = $this->options->get_guid();
 
-			$this->html->display_reporting_text( $anonymous_id, $reset_anchor );
+			$this->html->display_reporting_text( $anonymous_id, $reset_url );
 			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 		}
 
@@ -545,13 +543,8 @@ STATS_TABLE;
 					// Title and description are added all What's left [id and type].
 
 				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
-					$element = array_merge(
-						$element,
-						array(
-							'id'   => $id,
-							'type' => $type,
-						)
-					);
+					$element['id']   = $id;
+					$element['type'] = $type;
 					break;
 
 				default:
