@@ -423,6 +423,7 @@ STATS_TABLE;
 						'min'     => 0,
 						'max'     => 100,
 						'step'    => 1,
+						'css'     => 'width:75px;',
 					)
 				),
 
@@ -436,6 +437,7 @@ STATS_TABLE;
 						'min'     => 0,
 						'max'     => 100,
 						'step'    => 1,
+						'css'     => 'width:75px;',
 					)
 				),
 				$this->create_element(
@@ -461,6 +463,7 @@ STATS_TABLE;
 						'default' => 0,
 						'min'     => 0,
 						'step'    => 1,
+						'css'     => 'width:75px;',
 					)
 				),
 
@@ -499,6 +502,13 @@ STATS_TABLE;
 
 			$custom_attributes = array(); // array flattener.
 
+			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
+
 			switch ( $type ) {
 
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
@@ -514,17 +524,13 @@ STATS_TABLE;
 						$custom_attributes['step'] = $element_options['step'];
 						unset( $element_options['step'] );
 					}
-					$element['css'] = 'width:75px;';
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
-				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
+				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
-					} elseif ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
-						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-						break;
 					}
 					// $element_options added.
 
@@ -536,7 +542,7 @@ STATS_TABLE;
 					if ( ! empty( $label ) ) {
 						$element['title'] = $label;
 					}
-					// All What's left [id and type].
+					// Title and description are added all What's left [id and type].
 
 				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
 					$element = array_merge(
