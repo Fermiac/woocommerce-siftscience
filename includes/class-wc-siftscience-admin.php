@@ -545,13 +545,8 @@ STATS_TABLE;
 					// Title and description are added all What's left [id and type].
 
 				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
-					$element = array_merge(
-						$element,
-						array(
-							'id'   => $id,
-							'type' => $type,
-						)
-					);
+					$element['id']   = $id;
+					$element['type'] = $type;
 					break;
 
 				default:
