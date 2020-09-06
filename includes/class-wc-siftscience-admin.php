@@ -225,14 +225,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			}
 
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
-			echo wp_kses( '<a href="' . $ssl_url . '" class="button-primary woocommerce-save-button">Test SSL</a>', self::ALLOWED_HTML );
+			echo '<a href="' . esc_url( $ssl_url ) . '" class="button-primary woocommerce-save-button">Test SSL</a>';
 
 			// Display logs.
 			echo '<h2>Logs</h2>';
-			echo wp_kses( '<p>' . nl2br( esc_html( $logs ) ) . '</p>', self::ALLOWED_HTML );
+			echo '<p>' . nl2br( esc_html( $logs ) ) . '</p>';
 
 			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
-			echo wp_kses( '<a href="' . $log_url . '" class="button-primary woocommerce-save-button">Clear Logs</a>', self::ALLOWED_HTML );
+			echo '<a href="' . esc_url( $log_url ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
 		}
 
 		/**
@@ -301,7 +301,7 @@ STATS_TABLE;
 			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
 
 			$url = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
-			echo wp_kses( '<a href="' . $url . '" class="button-primary woocommerce-save-button">Clear Stats</a>', self::ALLOWED_HTML );
+			echo '<a href="' . esc_url( $url ) . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
 		}
 
 		/**
@@ -324,7 +324,7 @@ STATS_TABLE;
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details.',
 					array(
-						'desc_tip' => 'More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
+						'desc_tip' => '<em>More info</em> <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
 					)
 				),
 
@@ -514,8 +514,10 @@ STATS_TABLE;
 						$custom_attributes['step'] = $element_options['step'];
 						unset( $element_options['step'] );
 					}
+					$element['css'] = 'width:75px;';
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
+				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 					if ( ! empty( $element_options ) ) {
@@ -526,7 +528,6 @@ STATS_TABLE;
 					}
 					// $element_options added.
 
-				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
@@ -535,14 +536,14 @@ STATS_TABLE;
 					if ( ! empty( $label ) ) {
 						$element['title'] = $label;
 					}
-					// All Whats left to add is id and type.
+					// All What's left [id and type].
 
 				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
 					$element = array_merge(
 						$element,
 						array(
-							'type' => $type,
 							'id'   => $id,
+							'type' => $type,
 						)
 					);
 					break;
