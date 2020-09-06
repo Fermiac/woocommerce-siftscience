@@ -577,7 +577,7 @@ STATS_TABLE;
 				$is_admin_page = strpos( $uri, 'tab=siftsci' );
 				$is_valid_conf = ( false === $is_admin_page || $this->options->is_setup() );
 
-				if ( 1 === $is_valid_conf ) {
+				if ( false === $is_valid_conf ) {
 					$settings_url = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 
 					$this->html->disply_update_notice( $settings_url );
