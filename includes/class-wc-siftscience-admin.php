@@ -15,11 +15,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-html.php';
+	require_once 'class-wc-siftsience-iwc-elements.php';
+	require_once 'class-wc-siftsience-isift-options.php';
 
 	/**
 	 * Class WC_SiftScience_Admin
 	 */
-	class WC_SiftScience_Admin {
+	class WC_SiftScience_Admin implements Iwc_Elements, Isift_Options {
 		private const ADMIN_ID    = 'siftsci';
 		private const ADMIN_LABEL = 'Sift';
 
@@ -240,7 +242,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function output_settings_reporting() {
 			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
-				delete_option( WC_SiftScience_Options::GUID );
+				delete_option( self::GUID );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
@@ -267,7 +269,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			echo '<h2>Statistics</h2>';
 
-			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
+			$stats = get_option( self::STATS, 'none' );
 			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
@@ -313,14 +315,14 @@ STATS_TABLE;
 
 			return array(
 				$this->create_element(
-					WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					self::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
 					'Sift Debug & Reporting Settings'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
-					WC_SiftScience_Options::SEND_STATS,
+					self::WC_CHECKBOX_ELEMENT,
+					self::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details.',
 					array(
@@ -329,8 +331,8 @@ STATS_TABLE;
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_SELECT_ELEMENT,
-					WC_SiftScience_Options::LOG_LEVEL_KEY,
+					self::WC_SELECT_ELEMENT,
+					self::LOG_LEVEL_KEY,
 					'Log Level',
 					'How much logging information to generate',
 					array(
@@ -344,7 +346,7 @@ STATS_TABLE;
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					self::WC_SECTIONEND_ELEMENT,
 					'sifsci_section_reporting'
 				),
 			);
@@ -359,7 +361,7 @@ STATS_TABLE;
 				case '':
 					WC_Admin_Settings::save_fields( $this->get_settings_main() );
 					$is_api_working = $this->check_api();
-					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
+					update_option( self::IS_API_SETUP, $is_api_working ? 1 : 0 );
 					if ( $is_api_working ) {
 						WC_Admin_Settings::add_message( 'API is correctly configured' );
 					} else {
@@ -367,7 +369,7 @@ STATS_TABLE;
 					}
 					break;
 				case 'reporting':
-					WC_Admin_Settings::save_fields( $this->get_settings_stats() );
+					WC_Admin_Settings::save_fields( $this->get_settings_reporting() );
 					break;
 				default:
 					break;
@@ -394,28 +396,28 @@ STATS_TABLE;
 		private function get_settings_main() {
 			return array(
 				$this->create_element(
-					WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					self::WC_TITLE_ELEMENT,
 					'siftsci_title',
 					'Sift Settings'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::API_KEY,
+					self::WC_TEXT_ELEMENT,
+					self::API_KEY,
 					'Rest API Key',
 					'The API key for production'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::JS_KEY,
+					self::WC_TEXT_ELEMENT,
+					self::JS_KEY,
 					'Javascript Snippet Key',
 					'Javascript snippet key for production'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::THRESHOLD_GOOD,
+					self::WC_NUMBER_ELEMENT,
+					self::THRESHOLD_GOOD,
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
 					array(
@@ -427,8 +429,8 @@ STATS_TABLE;
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::THRESHOLD_BAD,
+					self::WC_NUMBER_ELEMENT,
+					self::THRESHOLD_BAD,
 					'Bad Score Threshold',
 					'Scores above this value are considered bad and shown in red',
 					array(
@@ -439,22 +441,22 @@ STATS_TABLE;
 					)
 				),
 				$this->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::NAME_PREFIX,
+					self::WC_TEXT_ELEMENT,
+					self::NAME_PREFIX,
 					'User & Order Name Prefix',
 					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
-					WC_SiftScience_Options::AUTO_SEND_ENABLED,
+					self::WC_CHECKBOX_ELEMENT,
+					self::AUTO_SEND_ENABLED,
 					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::MIN_ORDER_VALUE,
+					self::WC_NUMBER_ELEMENT,
+					self::MIN_ORDER_VALUE,
 					'Auto Send Minimum Value',
 					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
 					array(
@@ -465,7 +467,7 @@ STATS_TABLE;
 				),
 
 				$this->create_element(
-					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					self::WC_SECTIONEND_ELEMENT,
 					'sifsci_section_main'
 				),
 			);
@@ -501,7 +503,7 @@ STATS_TABLE;
 
 			switch ( $type ) {
 
-				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
+				case self::WC_NUMBER_ELEMENT:
 					if ( isset( $element_options['min'] ) ) {
 						$custom_attributes['min'] = $element_options['min'];
 						unset( $element_options['min'] );
@@ -516,18 +518,18 @@ STATS_TABLE;
 					}
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
-				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
-				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
+				case self::WC_SELECT_ELEMENT:
+				case self::WC_CHECKBOX_ELEMENT:
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
-					} elseif ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
+					} elseif ( self::WC_SELECT_ELEMENT === $type ) {
 						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						break;
 					}
 					// $element_options added.
 
-				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
-				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
+				case self::WC_TEXT_ELEMENT:
+				case self::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
 					}
@@ -537,7 +539,7 @@ STATS_TABLE;
 					}
 					// All Whats left to add is id and type.
 
-				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
+				case self::WC_SECTIONEND_ELEMENT:
 					$element = array_merge(
 						$element,
 						array(
@@ -593,7 +595,7 @@ NOTICE;
 		 * Displays the notice for opting in/out of stats
 		 */
 		private function notice_stats() {
-			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
+			$enabled = get_option( self::SEND_STATS, 'not_set' );
 
 			if ( 'not_set' !== $enabled ) {
 				return;
@@ -601,7 +603,7 @@ NOTICE;
 
 			$value = $this->get_value( self::GET_VAR_SET_STATS );
 			if ( false !== $value ) {
-				update_option( WC_SiftScience_Options::SEND_STATS, $value );
+				update_option( self::SEND_STATS, $value );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
 				exit;
 			}

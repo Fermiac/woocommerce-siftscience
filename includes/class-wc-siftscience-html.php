@@ -27,13 +27,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		private $allowed_tags;
 
-		public const WC_TITLE_ELEMENT      = 'title';
-		public const WC_TEXT_ELEMENT       = 'text';
-		public const WC_NUMBER_ELEMENT     = 'number';
-		public const WC_SELECT_ELEMENT     = 'select';
-		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
-		public const WC_SECTIONEND_ELEMENT = 'sectionend';
-
 		/**
 		 * A setter for allowed_html field
 		 *

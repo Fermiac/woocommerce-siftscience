@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+		require_once 'class-wc-siftsience-isift-options.php';
+
 if ( ! class_exists( 'WC_SiftScience_Stats' ) ) :
 
 	/**
@@ -18,7 +20,7 @@ if ( ! class_exists( 'WC_SiftScience_Stats' ) ) :
 	 *
 	 * Class WC_SiftScience_Stats
 	 */
-	class WC_SiftScience_Stats {
+	class WC_SiftScience_Stats implements Isift_Options {
 		/**
 		 * The logging object
 		 *
