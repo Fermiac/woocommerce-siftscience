@@ -83,19 +83,33 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			<?php
 		}
 		/**
-		 * This function displayes a booystrap notice for improveing plugin.
+		 * This function displayes a bootstrap notice for improveing plugin.
 		 *
-		 * @param stting $yes_anchor   the enabled anchor.
-		 * @param string $no_anchor    the disabled anchor.
+		 * @param stting $enabled_link the enabled url.
+		 * @param string $disabled_link the disabled url.
 		 */
-		public function display_improve_message( $yes_anchor, $no_anchor ) {
+		public function display_improve_message( $enabled_link, $disabled_link ) {
 			?>
 			<div class="notice notice-info is-dismissible">
 				<p> 
 					Please help improve Sift for WooCommerce by enabling Stats and Error Reporting.
-					<?php echo wp_kses( "$yes_anchor, $no_anchor,", array( 'a' => array( 'href' => array() ) ) ); ?>
-					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">more info</a>. 
+					<a href="<?php echo esc_url( $enabled_link ); ?>">Enable</a>,
+					<a href="<?php echo esc_url( $disabled_link ); ?>">Disable</a>,
+					<a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">More info</a>. 
 				</p>
+			</div>
+			<?php
+		}
+
+		/**
+		 * This function is to cdisplay a notice so the user shoulr update their plugin
+		 *
+		 * @param string $settings_url the link to update plugin.
+		 */
+		public function disply_update_notice( $settings_url ) {
+			?>
+			<div class="notice notice-error is-dismissible">
+				<p>Sift configuration is invalid. <a href="<?php echo esc_url( $settings_url ); ?>">please update</a>.</p>
 			</div>
 			<?php
 		}

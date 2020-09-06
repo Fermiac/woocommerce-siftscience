@@ -567,69 +567,39 @@ STATS_TABLE;
 		}
 
 		/**
-		 * Calls the functions to decide if we need to show notices
+		 * This function handles admin-notices action and decides to show update, improve notices
 		 */
 		public function settings_notice() {
-			$this->notice_config();
-			$this->notice_stats();
-		}
-
-		/**
-		 * Creates the notice for when sift is not correctly configured
-		 */
-		private function notice_config() {
+			// Check to display update notice.
 			if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-				$uri           = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+				$uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
 				$is_admin_page = strpos( $uri, 'tab=siftsci' );
-				if ( false === $is_admin_page || $this->options->is_setup() ) {
-					return;
+				$is_valid_conf = ( false === $is_admin_page || $this->options->is_setup() );
+
+				if ( 1 === $is_valid_conf ) {
+					$settings_url = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
+
+					$this->html->disply_update_notice( $settings_url );
 				}
 			}
+			// Check to dispkay improve notice.
+			$is_send_stat_set = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 
-			$link   = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
-			$anchor = '<a href="' . $link . '">here</a>';
-			$notice = <<<NOTICE
-			<div class="notice notice-error is-dismissible">
-			<p>Sift configuration is invalid. Click $anchor to update.</p>
-			</div>
-NOTICE;
-			echo wp_kses( $notice, self::ALLOWED_HTML );
-		}
+			if ( 'not_set' === $is_send_stat_set ) {
+				$value = $this->get_value( self::GET_VAR_SET_STATS );
 
-		/**
-		 * Displays the notice for opting in/out of stats
-		 */
-		private function notice_stats() {
-			$enabled = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
+				if ( false !== $value ) {
+					update_option( WC_SiftScience_Options::SEND_STATS, $value );
+					wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
 
-			if ( 'not_set' !== $enabled ) {
-				return;
+				} else {
+					$disabled_link = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'no' );
+					$enabled_link  = $this->bound_nonce_url( self::GET_VAR_SET_STATS, 'yes' );
+
+					$this->html->display_improve_message( $enabled_link, $disabled_link );
+				}
 			}
-
-			$value = $this->get_value( self::GET_VAR_SET_STATS );
-			if ( false !== $value ) {
-				update_option( WC_SiftScience_Options::SEND_STATS, $value );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_SET_STATS ) );
-				exit;
-			}
-
-			$no_anchor  = $this->get_stats_anchor( 'Disable', 'no' );
-			$yes_anchor = $this->get_stats_anchor( 'Enable', 'yes' );
-
-			$this->html->display_improve_message( $yes_anchor, $no_anchor );
-		}
-
-		/**
-		 * Gets the anchor HTML for the enable/disable links for stats
-		 *
-		 * @param string $text The text to display in the anchor.
-		 * @param string $value The get param value to put in the URL.
-		 *
-		 * @return string
-		 */
-		private function get_stats_anchor( $text, $value ) {
-			$url = $this->bound_nonce_url( self::GET_VAR_SET_STATS, $value );
-			return "<a href='{$url}'>{$text}</a>";
 		}
 
 		/**
