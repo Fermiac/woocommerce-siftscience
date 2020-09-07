@@ -322,6 +322,7 @@ STATS_TABLE;
 					'<a href="' . $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) . '">Reset</a>',
 					array(
 						'default'           => $this->options->get_guid(),
+						'css'               => 'border:hidden;padding-left:0;background:transparent;',
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
 						),
