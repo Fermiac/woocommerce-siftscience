@@ -660,7 +660,7 @@ STATS_TABLE;
 		private function get_anon_id_content() {
 			$anon_id  = $this->options->get_guid();
 			$rest_url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-			return "$anon_id <a href='$rest_url'>Reset</a>";
+			return "$anon_id (<a href='$rest_url'>Reset</a>)";
 		}
 
 		/**
@@ -671,7 +671,7 @@ STATS_TABLE;
 		private function get_reporting_checkbox_description() {
 			$url     = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$message = 'Help us improve this plugin by automatically reporting errors and statistics. ';
-			return "$message More info <a target='_blank' href='$url'>here</a>";
+			return "$message More info <a target='_blank' href='$url'>here</a>.";
 		}
 	}
 endif;
