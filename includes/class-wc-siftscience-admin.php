@@ -247,7 +247,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
 			$anonymous_id = $this->options->get_guid();
 
-			$this->html->display_reporting_text( $anonymous_id, $reset_url );
 			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 		}
 
@@ -313,7 +312,17 @@ STATS_TABLE;
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
-					'Sift Debug & Reporting Settings'
+					'Sift Debug & Reporting Settings',
+					'Help us improve this plugin by automatically reporting errors and statistics.<br />More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.'
+				),
+				$this->create_element(
+					WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					'tempID',
+					'Anonymous id',
+					'<a href="' . esc_url( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) ) . '">Reset </a>',
+					array(
+						'default' => $this->options->get_guid(),
+					)
 				),
 
 				$this->create_element(
@@ -321,9 +330,6 @@ STATS_TABLE;
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send the plugin developers statistics and error details.',
-					array(
-						'desc_tip' => '<em>More info</em> <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
-					)
 				),
 
 				$this->create_element(

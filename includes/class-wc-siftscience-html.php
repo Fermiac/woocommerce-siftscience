@@ -132,26 +132,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</table>
 			<?php
 		}
-		/**
-		 * This function displayes Reporting header receiving the anonymous id from the admin class
-		 *
-		 * @param String $anonymous_id The id sent from admin genarated by options.
-		 * @param String $reset_url    A url to reset the anonymous id.
-		 */
-		public function display_reporting_text( $anonymous_id, $reset_url ) {
-			?>
-
-			<h2>Notice</h2>
-			<p> 
-				Help us improve this plugin by automatically reporting errors and statistics.<br /> 
-				All information is anonymous and cannot be traced back to your site.<br />
-				For details, <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">click here</a>.
-			</p>
-			<p> Your <em>anonymous id</em> is: <?php echo esc_html( $anonymous_id ); ?> <a href="<?php echo esc_url( $reset_url ); ?>"></a></p>
-
-			<?php
-		}
-
 	}
 
 endif;
