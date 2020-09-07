@@ -148,10 +148,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 *
 		 * @param String $url the link in which it should dusokay as a button.
 		 */
-		public function display_reset_anchor( $url ) {
+		public function display_reset_anchor( $anon,$url ) {
 			ob_start();
 			?>
-				<a class="button button-secondary" href="<?php echo esc_url( $url ); ?>">Reset</a>
+				<?php echo esc_html( $anon ); ?> <a href="<?php echo esc_url( $url ); ?>">Reset</a>
 			<?php
 			return ob_get_clean();
 		}

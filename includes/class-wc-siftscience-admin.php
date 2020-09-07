@@ -319,12 +319,8 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					'tempID',
 					'Anonymous id',
-					$this->html->display_reset_anchor( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) ),
-					array(
-						'default'  => $this->options->get_guid(),
-						'css'      => 'border:hidden;padding-left:0;background:none;',
-						'readonly' => 'readonly',
-					)
+					$this->html->display_reset_anchor( $this->options->get_guid(), $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) ),
+					array( 'css' => 'display:none;' )
 				),
 
 				$this->create_element(
@@ -530,10 +526,6 @@ STATS_TABLE;
 					if ( isset( $element_options['step'] ) ) {
 						$custom_attributes['step'] = $element_options['step'];
 						unset( $element_options['step'] );
-					}
-					if ( isset( $element_options['readonly'] ) ) {
-						$custom_attributes['readonly'] = $element_options['readonly'];
-						unset( $element_options['readonly'] );
 					}
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
