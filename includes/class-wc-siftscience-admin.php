@@ -549,7 +549,6 @@ STATS_TABLE;
 					break;
 			}
 
-
 			return $element;
 		}
 
