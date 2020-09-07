@@ -321,7 +321,10 @@ STATS_TABLE;
 					'Anonymous id',
 					'<a href="' . $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) . '">Reset</a>',
 					array(
-						'default' => $this->options->get_guid(),
+						'default'           => $this->options->get_guid(),
+						'custom_attributes' => array(
+							'readonly' => 'readonly',
+						),
 					)
 				),
 
