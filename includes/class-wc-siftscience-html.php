@@ -137,20 +137,33 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		/**
 		 * This function displays a custom row in the admin settings page
 		 *
-		 * @param String $label   The label to display on the left side of the table.
-		 * @param String $content The content to display on the right side.
+		 * @param Array $data The data array of this setting line.
 		 */
-		public function display_settings_row( $label, $content ) {
+		public function display_custom_settings_row( $data ) {
+			$title   = $data['title'];
+			$content = $data['desc'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
-					<label><?php echo wp_kses( $label, $this->allowed_tags ); ?></label>
+					<?php echo wp_kses( $title, $this->allowed_tags ); ?>
 				</th>
 				<td class="forminp">
 					<?php echo wp_kses( $content, $this->allowed_tags ); ?>
 				</td>
 			</tr>
 			<?php
+		}
+
+		/**
+		 * Creates the text for anonymous ID setting row
+		 *
+		 * @param String $id   The current anon id.
+		 * @param String $link The link to reset the anon id.
+		 *
+		 * @return string
+		 */
+		public function get_anon_id_text( $id, $link ) {
+			return "$id <a href='$link'>Reset</a>";
 		}
 	}
 endif;

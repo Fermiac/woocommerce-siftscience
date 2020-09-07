@@ -306,10 +306,6 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_reporting() {
-			$reset_url    = esc_url( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) );
-			$anonymous_id = $this->options->get_guid();
-			$anon_id_text = "$anonymous_id <a href='$reset_url'>reset</a>";
-
 			return array(
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
@@ -321,7 +317,10 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
 					'anon_id',
 					'Anonymous ID',
-					$anon_id_text
+					$this->html->get_anon_id_text(
+						$this->options->get_guid(),
+						$this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' )
+					)
 				),
 
 				$this->create_element(
@@ -554,13 +553,14 @@ STATS_TABLE;
 					break;
 
 				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
-					add_action(
-						'woocommerce_admin_field_wc_sift_' . $id,
-						function () use ( $label, $desc ) {
-							$this->html->display_settings_row( $label, $desc );
-						}
-					);
-					return array( 'type' => 'wc_sift_' . $id );
+					$action_name = 'woocommerce_admin_field_wc_sift_' . $id;
+					$callback    = array( $this->html, 'display_custom_settings_row' );
+					add_action( $action_name, $callback );
+
+					$element['type']  = 'wc_sift_' . $id;
+					$element['title'] = $label;
+					$element['desc']  = $desc;
+					break;
 
 				default:
 					$this->logger->log_error( $type . ' is not a valid type!' );
