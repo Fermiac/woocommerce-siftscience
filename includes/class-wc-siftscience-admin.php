@@ -306,12 +306,6 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_reporting() {
-			$anon_id              = $this->options->get_guid();
-			$rest_url             = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-			$anon_text            = "$anon_id <a href='$rest_url'>Reset</a>";
-			$checkbox_description = 'Help us improve this plugin by automatically reporting errors and statistics. ' .
-				'More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.';
-
 			return array(
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
@@ -323,7 +317,7 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
 					'anon_id',
 					'Anonymous ID',
-					$anon_text
+					$this->get_anon_id_content()
 				),
 
 				$this->create_element(
@@ -331,9 +325,7 @@ STATS_TABLE;
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
 					'Send anonymous statistics and error details.',
-					array(
-						'desc_tip' => $checkbox_description,
-					)
+					array( 'desc_tip' => $this->get_reporting_checkbox_description() )
 				),
 
 				$this->create_element(
@@ -658,6 +650,28 @@ STATS_TABLE;
 		 */
 		private function unbound_nonce_url( $get_var_name ) {
 			return remove_query_arg( array( $get_var_name, $this->get_nonce_name( $get_var_name ) ) );
+		}
+
+		/**
+		 * Gets the content that goes in the Anonymous ID row in reporting
+		 *
+		 * @return string
+		 */
+		private function get_anon_id_content() {
+			$anon_id  = $this->options->get_guid();
+			$rest_url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
+			return "$anon_id <a href='$rest_url'>Reset</a>";
+		}
+
+		/**
+		 * Gets the content that goes in the description under the reporting
+		 *
+		 * @return string
+		 */
+		private function get_reporting_checkbox_description() {
+			$url     = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
+			$message = 'Help us improve this plugin by automatically reporting errors and statistics. ';
+			return "$message More info <a target='_blank' href='$url'>here</a>";
 		}
 	}
 endif;
