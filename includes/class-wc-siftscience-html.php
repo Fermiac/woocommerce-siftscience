@@ -146,12 +146,13 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		/**
 		 * This function adds returns anchored reset url
 		 *
+		 * @param String $anonymous_id the $anonymous id revieved from admin genarated by options.
 		 * @param String $url the link in which it should dusokay as a button.
 		 */
-		public function display_reset_anchor( $anon,$url ) {
+		public function display_reset_anchor( $anonymous_id, $url ) {
 			ob_start();
 			?>
-				<?php echo esc_html( $anon ); ?> <a href="<?php echo esc_url( $url ); ?>">Reset</a>
+				<?php echo esc_html( $anonymous_id ); ?> <a href="<?php echo esc_url( $url ); ?>">Reset</a>
 			<?php
 			return ob_get_clean();
 		}
