@@ -321,11 +321,9 @@ STATS_TABLE;
 					'Anonymous id',
 					'<a href="' . $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) . '">Reset</a>',
 					array(
-						'default'           => $this->options->get_guid(),
-						'css'               => 'border:hidden;padding-left:0;background:none;',
-						'custom_attributes' => array(
-							'readonly' => 'readonly',
-						),
+						'default'  => $this->options->get_guid(),
+						'css'      => 'border:hidden;padding-left:0;background:none;',
+						'readonly' => 'readonly',
 					)
 				),
 
@@ -520,6 +518,7 @@ STATS_TABLE;
 			switch ( $type ) {
 
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
+				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 					if ( isset( $element_options['min'] ) ) {
 						$custom_attributes['min'] = $element_options['min'];
 						unset( $element_options['min'] );
@@ -532,9 +531,12 @@ STATS_TABLE;
 						$custom_attributes['step'] = $element_options['step'];
 						unset( $element_options['step'] );
 					}
+					if ( isset( $element_options['readonly'] ) ) {
+						$custom_attributes['readonly'] = $element_options['readonly'];
+						unset( $element_options['readonly'] );
+					}
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
-				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 					if ( ! empty( $element_options ) ) {
