@@ -496,6 +496,7 @@ STATS_TABLE;
 		 */
 		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
 
+			$element = array();
 			// array flattener.
 			$custom_attributes =
 			array(
@@ -524,6 +525,10 @@ STATS_TABLE;
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
+					if ( ! empty( $element_options ) ) {
+						$element = array_merge( $element, $element_options );
+					}
+					// $element_options added.
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
