@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 
 	/**
-	 * Class WC_SiftScience_Format_Cart
+	 * Class WC_SiftScience_Api_Cart
 	 */
-	class WC_SiftScience_Format_Cart {
+	class WC_SiftScience_Api_Cart {
 		/**
 		 * Options service
 		 *
@@ -27,7 +27,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Cart' ) ) :
 		private $options;
 
 		/**
-		 * WC_SiftScience_Format_Cart constructor.
+		 * WC_SiftScience_Api_Cart constructor.
 		 *
 		 * @param WC_SiftScience_Options $options Options service.
 		 */

@@ -11,12 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Api_Items' ) ) :
 
 	/**
-	 * Class WC_SiftScience_Format_Items
+	 * Class WC_SiftScience_Api_Items
 	 */
-	class WC_SiftScience_Format_Items {
+	class WC_SiftScience_Api_Items {
 		/**
 		 * Options service.
 		 *
@@ -25,7 +25,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Items' ) ) :
 		private $options;
 
 		/**
-		 * WC_SiftScience_Format_Items constructor.
+		 * WC_SiftScience_Api_Items constructor.
 		 *
 		 * @param WC_SiftScience_Options $options Options service.
 		 */

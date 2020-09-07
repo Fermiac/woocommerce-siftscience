@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Api_Transaction' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 
 	/**
-	 * Class WC_SiftScience_Format_Transaction
+	 * Class WC_SiftScience_Api_Transaction
 	 */
-	class WC_SiftScience_Format_Transaction {
+	class WC_SiftScience_Api_Transaction {
 		/**
 		 * Options service
 		 *
@@ -27,7 +27,7 @@ if ( ! class_exists( 'WC_SiftScience_Format_Transaction' ) ) :
 		private $options;
 
 		/**
-		 * WC_SiftScience_Format_Transaction constructor.
+		 * WC_SiftScience_Api_Transaction constructor.
 		 *
 		 * @param WC_SiftScience_Options $options Options service.
 		 */
