@@ -496,9 +496,20 @@ STATS_TABLE;
 		 */
 		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
 
-			$element = array();
+			// array flattener.
+			$custom_attributes =
+			array(
+				'min'  => '',
+				'max'  => '',
+				'step' => '',
+			);
+			$custom_attributes = array_intersect_key( $element_options, $custom_attributes ); // Gets the new values.
 
-			$custom_attributes = array(); // array flattener.
+			if ( ! empty( $custom_attributes ) ) {
+				$element = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
+
+				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
+			}
 
 			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
 				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
@@ -510,28 +521,9 @@ STATS_TABLE;
 			switch ( $type ) {
 
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
-					if ( isset( $element_options['min'] ) ) {
-						$custom_attributes['min'] = $element_options['min'];
-						unset( $element_options['min'] );
-					}
-					if ( isset( $element_options['max'] ) ) {
-						$custom_attributes['max'] = $element_options['max'];
-						unset( $element_options['max'] );
-					}
-					if ( isset( $element_options['step'] ) ) {
-						$custom_attributes['step'] = $element_options['step'];
-						unset( $element_options['step'] );
-					}
-					// Number field min, nax and step values saved and unseted to avoid duplicates.
-
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
-					if ( ! empty( $element_options ) ) {
-						$element = array_merge( $element, $element_options );
-					}
-					// $element_options added.
-
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
@@ -552,9 +544,6 @@ STATS_TABLE;
 					break;
 			}
 
-			if ( ! empty( $custom_attributes ) ) {
-				$element['custom_attributes'] = $custom_attributes;
-			}
 
 			return $element;
 		}
