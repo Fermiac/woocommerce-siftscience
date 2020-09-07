@@ -329,7 +329,7 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
-					'Send the plugin developers statistics and error details.',
+					'Send the plugin developers statistics and error details.'
 				),
 
 				$this->create_element(
