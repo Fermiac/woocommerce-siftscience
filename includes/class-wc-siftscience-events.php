@@ -16,7 +16,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-logger.php';
 	require_once 'class-wc-siftscience-comm.php';
-	require_once 'class-wc-siftscience-format.php';
+	require_once 'class-wc-siftscience-api-account.php';
+	require_once 'class-wc-siftscience-api-cart.php';
+	require_once 'class-wc-siftscience-api-items.php';
+	require_once 'class-wc-siftscience-api-login.php';
+	require_once 'class-wc-siftscience-api-order.php';
+	require_once 'class-wc-siftscience-api-transaction.php';
 
 	/**
 	 * Class WC_SiftScience_Events
@@ -25,9 +30,37 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Request formatting service
 		 *
-		 * @var WC_SiftScience_Format
+		 * @var WC_SiftScience_Api_Account
 		 */
-		private $format;
+		private $account;
+
+		/**
+		 * Request formatting service
+		 *
+		 * @var WC_SiftScience_Api_Cart
+		 */
+		private $cart;
+
+		/**
+		 * Request formatting service
+		 *
+		 * @var WC_SiftScience_Api_Login
+		 */
+		private $login;
+
+		/**
+		 * Request formatting service
+		 *
+		 * @var WC_SiftScience_Api_Order
+		 */
+		private $order;
+
+		/**
+		 * Request formatting service
+		 *
+		 * @var WC_SiftScience_Api_Transaction
+		 */
+		private $transaction;
 
 		/**
 		 * Communication service
@@ -74,20 +107,32 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * WC_SiftScience_Events constructor.
 		 *
-		 * @param WC_SiftScience_Comm    $comm Communications service.
-		 * @param WC_SiftScience_Options $options Options service.
-		 * @param WC_SiftScience_Format  $format Request formatting service.
-		 * @param WC_SiftScience_Logger  $logger Logger service.
+		 * @param WC_SiftScience_Comm            $comm        Communications service.
+		 * @param WC_SiftScience_Options         $options     Options service.
+		 * @param WC_SiftScience_Api_Account     $account     Account request formatting service.
+		 * @param WC_SiftScience_Api_Cart        $cart        Cart request formatting service.
+		 * @param WC_SiftScience_Api_Login       $login       Login request formatting service.
+		 * @param WC_SiftScience_Api_Order       $order       Order request formatting service.
+		 * @param WC_SiftScience_Api_Transaction $transaction Transaction request formatting service.
+		 * @param WC_SiftScience_Logger          $logger      Logger service.
 		 */
 		public function __construct(
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Options $options,
-				WC_SiftScience_Format $format,
+				WC_SiftScience_Api_Account $account,
+				WC_SiftScience_Api_Cart $cart,
+				WC_SiftScience_Api_Login $login,
+				WC_SiftScience_Api_Order $order,
+				WC_SiftScience_Api_Transaction $transaction,
 				WC_SiftScience_Logger $logger ) {
-			$this->format  = $format;
-			$this->comm    = $comm;
-			$this->options = $options;
-			$this->logger  = $logger;
+			$this->account     = $account;
+			$this->cart        = $cart;
+			$this->login       = $login;
+			$this->order       = $order;
+			$this->transaction = $transaction;
+			$this->comm        = $comm;
+			$this->options     = $options;
+			$this->logger      = $logger;
 
 			$this->saved_user_id = get_current_user_id();
 			$this->order_map     = array();
@@ -178,7 +223,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param object $user User object.
 		 */
 		public function login_success( $username, $user ) {
-			$data           = $this->format->login->login_success( $user );
+			$data           = $this->login->login_success( $user );
 			$this->events[] = $data;
 
 			$this->link_session_to_user( $user->ID );
@@ -191,7 +236,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param object $username User object.
 		 */
 		public function login_failure( $username ) {
-			$this->eventss[] = $this->format->login->login_failure( $username );
+			$this->eventss[] = $this->login->login_failure( $username );
 		}
 
 		/**
@@ -200,7 +245,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
 		 */
 		public function logout() {
-			$data           = $this->format->login->logout( $this->saved_user_id );
+			$data           = $this->login->logout( $this->saved_user_id );
 			$this->events[] = $data;
 		}
 
@@ -212,7 +257,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 */
 		public function create_account( $user_id ) {
 			$user           = get_userdata( $user_id );
-			$data           = $this->format->account->create_account( $user_id, $user );
+			$data           = $this->account->create_account( $user_id, $user );
 			$this->events[] = $data;
 
 			$this->link_session_to_user( $user->ID );
@@ -226,7 +271,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param array  $old_user_data Old data before change.
 		 */
 		public function update_account( $user_id, $old_user_data ) {
-			$data           = $this->format->account->update_account( $user_id, $old_user_data );
+			$data           = $this->account->update_account( $user_id, $old_user_data );
 			$this->events[] = $data;
 		}
 
@@ -274,7 +319,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				return;
 			}
 
-			$data = $this->format->order->update_order_status( $order_id );
+			$data = $this->order->update_order_status( $order_id );
 			if ( null === $data ) {
 				return;
 			}
@@ -321,7 +366,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $order_id The Order ID.
 		 */
 		public function send_transaction( $order_id ) {
-			$data           = $this->format->transactions->create_transaction( $order_id );
+			$data           = $this->transactions->create_transaction( $order_id );
 			$this->events[] = $data;
 		}
 
@@ -332,7 +377,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $cart_item_key The Cart Key.
 		 */
 		public function add_to_cart( $cart_item_key ) {
-			$data           = $this->format->cart->add_to_cart( $cart_item_key );
+			$data           = $this->cart->add_to_cart( $cart_item_key );
 			$this->events[] = $data;
 		}
 
@@ -343,7 +388,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $cart_item_key The key of the cart item.
 		 */
 		public function remove_from_cart( $cart_item_key ) {
-			$data           = $this->format->cart->remove_from_cart( $cart_item_key );
+			$data           = $this->cart->remove_from_cart( $cart_item_key );
 			$this->events[] = $data;
 		}
 
@@ -354,7 +399,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $user_id ID of the user.
 		 */
 		public function link_session_to_user( $user_id ) {
-			$data           = $this->format->account->link_session_to_user( $user_id );
+			$data           = $this->account->link_session_to_user( $user_id );
 			$this->events[] = $data;
 		}
 
@@ -383,7 +428,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $type The type of event to send.
 		 */
 		private function send_order_event( $order_id, $type = 'create' ) {
-			$data = $this->format->order->create_order( $order_id, $type );
+			$data = $this->order->create_order( $order_id, $type );
 			if ( null !== $data ) {
 				$this->events[] = $data;
 				$this->send_transaction( $order_id );

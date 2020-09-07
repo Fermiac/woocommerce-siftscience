@@ -11,17 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Api_Order' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-logger.php';
-	require_once 'class-wc-siftscience-format-items.php';
-	require_once 'class-wc-siftscience-format-transaction.php';
+	require_once 'class-wc-siftscience-api-items.php';
+	require_once 'class-wc-siftscience-api-transaction.php';
 
 	/**
-	 * Class WC_SiftScience_Format_Order
+	 * Class WC_SiftScience_Api_Order
 	 */
-	class WC_SiftScience_Format_Order {
+	class WC_SiftScience_Api_Order {
 		/**
 		 * Options service
 		 *
@@ -32,14 +32,14 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		/**
 		 * Items formatter
 		 *
-		 * @var WC_SiftScience_Format_Items
+		 * @var WC_SiftScience_Api_Items
 		 */
 		private $items;
 
 		/**
 		 * Transaction formatter
 		 *
-		 * @var WC_SiftScience_Format_Transaction
+		 * @var WC_SiftScience_Api_Transaction
 		 */
 		private $transaction;
 
@@ -51,16 +51,16 @@ if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
 		private $logger;
 
 		/**
-		 * WC_SiftScience_Format_Order constructor.
+		 * WC_SiftScience_Api_Order constructor.
 		 *
-		 * @param WC_SiftScience_Format_Items       $items Items formatter.
-		 * @param WC_SiftScience_Format_Transaction $transaction Transaction formatter.
-		 * @param WC_SiftScience_Options            $options Options service.
-		 * @param WC_SiftScience_Logger             $logger Logging service.
+		 * @param WC_SiftScience_Api_Items       $items Items formatter.
+		 * @param WC_SiftScience_Api_Transaction $transaction Transaction formatter.
+		 * @param WC_SiftScience_Options         $options Options service.
+		 * @param WC_SiftScience_Logger          $logger Logging service.
 		 */
 		public function __construct(
-				WC_SiftScience_Format_Items $items,
-				WC_SiftScience_Format_Transaction $transaction,
+				WC_SiftScience_Api_Items $items,
+				WC_SiftScience_Api_Transaction $transaction,
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Logger $logger ) {
 			$this->options     = $options;

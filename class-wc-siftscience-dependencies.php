@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'WC_SiftScience_Format_Order' ) ) :
+if ( ! class_exists( 'WC_SiftScience_Api_Order' ) ) :
 
 	/**
 	 * Class WC_SiftScience_Dependencies
