@@ -145,10 +145,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
-					<?php echo wp_kses( $title, $this->allowed_tags ); ?>
+					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo wp_kses( $content, $this->allowed_tags ); ?>
+					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
 				</td>
 			</tr>
 			<?php
