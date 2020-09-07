@@ -530,6 +530,11 @@ STATS_TABLE;
 			}
 
 			switch ( $type ) {
+				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
+					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
+					$callback = array( $this->html, 'display_custom_settings_row' );
+					add_action( 'woocommerce_admin_field_' . $type, $callback ); // This intentionally falls through to the next section.
+
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
@@ -551,16 +556,6 @@ STATS_TABLE;
 				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
 					$element['id']   = $id;
 					$element['type'] = $type;
-					break;
-
-				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
-					$action_name = 'woocommerce_admin_field_wc_sift_' . $id;
-					$callback    = array( $this->html, 'display_custom_settings_row' );
-					add_action( $action_name, $callback );
-
-					$element['type']  = 'wc_sift_' . $id;
-					$element['title'] = $label;
-					$element['desc']  = $desc;
 					break;
 
 				default:
