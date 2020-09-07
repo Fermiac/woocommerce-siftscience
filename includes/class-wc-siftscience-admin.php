@@ -514,7 +514,6 @@ STATS_TABLE;
 			switch ( $type ) {
 
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
-				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 					if ( isset( $element_options['min'] ) ) {
 						$custom_attributes['min'] = $element_options['min'];
 						unset( $element_options['min'] );
@@ -529,6 +528,7 @@ STATS_TABLE;
 					}
 					// Number field min, nax and step values saved and unseted to avoid duplicates.
 
+				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 					if ( ! empty( $element_options ) ) {
