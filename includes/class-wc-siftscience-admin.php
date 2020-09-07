@@ -42,6 +42,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				'colspan' => array(),
 				'style'   => array(),
 			),
+			'a'     => array( 'href' => array() ),
 		);
 
 		/**
@@ -244,10 +245,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
 				exit();
 			}
-			$reset_url    = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-			$anonymous_id = $this->options->get_guid();
 
-			$this->html->display_reporting_text( $anonymous_id, $reset_url );
 			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
 		}
 
@@ -308,6 +306,9 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_reporting() {
+			$reset_url    = esc_url( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) );
+			$anonymous_id = $this->options->get_guid();
+			$anon_id_text = "$anonymous_id <a href='$reset_url'>reset</a>";
 
 			return array(
 				$this->create_element(
@@ -317,12 +318,21 @@ STATS_TABLE;
 				),
 
 				$this->create_element(
+					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
+					'anon_id',
+					'Anonymous ID',
+					$anon_id_text
+				),
+
+				$this->create_element(
 					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
-					'Send the plugin developers statistics and error details.',
+					'Send anonymous statistics and error details.',
 					array(
-						'desc_tip' => '<em>More info</em> <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
+						'desc_tip' =>
+							'Help us improve this plugin by automatically reporting errors and statistics. ' .
+							'More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.',
 					)
 				),
 
@@ -520,7 +530,6 @@ STATS_TABLE;
 			}
 
 			switch ( $type ) {
-
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
@@ -543,6 +552,15 @@ STATS_TABLE;
 					$element['id']   = $id;
 					$element['type'] = $type;
 					break;
+
+				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
+					add_action(
+						'woocommerce_admin_field_wc_sift_' . $id,
+						function () use ( $label, $desc ) {
+							$this->html->display_settings_row( $label, $desc );
+						}
+					);
+					return array( 'type' => 'wc_sift_' . $id );
 
 				default:
 					$this->logger->log_error( $type . ' is not a valid type!' );
