@@ -33,6 +33,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_SELECT_ELEMENT     = 'select';
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
+		public const WC_CUSTOM_ELEMENT     = 'custom';
 
 		/**
 		 * A setter for allowed_html field
@@ -132,26 +133,25 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</table>
 			<?php
 		}
+
 		/**
-		 * This function displayes Reporting header receiving the anonymous id from the admin class
+		 * This function displays a custom row in the admin settings page
 		 *
-		 * @param String $anonymous_id The id sent from admin genarated by options.
-		 * @param String $reset_url    A url to reset the anonymous id.
+		 * @param Array $data The data array of this setting line.
 		 */
-		public function display_reporting_text( $anonymous_id, $reset_url ) {
+		public function display_custom_settings_row( $data ) {
+			$title   = $data['title'];
+			$content = $data['desc'];
 			?>
-
-			<h2>Notice</h2>
-			<p> 
-				Help us improve this plugin by automatically reporting errors and statistics.<br /> 
-				All information is anonymous and cannot be traced back to your site.<br />
-				For details, <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">click here</a>.
-			</p>
-			<p> Your <em>anonymous id</em> is: <?php echo esc_html( $anonymous_id ); ?> <a href="<?php echo esc_url( $reset_url ); ?>"></a></p>
-
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo wp_kses( $title, $this->allowed_tags ); ?>
+				</th>
+				<td class="forminp">
+					<?php echo wp_kses( $content, $this->allowed_tags ); ?>
+				</td>
+			</tr>
 			<?php
 		}
-
 	}
-
 endif;
