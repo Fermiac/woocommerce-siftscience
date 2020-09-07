@@ -306,6 +306,10 @@ STATS_TABLE;
 		 * @return Array []
 		 */
 		private function get_settings_reporting() {
+			$anon_id   = $this->options->get_guid();
+			$rest_url  = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
+			$anon_text = "$anon_id <a href='$rest_url'>Reset</a>";
+
 			return array(
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
@@ -317,10 +321,7 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
 					'anon_id',
 					'Anonymous ID',
-					$this->html->get_anon_id_text(
-						$this->options->get_guid(),
-						$this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' )
-					)
+					$anon_text
 				),
 
 				$this->create_element(

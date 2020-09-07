@@ -153,17 +153,5 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</tr>
 			<?php
 		}
-
-		/**
-		 * Creates the text for anonymous ID setting row
-		 *
-		 * @param String $id   The current anon id.
-		 * @param String $link The link to reset the anon id.
-		 *
-		 * @return string
-		 */
-		public function get_anon_id_text( $id, $link ) {
-			return "$id <a href='$link'>Reset</a>";
-		}
 	}
 endif;
