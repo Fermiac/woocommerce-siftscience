@@ -132,6 +132,29 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</table>
 			<?php
 		}
+		/**
+		 * This function displays sub title in repotring page
+		 */
+		public function display_reporting_sub_title() {
+			ob_start();
+			?>
+				Help us improve this plugin by automatically reporting errors and statistics.<br />
+				<em>More info</em> <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.
+			<?php
+			return ob_get_clean();
+		}
+		/**
+		 * This function adds returns anchored reset url
+		 *
+		 * @param String $url the link in which it should dusokay as a button.
+		 */
+		public function display_reset_anchor( $url ) {
+			ob_start();
+			?>
+				<a class="button button-secondary" href="<?php echo esc_url( $url ); ?>">Reset</a>
+			<?php
+			return ob_get_clean();
+		}
 	}
 
 endif;

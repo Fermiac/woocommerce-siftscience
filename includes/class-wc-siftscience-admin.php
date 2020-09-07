@@ -313,13 +313,13 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
 					'Sift Debug & Reporting Settings',
-					'Help us improve this plugin by automatically reporting errors and statistics.<br />More info <a target="_blank" href="https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection">here</a>.'
+					$this->html->display_reporting_sub_title()
 				),
 				$this->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					'tempID',
 					'Anonymous id',
-					'<a href="' . $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) . '">Reset</a>',
+					$this->html->display_reset_anchor( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) ),
 					array(
 						'default'  => $this->options->get_guid(),
 						'css'      => 'border:hidden;padding-left:0;background:none;',
