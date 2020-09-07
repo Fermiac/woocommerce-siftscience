@@ -319,7 +319,7 @@ STATS_TABLE;
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					'tempID',
 					'Anonymous id',
-					'<a href="' . esc_url( $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) ) . '">Reset </a>',
+					'<a href="' . $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ) . '">Reset</a>',
 					array(
 						'default' => $this->options->get_guid(),
 					)
