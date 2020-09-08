@@ -30,21 +30,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_TEST_SSL    = self::GET_VAR_SCHEMA . 'test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
-		private const ALLOWED_HTML = array(
-			'table' => array(),
-			'thead' => array(),
-			'tbody' => array(),
-			'tr'    => array(),
-			'td'    => array( 'style' => array() ),
-			'span'  => array( 'style' => array() ),
-			'th'    => array(
-				'scope'   => array(),
-				'colspan' => array(),
-				'style'   => array(),
-			),
-			'a'     => array( 'href' => array() ),
-		);
-
 		/**
 		 * The options service
 		 *
@@ -100,8 +85,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->html    = $html;
 			$this->logger  = $logger;
 			$this->stats   = $stats;
-
-			$this->html->set_allowed_tags( self::ALLOWED_HTML );
 		}
 
 		/**
@@ -222,7 +205,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
 			if ( false !== $ssl_data ) {
 				delete_transient( 'wc-siftsci-ssl-log' );
-				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
+				echo wp_kses( $ssl_data, array( 'p' => array() ) );
 			}
 
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
@@ -261,43 +244,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
-			echo '<h2>Statistics</h2>';
-
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
 			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
 			}
 
+			$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
 			$stats = json_decode( $stats, true );
 			ksort( $stats );
-
-			$stats_tables = '';
-
-			foreach ( $stats as $outer_k => $outer_v ) {
-
-				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );
-
-				$stats_tables .= <<< STATS_TABLE
-				<table><thead>
-					<tr>
-						<th scope="colgroup" colspan="2" style="text-align:left"> $outer_k: </th>
-					</tr>
-				</thead>
-				<tbody>
-STATS_TABLE;
-
-				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
-					$stats_tables .= '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
-				}
-
-				$stats_tables .= '</tbody></table><br>';
-			}
-
-			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
-
-			$url = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
-			echo '<a href="' . esc_url( $url ) . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
+			$this->html->display_stats_tables( $stats, $url );
 		}
 
 		/**

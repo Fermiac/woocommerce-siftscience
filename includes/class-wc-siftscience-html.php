@@ -20,13 +20,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	 */
 	class WC_SiftScience_Html {
 
-		/**
-		 * The allowed HTML tags
-		 *
-		 * @var Array $allowed_tags Set from admin for escaping output.
-		 */
-		private $allowed_tags;
-
 		public const WC_TITLE_ELEMENT      = 'title';
 		public const WC_TEXT_ELEMENT       = 'text';
 		public const WC_NUMBER_ELEMENT     = 'number';
@@ -34,15 +27,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
 		public const WC_CUSTOM_ELEMENT     = 'custom';
-
-		/**
-		 * A setter for allowed_html field
-		 *
-		 * @param Array $tags the tags set frp WC_SiftScience_admin.
-		 */
-		public function set_allowed_tags( $tags ) {
-			$this->allowed_tags = $tags;
-		}
 
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section
@@ -151,6 +135,63 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
 				</td>
 			</tr>
+			<?php
+		}
+		/**
+		 * This function displays the stats of time and method calls.
+		 *
+		 * @param Array  $stats          the data stored in  WC_SiftScience_Options::STATS.
+		 * @param String $clear_url      this url is used to clear stats.
+		 */
+		public function display_stats_tables( $stats, $clear_url ) {
+			?>
+				<h2>Statistics</h2>
+				<style type="text/css">
+					div.stats table:not(:last-child){
+						border-bottom:1px solid #000;
+						padding-bottom: 3px;
+					}
+					div.stats table{
+						margin-bottom:5px;
+					}
+				</style>
+			<?php
+			foreach ( $stats as $outer_k => $outer_v ) :
+				$class_name = substr( $outer_k, 0, stripos( $outer_k, ':' ) );
+				$method     = substr( $outer_k, strripos( $outer_k, ':' ) );
+
+				?>
+				<div class="stats">
+					<table style="width: 300px;">
+						<thead>
+							<tr>
+								<th scope="colgroup" colspan="2" style="text-align:left">
+									<span style="color:#00a0d2"> <?php echo esc_html( $class_name ); ?>::</span><?php echo esc_html( $method ); ?>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+					<?php
+					foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) :
+						?>
+						<tr>
+							<td style="width:50px">
+								<?php echo esc_html( $inner_k ); ?> 
+							</td>
+							<td>
+								<?php echo esc_html( $inner_v ); ?>  
+							</td>
+						</tr>
+						<?php
+						endforeach; // inner.
+					?>
+					</tbody>
+				</table>
+					<?php
+					endforeach; // Outer.
+			?>
+				</div>
+					<a href="<?php echo esc_url( $url ); ?>" class="button-primary woocommerce-save-button">Clear Stats</a>
 			<?php
 		}
 	}
