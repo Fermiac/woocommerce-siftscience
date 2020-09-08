@@ -30,21 +30,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_TEST_SSL    = self::GET_VAR_SCHEMA . 'test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
-		private const ALLOWED_HTML = array(
-			'table' => array(),
-			'thead' => array(),
-			'tbody' => array(),
-			'tr'    => array(),
-			'td'    => array( 'style' => array() ),
-			'span'  => array( 'style' => array() ),
-			'th'    => array(
-				'scope'   => array(),
-				'colspan' => array(),
-				'style'   => array(),
-			),
-			'a'     => array( 'href' => array() ),
-		);
-
 		/**
 		 * The options service
 		 *
@@ -100,8 +85,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->html    = $html;
 			$this->logger  = $logger;
 			$this->stats   = $stats;
-
-			$this->html->set_allowed_tags( self::ALLOWED_HTML );
 		}
 
 		/**

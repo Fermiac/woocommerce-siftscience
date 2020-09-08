@@ -20,13 +20,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	 */
 	class WC_SiftScience_Html {
 
-		/**
-		 * The allowed HTML tags
-		 *
-		 * @var Array $allowed_tags Set from admin for escaping output.
-		 */
-		private $allowed_tags;
-
 		public const WC_TITLE_ELEMENT      = 'title';
 		public const WC_TEXT_ELEMENT       = 'text';
 		public const WC_NUMBER_ELEMENT     = 'number';
@@ -34,15 +27,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
 		public const WC_CUSTOM_ELEMENT     = 'custom';
-
-		/**
-		 * A setter for allowed_html field
-		 *
-		 * @param Array $tags the tags set frp WC_SiftScience_admin.
-		 */
-		public function set_allowed_tags( $tags ) {
-			$this->allowed_tags = $tags;
-		}
 
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section
