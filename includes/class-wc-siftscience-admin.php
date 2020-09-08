@@ -375,11 +375,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
 					array(
-						'default' => 30,
-						'min'     => 0,
-						'max'     => 100,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 30,
+						'min'      => 0,
+						'max'      => 100,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => true,
 					)
 				),
 
@@ -389,18 +390,20 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Bad Score Threshold',
 					'Scores above this value are considered bad and shown in red',
 					array(
-						'default' => 60,
-						'min'     => 0,
-						'max'     => 100,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 60,
+						'min'      => 0,
+						'max'      => 100,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => true,
 					)
 				),
 				$this->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
-					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
+					'Prefix to give order and user names.',
+					array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
 				),
 
 				$this->create_element(
@@ -414,12 +417,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Auto Send Minimum Value',
-					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
+					'Set to zero to send all orders.',
 					array(
-						'default' => 0,
-						'min'     => 0,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 0,
+						'min'      => 0,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => 'Orders less than this value will not be automatically sent to sift.',
 					)
 				),
 
@@ -436,12 +440,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 *     field type of checkbox; the desc text is going next to the control
 		 *     field type of select, number or text; the desc text is going underneath control
 		 * desc_tip Mixed [bool:true]
-		 *     field type of check box; the desc text is going underneath control
+		 *     [X] field type of checkbox; the desc text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
 		 * desc_tip Mixed [string]
-		 *     field type of checkbox; the text is going underneath control
-		 *     field type of select, number or text; a question mark pop-up appears before control with desc tip
-		 * note: currently desc_tip can only be added as element_options
+		 *     field type of checkbox; the desc_tip text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
+		 * NOTE: if desc_tip isn't a string and it's a checkbox [X] disc_tip is sanitized to false, add it in element_options
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
@@ -453,6 +457,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @since 1.1.0
 		 */
 		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
+
+			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
 
 			$element = array();
 			// array flattener.
@@ -470,10 +481,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
 			}
 
-			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
-				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
-					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-					return;
+			if ( isset( $element_options['desc_tip'] ) ) {
+				$desc_tip = $element_options['desc_tip'];
+				if ( WC_SiftScience_Html::WC_CHECKBOX_ELEMENT === $type ) {
+					$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// desc_tip sanitized from being true or not being a stirng.
 				}
 			}
 
@@ -481,16 +493,18 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
 					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
 					$callback = array( $this->html, 'display_custom_settings_row' );
-					add_action( 'woocommerce_admin_field_' . $type, $callback ); // This intentionally falls through to the next section.
+					add_action( 'woocommerce_admin_field_' . $type, $callback );
+					// This intentionally falls through to the next section.
 
+				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
-				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
 					if ( ! empty( $element_options ) ) {
 						$element = array_merge( $element, $element_options );
 					}
 					// $element_options added.
+
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
