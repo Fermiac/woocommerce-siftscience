@@ -205,7 +205,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
 			if ( false !== $ssl_data ) {
 				delete_transient( 'wc-siftsci-ssl-log' );
-				echo wp_kses( $ssl_data, self::ALLOWED_HTML );
+				echo wp_kses( $ssl_data, array( 'p' => array() ) );
 			}
 
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
