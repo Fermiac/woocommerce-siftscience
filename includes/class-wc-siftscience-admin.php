@@ -436,12 +436,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 *     field type of checkbox; the desc text is going next to the control
 		 *     field type of select, number or text; the desc text is going underneath control
 		 * desc_tip Mixed [bool:true]
-		 *     [X] field type of check box; the desc text is going underneath control
+		 *     [X] field type of checkbox; the desc text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
 		 * desc_tip Mixed [string]
 		 *     field type of checkbox; the desc_tip text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * NOTE: if desc_tip is true and its a checkbox [X] disc_tip is sanitized to false, add it in element_options
+		 * NOTE: if desc_tip isn't a string and it's a checkbox [X] disc_tip is sanitized to false, add it in element_options
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
@@ -453,6 +453,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @since 1.1.0
 		 */
 		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
+
+			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
 
 			$element = array();
 			// array flattener.
@@ -470,16 +477,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
 			}
 
-			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
-				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
-					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-					return;
-				}
-			}
-
-			$desc_tip = false;
 			if ( isset( $element_options['desc_tip'] ) ) {
-					$desc_tip = $element_options['desc_tip'];
+				$desc_tip = $element_options['desc_tip'];
+				if ( WC_SiftScience_Html::WC_CHECKBOX_ELEMENT === $type ) {
+					$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// desc_tip sanitized from being true or not being a stirng.
+				}
 			}
 
 			switch ( $type ) {
@@ -490,15 +493,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					// This intentionally falls through to the next section.
 
 				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
-					$desc_tip = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
-					// Desc_tip sanitized from being true.
-
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
-					$element_options['desc_tip'] = $desc_tip;
-
-					$element = array_merge( $element, $element_options );
+					if ( ! empty( $element_options ) ) {
+						$element = array_merge( $element, $element_options );
+					}
 					// $element_options added.
 
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
