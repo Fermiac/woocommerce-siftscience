@@ -375,11 +375,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Good Score Threshold',
 					'Scores below this value are considered good and shown in green',
 					array(
-						'default' => 30,
-						'min'     => 0,
-						'max'     => 100,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 30,
+						'min'      => 0,
+						'max'      => 100,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => true,
 					)
 				),
 
@@ -389,18 +390,20 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					'Bad Score Threshold',
 					'Scores above this value are considered bad and shown in red',
 					array(
-						'default' => 60,
-						'min'     => 0,
-						'max'     => 100,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 60,
+						'min'      => 0,
+						'max'      => 100,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => true,
 					)
 				),
 				$this->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
-					'Prefix to give order and user names. Useful when you have have multiple stores and one Sift account.'
+					'Prefix to give order and user names.',
+					array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
 				),
 
 				$this->create_element(
@@ -414,12 +417,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Auto Send Minimum Value',
-					'Orders less than this value will not be automatically sent to sift. Set to zero to send all orders.',
+					'Set to zero to send all orders.',
 					array(
-						'default' => 0,
-						'min'     => 0,
-						'step'    => 1,
-						'css'     => 'width:75px;',
+						'default'  => 0,
+						'min'      => 0,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => 'Orders less than this value will not be automatically sent to sift.',
 					)
 				),
 
