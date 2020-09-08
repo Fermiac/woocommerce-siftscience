@@ -261,43 +261,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
-			echo '<h2>Statistics</h2>';
-
 			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
 			if ( 'none' === $stats ) {
 				echo '<p>No stats stored yet</p>';
 				return;
 			}
 
+			$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
 			$stats = json_decode( $stats, true );
 			ksort( $stats );
-
-			$stats_tables = '';
-
-			foreach ( $stats as $outer_k => $outer_v ) {
-
-				$outer_k = '<span style="color:#00a0d2">' . str_replace( '::', '</span>::', $outer_k );
-
-				$stats_tables .= <<< STATS_TABLE
-				<table><thead>
-					<tr>
-						<th scope="colgroup" colspan="2" style="text-align:left"> $outer_k: </th>
-					</tr>
-				</thead>
-				<tbody>
-STATS_TABLE;
-
-				foreach ( array_reverse( $outer_v ) as $inner_k => $inner_v ) {
-					$stats_tables .= '<tr><td style="width:50px">' . $inner_k . '</td><td>' . $inner_v . '</td></tr>';
-				}
-
-				$stats_tables .= '</tbody></table><br>';
-			}
-
-			echo wp_kses( $stats_tables, self::ALLOWED_HTML );
-
-			$url = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
-			echo '<a href="' . esc_url( $url ) . '" class="button-primary woocommerce-save-button">Clear Stats</a>';
+			$this->html->display_stats_tables( $stats, $url );
 		}
 
 		/**
