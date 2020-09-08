@@ -436,12 +436,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 *     field type of checkbox; the desc text is going next to the control
 		 *     field type of select, number or text; the desc text is going underneath control
 		 * desc_tip Mixed [bool:true]
-		 *     field type of check box; the desc text is going underneath control
+		 *     [X] field type of check box; the desc text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
 		 * desc_tip Mixed [string]
-		 *     field type of checkbox; the text is going underneath control
-		 *     field type of select, number or text; a question mark pop-up appears before control with desc tip
-		 * note: currently desc_tip can only be added as element_options
+		 *     field type of checkbox; the desc_tip text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
+		 * NOTE: if desc_tip is true and its a checkbox [X] disc_tip is sanitized to false, add it in element_options
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
@@ -477,20 +477,30 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				}
 			}
 
+			$desc_tip = false;
+			if ( isset( $element_options['desc_tip'] ) ) {
+					$desc_tip = $element_options['desc_tip'];
+			}
+
 			switch ( $type ) {
 				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
 					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
 					$callback = array( $this->html, 'display_custom_settings_row' );
-					add_action( 'woocommerce_admin_field_' . $type, $callback ); // This intentionally falls through to the next section.
+					add_action( 'woocommerce_admin_field_' . $type, $callback );
+					// This intentionally falls through to the next section.
+
+				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
+					$desc_tip = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// Desc_tip sanitized from being true.
 
 				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
 				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
-				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
 				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
-					if ( ! empty( $element_options ) ) {
-						$element = array_merge( $element, $element_options );
-					}
+					$element_options['desc_tip'] = $desc_tip;
+
+					$element = array_merge( $element, $element_options );
 					// $element_options added.
+
 				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
 					if ( ! empty( $desc ) ) {
 						$element['desc'] = $desc;
