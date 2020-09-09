@@ -219,7 +219,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			<?php
 			if ( false !== $ssl_data ) :
 				?>
-				<div style="width:400px">
+				<div>
 					<p><?php echo esc_html( $ssl_data ); ?></p>
 				</div>
 				<?php
