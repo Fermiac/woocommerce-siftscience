@@ -193,30 +193,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
 				$body        = $response['body'];
 				$tls_version = json_decode( $body )->tls_version;
-				$data        = "<p>TLS Version: $tls_version</p>\n<p>Full Data: $body</p>\n";
+				$data        = "TLS Version: $tls_version Full Data: $body";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
 				exit;
 			}
 
-			echo '<h2>SSL Check</h2>';
-			echo '<p>Starting in September 2020, Sift.com will require TLS1.2. Click "Test SSL" to test your store.</p>';
+			$is_trans_deleted = false;
+
 			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
 			if ( false !== $ssl_data ) {
 				delete_transient( 'wc-siftsci-ssl-log' );
-				echo wp_kses( $ssl_data, array( 'p' => array() ) );
+				$is_trans_deleted = true;
 			}
 
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
-			echo '<a href="' . esc_url( $ssl_url ) . '" class="button-primary woocommerce-save-button">Test SSL</a>';
-
-			// Display logs.
-			echo '<h2>Logs</h2>';
-			echo '<p>' . nl2br( esc_html( $logs ) ) . '</p>';
-
 			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
-			echo '<a href="' . esc_url( $log_url ) . '" class="button-primary woocommerce-save-button">Clear Logs</a>';
+
+			$this->html->display_debuging_info( $ssl_data, $is_trans_deleted, $ssl_url, $log_url, $logs );
+
 		}
 
 		/**

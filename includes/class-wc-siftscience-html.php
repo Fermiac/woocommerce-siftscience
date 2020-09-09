@@ -200,5 +200,40 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				</style>
 			<?php
 		}
+
+
+		/**
+		 * This function displays debugging info for ssl and logs in HTML format
+		 *
+		 * @param Mixed  $ssl_data         get_transient from admin returns this data.
+		 * @param bool   $is_trans_deleted a pointer for the operation to display ssl_data.
+		 * @param String $ssl_url          an action button to check ssl vertion and this is it's url.
+		 * @param String $log_url          an action button to clear logs this is it's url.
+		 * @param Steing $logs             the logs retrieved gtom debug DOT log file.
+		 */
+		public function display_debuging_info( $ssl_data, $is_trans_deleted, $ssl_url, $log_url, $logs ) {
+			?>
+			<h2>SSL Check</h2>
+			<div>
+				<p>Starting in September 2020, Sift.com will require TLS1.2. Click "Test SSL" to test your store.</p>
+			</div>
+			<?php
+			if ( true === $is_trans_deleted ) :
+				?>
+				<div style="width:400px">
+					<p><?php echo esc_html( $ssl_data ); ?></p>
+				</div>
+				<?php
+			endif;
+			?>
+			<a href="<?php echo esc_url( $ssl_url ); ?>" class="button-primary woocommerce-save-button">Test SSL</a>
+			<h2>Logs</h2>
+			<div>
+				<p><?php echo nl2br( esc_html( $logs ) ); ?></p>
+			</div>
+
+			<a href="<?php echo esc_url( $log_url ); ?>" class="button-primary woocommerce-save-button">Clear Logs</a>
+			<?php
+		}
 	}
 endif;
