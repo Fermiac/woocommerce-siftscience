@@ -200,5 +200,30 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				</style>
 			<?php
 		}
+
+		public function display_debuging_info( $ssl_data, $is_trans_deleted, $ssl_url, $log_url, $logs ) {
+			?>
+			<h2>SSL Check</h2>
+			<div>
+				<p>Starting in September 2020, Sift.com will require TLS1.2. Click "Test SSL" to test your store.</p>
+			</div>
+			<?php
+			if ( true === $is_trans_deleted ) :
+				?>
+				<div style="width:400px">
+					<p><?php echo esc_html( $ssl_data ); ?></p>
+				</div>
+				<?php
+			endif;
+			?>
+			<a href="<?php echo esc_url( $ssl_url ); ?>" class="button-primary woocommerce-save-button">Test SSL</a>
+			<h2>Logs</h2>
+			<div>
+				<p><?php echo nl2br( esc_html( $logs ) ); ?></p>
+			</div>
+
+			<a href="<?php echo esc_url( $log_url ); ?>" class="button-primary woocommerce-save-button">Clear Logs</a>
+			<?php
+		}
 	}
 endif;
