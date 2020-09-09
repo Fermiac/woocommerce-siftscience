@@ -200,19 +200,15 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				exit;
 			}
 
-			$is_trans_deleted = false;
-
 			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
 			if ( false !== $ssl_data ) {
 				delete_transient( 'wc-siftsci-ssl-log' );
-				$is_trans_deleted = true;
 			}
 
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
 			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
 
-			$this->html->display_debuging_info( $ssl_data, $is_trans_deleted, $ssl_url, $log_url, $logs );
-
+			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs );
 		}
 
 		/**
