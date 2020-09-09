@@ -201,6 +201,16 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			<?php
 		}
 
+
+		/**
+		 * This function displays debugging info for ssl and logs in HTML format
+		 *
+		 * @param Mixed  $ssl_data         get_transient from admin returns this data.
+		 * @param bool   $is_trans_deleted a pointer for the operation to display ssl_data.
+		 * @param String $ssl_url          an action button to check ssl vertion and this is it's url.
+		 * @param String $log_url          an action button to clear logs this is it's url.
+		 * @param Steing $logs             the logs retrieved gtom debug DOT log file.
+		 */
 		public function display_debuging_info( $ssl_data, $is_trans_deleted, $ssl_url, $log_url, $logs ) {
 			?>
 			<h2>SSL Check</h2>
