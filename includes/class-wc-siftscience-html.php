@@ -84,13 +84,14 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				}
 			}
 
-			$element = array();
-
+			$element  = array();
+			$desc_tip = false;
 			if ( isset( $element_options['desc_tip'] ) ) {
 				$desc_tip = $element_options['desc_tip'];
+				unset( $element_options['desc_tip'] );
 				if ( self::WC_CHECKBOX_ELEMENT === $type ) {
-					$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
-					// desc_tip sanitized from being true or not being a stirng.
+					$desc_tip = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// desc_tip sanitized from being true or not being a stirng to false.
 				}
 			}
 
@@ -120,13 +121,9 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					// $element_options added.
 
 				case self::WC_TITLE_ELEMENT:
-					if ( ! empty( $desc ) ) {
-						$element['desc'] = $desc;
-					}
-
-					if ( ! empty( $label ) ) {
-						$element['title'] = $label;
-					}
+					$element['desc']     = $desc;
+					$element['title']    = $label;
+					$element['desc_tip'] = $desc_tip;
 					// Title and description are added all What's left [id and type].
 
 				case self::WC_SECTIONEND_ELEMENT:
