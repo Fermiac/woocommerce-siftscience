@@ -148,7 +148,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					$element_options['desc']     = $desc;
 					$element_options['title']    = $label;
 					$element_options['desc_tip'] = $desc_tip;
-					// Title and description are added all What's left [id and type].
+					// Title, desc and desc_tip are added all What's left [id and type].
 
 				case self::WC_SECTIONEND_ELEMENT:
 					$element_options['id']   = $id;
