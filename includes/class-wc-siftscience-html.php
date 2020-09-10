@@ -66,6 +66,11 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 					if ( isset( $args[3] ) && empty( $args[3] ) ) { // description is empty.
 							$args[3] = '[Empty description]';
+
+						if ( isset( $args[4] ) && ! is_array( $args[4] ) ) { // Elsment options must be an array.
+							$this->logger->log_error( 'element_option must be an array' );
+							return;
+						}
 					}
 				}
 
@@ -77,6 +82,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					case 4:
 						return $this->create_element( $args[0], $args[1], $args[2], $args[3], false, array() );
 					case 5:
+						// array flattener.
+						$custom_attributes = array( 'min', 'max', 'step' );
+						$custom_attributes = array_intersect_key( $args[4], array_flip( $custom_attributes ) ); // Gets the new values.
+
+						if ( ! empty( $custom_attributes ) ) {
+							$args[4] = array_diff_key( $args[4], $custom_attributes ); // Unsets those specific keys.
+
+							$args[4]['custom_attributes'] = $custom_attributes; // sets array level 2.
+						}
 						if ( isset( $args[4]['desc_tip'] ) ) {
 							if ( self::WC_CHECKBOX_ELEMENT === $args[1] ) {
 								// if desc_tip is not a string or empty it sanitized to false.
@@ -123,27 +137,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			$element = array();
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
-					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
-					$callback = array( $this, 'display_custom_settings_row' );
-					add_action( 'woocommerce_admin_field_' . $type, $callback );
+					$type = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
+					add_action( 'woocommerce_admin_field_' . $type, array( $this, 'display_custom_settings_row' ) );
 					// This intentionally falls through to the next section.
 
 				case self::WC_CHECKBOX_ELEMENT:
 				case self::WC_NUMBER_ELEMENT:
 				case self::WC_TEXT_ELEMENT:
 				case self::WC_SELECT_ELEMENT:
-					if ( ! empty( $element_options ) ) {
-						// array flattener.
-						$custom_attributes = array( 'min', 'max', 'step' );
-						$custom_attributes = array_intersect_key( $element_options, array_flip( $custom_attributes ) ); // Gets the new values.
-
-						if ( ! empty( $custom_attributes ) ) {
-							$element_options = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
-
-							$element_options['custom_attributes'] = $custom_attributes; // sets array level 2.
-						}
-						$element = array_merge( $element, $element_options );
-					}
+					$element = array_merge( $element, $element_options );
 					// $element_options added.
 
 				case self::WC_TITLE_ELEMENT:
