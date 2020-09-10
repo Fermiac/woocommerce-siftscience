@@ -60,7 +60,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 						return;
 					}
 				}
-				if ( isset( $args[2] ) && ! enpty( $args[2] ) ) {
+				if ( isset( $args[2] ) && empty( $args[2] ) ) {
 					$args[2] = '[Empty lable]';
 				}
 
