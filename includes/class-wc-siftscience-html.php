@@ -61,10 +61,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					}
 				}
 
-				if ( isset( $args[2] ) && empty( $args[2] ) ) { // Label is sent empty.
+				if ( isset( $args[2] ) && empty( $args[2] ) ) { // Label is empty.
 					$args[2] = '[Empty lable]';
 
-					if ( isset( $args[3] ) && empty( $args[3] ) ) { // description is sent empty.
+					if ( isset( $args[3] ) && empty( $args[3] ) ) { // description is empty.
 							$args[3] = '[Empty description]';
 					}
 				}
