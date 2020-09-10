@@ -144,11 +144,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				case self::WC_TITLE_ELEMENT:
 				case self::WC_NUMBER_ELEMENT:
 				case self::WC_SELECT_ELEMENT:
-				case self::WC_CHECKBOX_ELEMENT:
-					$element_options['desc']     = $desc;
-					$element_options['title']    = $label;
 					$element_options['desc_tip'] = $desc_tip;
-					// Title, desc and desc_tip are added all What's left [id and type].
+					// desc_tip is added.
+				case self::WC_CHECKBOX_ELEMENT:
+					$element_options['desc']  = $desc;
+					$element_options['title'] = $label;
+					// Title and desc are added all What's left [id and type].
 
 				case self::WC_SECTIONEND_ELEMENT:
 					$element_options['id']   = $id;
