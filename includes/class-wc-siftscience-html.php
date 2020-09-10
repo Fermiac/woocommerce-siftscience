@@ -19,6 +19,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	 * Class WC_SiftScience_Html
 	 */
 	class WC_SiftScience_Html {
+		/**
+		 * The logger service
+		 *
+		 * @var WC_SiftScience_Logger
+		 */
+		private $logger;
 
 		public const WC_TITLE_ELEMENT      = 'title';
 		public const WC_TEXT_ELEMENT       = 'text';
@@ -27,6 +33,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
 		public const WC_CUSTOM_ELEMENT     = 'custom';
+
+		/**
+		 * WC_SiftScience_Html constructor.
+		 *
+		 * @param WC_SiftScience_Logger $logger Logger service.
+		 */
+		public function __construct( WC_SiftScience_Logger $logger ) {
+			$this->logger = $logger;
+		}
 
 		/**
 		 * This function manages the call from outside [admin class] overloading creqate element
