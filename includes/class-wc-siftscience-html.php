@@ -44,68 +44,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		}
 
 		/**
-		 * This function validates and sanitizes calls for create_element
-		 *
-		 * @see WC_SiftScience_Html::create_element
-		 *
-		 * @param string $name the method name create_element.
-		 * @param Array  $args the arguments provided.
-		 */
-		public function __call( $name, $args ) {
-			if ( 'create_element' === $name ) {
-				// element type of select must add options array to it's call.
-				if ( self::WC_SELECT_ELEMENT === $args[1] ) {
-					if ( ! isset( $args[4]['options'] ) || empty( $args[4]['options'] || ! is_array( $args[4]['options'] ) ) ) {
-						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-						return;
-					}
-				}
-
-				if ( isset( $args[2] ) && empty( $args[2] ) ) { // Label is empty.
-					$args[2] = '[Empty lable]';
-
-					if ( isset( $args[3] ) && empty( $args[3] ) ) { // description is empty.
-							$args[3] = '[Empty description]';
-
-						if ( isset( $args[4] ) && ! is_array( $args[4] ) ) { // Elsment options must be an array.
-							$this->logger->log_error( 'element_option must be an array' );
-							return;
-						}
-					}
-				}
-
-				switch ( count( $args ) ) {
-					case 2:
-						return $this->create_element( $args[0], $args[1], '', '', array() );
-					case 3:
-						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
-					case 4:
-						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
-					case 5:
-						// array flattener.
-						$custom_attributes = array( 'min', 'max', 'step' );
-						$custom_attributes = array_intersect_key( $args[4], array_flip( $custom_attributes ) ); // Gets the new values.
-
-						if ( ! empty( $custom_attributes ) ) {
-							$args[4] = array_diff_key( $args[4], $custom_attributes ); // Unsets those specific keys.
-
-							$args[4]['custom_attributes'] = $custom_attributes; // sets array level 2.
-						}
-						if ( isset( $args[4]['desc_tip'] ) ) {
-							if ( self::WC_CHECKBOX_ELEMENT === $args[1] ) {
-								// if desc_tip is not a string or empty it sanitized to false.
-								$args[4]['desc_tip'] = ( is_string( $args[4]['desc_tip'] ) && ! empty( $args[4]['desc_tip'] ) ) ? $args[4]['desc_tip'] : false;
-							}
-							return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
-						}
-					default:
-						$this->logger->log_error( 'There is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
-						break;
-				}
-			}
-		}
-
-		/**
 		 * This function sets HTML element attributes according to woocommearce provided library.
 		 * desc_tip Mixed [bool:false] (default)
 		 *     field type of checkbox; the desc text is going next to the control
@@ -116,7 +54,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * desc_tip Mixed [string]
 		 *     field type of checkbox; the desc_tip text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * desc_rip is added in element options.
+		 * desc_tip is added in element options [X] sanitized.
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
@@ -124,10 +62,50 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param string $desc            Description text.
 		 * @param array  $element_options Element special options.
 		 *
-		 * @return array $element         An array of attributes.
+		 * @return array $element_options An array of attributes.
 		 * @since 1.1.0
 		 */
-		private function create_element( $type, $id, $label, $desc, $element_options ) {
+		public function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
+
+			// $element_options must have level 2 options array forb the select element.
+			if ( self::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
+
+			switch ( func_num_args() ) {
+				case 5:
+					if ( ! is_array( $element_options ) ) { // elsment_options must be an array.
+						$this->logger->log_error( 'element_options must be an array' );
+						return;
+					}
+					// array flattener.
+					$custom_attributes = array( 'min', 'max', 'step' );
+					$custom_attributes = array_intersect_key( $element_options, array_flip( $custom_attributes ) ); // Gets the new values.
+
+					if ( ! empty( $custom_attributes ) ) {
+						$element_options = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
+
+						$element_options['custom_attributes'] = $custom_attributes; // sets array level 2.
+					}
+
+					if ( isset( $element_options['desc_tip'] ) ) {
+						if ( self::WC_CHECKBOX_ELEMENT === $type ) {
+							// if desc_tip is not a string or empty it is sanitized to false.
+							$desc_tip = $element_options['desc_tip']; // Temporary storege.
+
+							$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+						}
+					}
+					// element_options exists so there is a description.
+				case 4:
+					$desc = ( empty( $desc ) ) ? '[Empty description]' : $desc;
+					// description exists so there is a label.
+				case 3:
+					$label = ( empty( $label ) ) ? '[Empty lable]' : $label;
+			}
 
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
