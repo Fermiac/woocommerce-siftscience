@@ -98,7 +98,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
 					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
-					$callback = array( $this->html, 'display_custom_settings_row' );
+					$callback = array( $this, 'display_custom_settings_row' );
 					add_action( 'woocommerce_admin_field_' . $type, $callback );
 					// This intentionally falls through to the next section.
 
