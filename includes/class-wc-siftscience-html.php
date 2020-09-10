@@ -134,29 +134,25 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		private function create_element( $type, $id, $label, $desc, $desc_tip, $element_options ) {
 
-			$element = array();
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
 					$type = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
 					add_action( 'woocommerce_admin_field_' . $type, array( $this, 'display_custom_settings_row' ) );
 					// This intentionally falls through to the next section.
 
-				case self::WC_CHECKBOX_ELEMENT:
-				case self::WC_NUMBER_ELEMENT:
 				case self::WC_TEXT_ELEMENT:
-				case self::WC_SELECT_ELEMENT:
-					$element = array_merge( $element, $element_options );
-					// $element_options added.
-
 				case self::WC_TITLE_ELEMENT:
-					$element['desc']     = $desc;
-					$element['title']    = $label;
-					$element['desc_tip'] = $desc_tip;
+				case self::WC_NUMBER_ELEMENT:
+				case self::WC_SELECT_ELEMENT:
+				case self::WC_CHECKBOX_ELEMENT:
+					$element_options['desc']     = $desc;
+					$element_options['title']    = $label;
+					$element_options['desc_tip'] = $desc_tip;
 					// Title and description are added all What's left [id and type].
 
 				case self::WC_SECTIONEND_ELEMENT:
-					$element['id']   = $id;
-					$element['type'] = $type;
+					$element_options['id']   = $id;
+					$element_options['type'] = $type;
 					break;
 
 				default:
@@ -164,7 +160,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					break;
 			}
 
-			return $element;
+			return $element_options;
 		}
 
 		/**
