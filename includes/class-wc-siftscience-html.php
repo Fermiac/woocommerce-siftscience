@@ -27,7 +27,13 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
 		public const WC_CUSTOM_ELEMENT     = 'custom';
-		
+
+		/**
+		 * This function manages the call from outside [admin class] overloading creqate element
+		 *
+		 * @param string $name the method name create_element.
+		 * @param Array  $args the arguments provided.
+		 */
 		public function __call( $name, $args ) {
 			if ( 'create_element' === $name ) {
 
@@ -79,20 +85,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			}
 
 			$element = array();
-			// array flattener.
-			$custom_attributes =
-			array(
-				'min'  => '',
-				'max'  => '',
-				'step' => '',
-			);
-			$custom_attributes = array_intersect_key( $element_options, $custom_attributes ); // Gets the new values.
-
-			if ( ! empty( $custom_attributes ) ) {
-				$element = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
-
-				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
-			}
 
 			if ( isset( $element_options['desc_tip'] ) ) {
 				$desc_tip = $element_options['desc_tip'];
@@ -114,6 +106,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				case self::WC_TEXT_ELEMENT:
 				case self::WC_SELECT_ELEMENT:
 					if ( ! empty( $element_options ) ) {
+						// array flattener.
+						$custom_attributes = array( 'min', 'max', 'step' );
+						$custom_attributes = array_intersect_key( $element_options, array_flip( $custom_attributes ) ); // Gets the new values.
+
+						if ( ! empty( $custom_attributes ) ) {
+							$element_options = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
+
+							$element_options['custom_attributes'] = $custom_attributes; // sets array level 2.
+						}
 						$element = array_merge( $element, $element_options );
 					}
 					// $element_options added.
