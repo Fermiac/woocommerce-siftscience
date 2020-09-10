@@ -60,19 +60,16 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 						return;
 					}
 				}
-				$arguments_count = count( $args );
-				if ( 2 < $arguments_count ) { // Label is sent empty.
-					if ( isset( $args[2] ) && empty( $args[2] ) ) {
-						$args[2] = '[Empty lable]';
-					}
-					if ( 3 < $arguments_count ) { // description is sent empty.
-						if ( isset( $args[3] ) && empty( $args[3] ) ) {
+
+				if ( isset( $args[2] ) && empty( $args[2] ) ) { // Label is sent empty.
+					$args[2] = '[Empty lable]';
+
+					if ( isset( $args[3] ) && empty( $args[3] ) ) { // description is sent empty.
 							$args[3] = '[Empty description]';
-						}
 					}
 				}
 
-				switch ( $arguments_count ) {
+				switch ( count( $args ) ) {
 					case 2:
 						return $this->create_element( $args[0], $args[1], '', '', false, array() );
 					case 3:
