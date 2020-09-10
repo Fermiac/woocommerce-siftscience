@@ -44,47 +44,25 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		}
 
 		/**
-		 * This function validates and sanitizes calls for create_element
-		 *
-		 * @see WC_SiftScience_Html::create_element
+		 * This function manages the call from outside [admin class] overloading creqate element
 		 *
 		 * @param string $name the method name create_element.
 		 * @param Array  $args the arguments provided.
 		 */
 		public function __call( $name, $args ) {
 			if ( 'create_element' === $name ) {
-				// if type id delect amd options array empty element wont create.
-				if ( self::WC_SELECT_ELEMENT === $args[1] ) {
-					if ( ! isset( $args[4]['options'] ) || empty( $args[4]['options'] || ! is_array( $args[4]['options'] ) ) ) {
-						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-						return;
-					}
-				}
-				if ( isset( $args[2] ) && ! enpty( $args[2] ) ) {
-					$args[2] = '[Empty lable]';
-				}
 
 				switch ( count( $args ) ) {
 					case 2:
-						return $this->create_element( $args[0], $args[1], '', '', false, array() );
+						return $this->create_element( $args[0], $args[1], '', '', array() );
 					case 3:
-						return $this->create_element( $args[0], $args[1], $args[2], '', false, array() );
+						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
 					case 4:
-						return $this->create_element( $args[0], $args[1], $args[2], $args[3], false, array() );
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
 					case 5:
-						if ( isset( $args[4]['desc_tip'] ) ) {
-							if ( self::WC_CHECKBOX_ELEMENT === $args[1] ) {
-								// if desc_tip is not a string or empty it sanitized to false.
-								$desc_tip = ( is_string( $args[4]['desc_tip'] ) && ! empty( $args[4]['desc_tip'] ) ) ? $args[4]['desc_tip'] : false;
-							} else {
-								$desc_tip = $args[4]['desc_tip'];
-							}
-							return $this->create_element( $args[0], $args[1], $args[2], $args[3], $desc_tip, $args[4] );
-						} else {
-							return $this->create_element( $args[0], $args[1], $args[2], $args[3], false, $args[4] );
-						}
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
 					default:
-						$this->logger->log_error( 'There is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
+						$this->logger->log_error( 'there is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
 						break;
 				}
 			}
@@ -101,21 +79,37 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * desc_tip Mixed [string]
 		 *     field type of checkbox; the desc_tip text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * desc_rip is added in element options.
+		 * NOTE: if desc_tip isn't a string and it's a checkbox [X] disc_tip is sanitized to false, add it in element_options
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HtmlElement ID.
 		 * @param string $label           Element label.
 		 * @param string $desc            Description text.
-		 * @param mixed  $desc_tip        description tip.
 		 * @param array  $element_options Element special options.
 		 *
 		 * @return array $element         An array of attributes.
 		 * @since 1.1.0
 		 */
-		private function create_element( $type, $id, $label, $desc, $desc_tip, $element_options ) {
+		private function create_element( $type, $id, $label, $desc, $element_options ) {
 
-			$element = array();
+			if ( self::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
+
+			$element  = array();
+			$desc_tip = false;
+			if ( isset( $element_options['desc_tip'] ) ) {
+				$desc_tip = $element_options['desc_tip'];
+				unset( $element_options['desc_tip'] );
+				if ( self::WC_CHECKBOX_ELEMENT === $type ) {
+					$desc_tip = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// desc_tip sanitized from being true or not being a stirng to false.
+				}
+			}
+
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
 					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
