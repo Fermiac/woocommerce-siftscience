@@ -76,11 +76,11 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 				switch ( count( $args ) ) {
 					case 2:
-						return $this->create_element( $args[0], $args[1], '', '', false, array() );
+						return $this->create_element( $args[0], $args[1], '', '', array() );
 					case 3:
-						return $this->create_element( $args[0], $args[1], $args[2], '', false, array() );
+						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
 					case 4:
-						return $this->create_element( $args[0], $args[1], $args[2], $args[3], false, array() );
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
 					case 5:
 						// array flattener.
 						$custom_attributes = array( 'min', 'max', 'step' );
@@ -94,13 +94,9 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 						if ( isset( $args[4]['desc_tip'] ) ) {
 							if ( self::WC_CHECKBOX_ELEMENT === $args[1] ) {
 								// if desc_tip is not a string or empty it sanitized to false.
-								$desc_tip = ( is_string( $args[4]['desc_tip'] ) && ! empty( $args[4]['desc_tip'] ) ) ? $args[4]['desc_tip'] : false;
-							} else {
-								$desc_tip = $args[4]['desc_tip'];
+								$args[4]['desc_tip'] = ( is_string( $args[4]['desc_tip'] ) && ! empty( $args[4]['desc_tip'] ) ) ? $args[4]['desc_tip'] : false;
 							}
-							return $this->create_element( $args[0], $args[1], $args[2], $args[3], $desc_tip, $args[4] );
-						} else {
-							return $this->create_element( $args[0], $args[1], $args[2], $args[3], false, $args[4] );
+							return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
 						}
 					default:
 						$this->logger->log_error( 'There is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
@@ -126,13 +122,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param string $id              HtmlElement ID.
 		 * @param string $label           Element label.
 		 * @param string $desc            Description text.
-		 * @param mixed  $desc_tip        description tip.
 		 * @param array  $element_options Element special options.
 		 *
 		 * @return array $element         An array of attributes.
 		 * @since 1.1.0
 		 */
-		private function create_element( $type, $id, $label, $desc, $desc_tip, $element_options ) {
+		private function create_element( $type, $id, $label, $desc, $element_options ) {
 
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
@@ -144,8 +139,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				case self::WC_SELECT_ELEMENT:
 				case self::WC_NUMBER_ELEMENT:
 				case self::WC_CHECKBOX_ELEMENT:
-					$element_options['desc_tip'] = $desc_tip;
-					// desc_tip is added.
 				case self::WC_TITLE_ELEMENT:
 					$element_options['desc']  = $desc;
 					$element_options['title'] = $label;
