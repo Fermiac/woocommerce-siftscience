@@ -53,18 +53,26 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function __call( $name, $args ) {
 			if ( 'create_element' === $name ) {
-				// if type id delect amd options array empty element wont create.
+				// element type of select must add options array to it's call.
 				if ( self::WC_SELECT_ELEMENT === $args[1] ) {
 					if ( ! isset( $args[4]['options'] ) || empty( $args[4]['options'] || ! is_array( $args[4]['options'] ) ) ) {
 						$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
 						return;
 					}
 				}
-				if ( isset( $args[2] ) && empty( $args[2] ) ) {
-					$args[2] = '[Empty lable]';
+				$arguments_count = count( $args );
+				if ( 2 < $arguments_count ) { // Label is sent empty.
+					if ( isset( $args[2] ) && empty( $args[2] ) ) {
+						$args[2] = '[Empty lable]';
+					}
+					if ( 3 < $arguments_count ) { // description is sent empty.
+						if ( isset( $args[3] ) && empty( $args[3] ) ) {
+							$args[3] = '[Empty description]';
+						}
+					}
 				}
 
-				switch ( count( $args ) ) {
+				switch ( $arguments_count ) {
 					case 2:
 						return $this->create_element( $args[0], $args[1], '', '', false, array() );
 					case 3:
