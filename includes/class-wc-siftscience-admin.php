@@ -343,7 +343,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			return array(
 				$this->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
-					'siftsci_title',
+					'siftsci_title_id',
 					'Sift Settings'
 				),
 
@@ -426,6 +426,26 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			);
 		}
 
+		public function __call( $name, $args ) {
+			if ( 'WC_SiftScience_Admin::create_element' === $name ) {
+
+				echo 'ra ra ra';
+				switch ( count( $args ) ) {
+					case 2:
+						return $this->create_element( $args[0], $args[1], '', '', array() );
+					case 3:
+						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
+					case 4:
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
+					case 5:
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
+					default:
+						$this->logger->log_error( 'there is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
+						break;
+				}
+			}
+		}
+
 		/**
 		 * This function sets HTML element attributes according to woocommearce provided library.
 		 * desc_tip Mixed [bool:false] (default)
@@ -448,7 +468,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @return array $element         An array of attributes.
 		 * @since 1.1.0
 		 */
-		private function create_element( $type, $id, $label = '', $desc = '', $element_options = array() ) {
+		private function create_element( $type, $id, $labe, $desc, $element_options ) {
 
 			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
 				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
