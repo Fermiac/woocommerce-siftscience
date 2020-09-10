@@ -27,6 +27,119 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
 		public const WC_CUSTOM_ELEMENT     = 'custom';
+		
+		public function __call( $name, $args ) {
+			if ( 'create_element' === $name ) {
+
+				switch ( count( $args ) ) {
+					case 2:
+						return $this->create_element( $args[0], $args[1], '', '', array() );
+					case 3:
+						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
+					case 4:
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
+					case 5:
+						return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
+					default:
+						$this->logger->log_error( 'there is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
+						break;
+				}
+			}
+		}
+
+		/**
+		 * This function sets HTML element attributes according to woocommearce provided library.
+		 * desc_tip Mixed [bool:false] (default)
+		 *     field type of checkbox; the desc text is going next to the control
+		 *     field type of select, number or text; the desc text is going underneath control
+		 * desc_tip Mixed [bool:true]
+		 *     [X] field type of checkbox; the desc text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
+		 * desc_tip Mixed [string]
+		 *     field type of checkbox; the desc_tip text is going underneath control
+		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
+		 * NOTE: if desc_tip isn't a string and it's a checkbox [X] disc_tip is sanitized to false, add it in element_options
+		 *
+		 * @param string $type            Element type name.
+		 * @param string $id              HtmlElement ID.
+		 * @param string $label           Element label.
+		 * @param string $desc            Description text.
+		 * @param array  $element_options Element special options.
+		 *
+		 * @return array $element         An array of attributes.
+		 * @since 1.1.0
+		 */
+		private function create_element( $type, $id, $label, $desc, $element_options ) {
+
+			if ( self::WC_SELECT_ELEMENT === $type ) {
+				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
+					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
+					return;
+				}
+			}
+
+			$element = array();
+			// array flattener.
+			$custom_attributes =
+			array(
+				'min'  => '',
+				'max'  => '',
+				'step' => '',
+			);
+			$custom_attributes = array_intersect_key( $element_options, $custom_attributes ); // Gets the new values.
+
+			if ( ! empty( $custom_attributes ) ) {
+				$element = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
+
+				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
+			}
+
+			if ( isset( $element_options['desc_tip'] ) ) {
+				$desc_tip = $element_options['desc_tip'];
+				if ( self::WC_CHECKBOX_ELEMENT === $type ) {
+					$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
+					// desc_tip sanitized from being true or not being a stirng.
+				}
+			}
+
+			switch ( $type ) {
+				case self::WC_CUSTOM_ELEMENT:
+					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
+					$callback = array( $this->html, 'display_custom_settings_row' );
+					add_action( 'woocommerce_admin_field_' . $type, $callback );
+					// This intentionally falls through to the next section.
+
+				case self::WC_CHECKBOX_ELEMENT:
+				case self::WC_NUMBER_ELEMENT:
+				case self::WC_TEXT_ELEMENT:
+				case self::WC_SELECT_ELEMENT:
+					if ( ! empty( $element_options ) ) {
+						$element = array_merge( $element, $element_options );
+					}
+					// $element_options added.
+
+				case self::WC_TITLE_ELEMENT:
+					if ( ! empty( $desc ) ) {
+						$element['desc'] = $desc;
+					}
+
+					if ( ! empty( $label ) ) {
+						$element['title'] = $label;
+					}
+					// Title and description are added all What's left [id and type].
+
+				case self::WC_SECTIONEND_ELEMENT:
+					$element['id']   = $id;
+					$element['type'] = $type;
+					break;
+
+				default:
+					$this->logger->log_error( $type . ' is not a valid type!' );
+					break;
+			}
+
+			return $element;
+		}
 
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section

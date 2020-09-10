@@ -255,20 +255,20 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function get_settings_reporting() {
 			return array(
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_reporting',
 					'Sift Debug & Reporting Settings'
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
 					'anon_id',
 					'Anonymous ID',
 					$this->get_anon_id_content()
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::SEND_STATS,
 					'Enable Reporting',
@@ -276,7 +276,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					array( 'desc_tip' => $this->get_reporting_checkbox_description() )
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_SELECT_ELEMENT,
 					WC_SiftScience_Options::LOG_LEVEL_KEY,
 					'Log Level',
@@ -291,7 +291,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					)
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
 					'sifsci_section_reporting'
 				),
@@ -341,27 +341,27 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function get_settings_main() {
 			return array(
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_TITLE_ELEMENT,
 					'siftsci_title_id',
 					'Sift Settings'
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::API_KEY,
 					'Rest API Key',
 					'The API key for production'
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::JS_KEY,
 					'Javascript Snippet Key',
 					'Javascript snippet key for production'
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::THRESHOLD_GOOD,
 					'Good Score Threshold',
@@ -376,7 +376,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					)
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::THRESHOLD_BAD,
 					'Bad Score Threshold',
@@ -390,7 +390,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						'desc_tip' => true,
 					)
 				),
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_TEXT_ELEMENT,
 					WC_SiftScience_Options::NAME_PREFIX,
 					'User & Order Name Prefix',
@@ -398,14 +398,14 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
 					WC_SiftScience_Options::AUTO_SEND_ENABLED,
 					'Automatically Send Data',
 					'Automatically send data to Sift when an order is created'
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
 					WC_SiftScience_Options::MIN_ORDER_VALUE,
 					'Auto Send Minimum Value',
@@ -419,125 +419,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					)
 				),
 
-				$this->create_element(
+				$this->html->create_element(
 					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
 					'sifsci_section_main'
 				),
 			);
-		}
-
-		public function __call( $name, $args ) {
-			if ( 'WC_SiftScience_Admin::create_element' === $name ) {
-
-				echo 'ra ra ra';
-				switch ( count( $args ) ) {
-					case 2:
-						return $this->create_element( $args[0], $args[1], '', '', array() );
-					case 3:
-						return $this->create_element( $args[0], $args[1], $args[2], '', array() );
-					case 4:
-						return $this->create_element( $args[0], $args[1], $args[2], $args[3], array() );
-					case 5:
-						return $this->create_element( $args[0], $args[1], $args[2], $args[3], $args[4] );
-					default:
-						$this->logger->log_error( 'there is no delaretion method for create_element with ' . count( $args ) . ' arguemnts' );
-						break;
-				}
-			}
-		}
-
-		/**
-		 * This function sets HTML element attributes according to woocommearce provided library.
-		 * desc_tip Mixed [bool:false] (default)
-		 *     field type of checkbox; the desc text is going next to the control
-		 *     field type of select, number or text; the desc text is going underneath control
-		 * desc_tip Mixed [bool:true]
-		 *     [X] field type of checkbox; the desc text is going underneath control
-		 *     field type of select, number or text; a question mark pop-up appears before control with desc text
-		 * desc_tip Mixed [string]
-		 *     field type of checkbox; the desc_tip text is going underneath control
-		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * NOTE: if desc_tip isn't a string and it's a checkbox [X] disc_tip is sanitized to false, add it in element_options
-		 *
-		 * @param string $type            Element type name.
-		 * @param string $id              HtmlElement ID.
-		 * @param string $label           Element label.
-		 * @param string $desc            Description text.
-		 * @param array  $element_options Element special options.
-		 *
-		 * @return array $element         An array of attributes.
-		 * @since 1.1.0
-		 */
-		private function create_element( $type, $id, $labe, $desc, $element_options ) {
-
-			if ( WC_SiftScience_Html::WC_SELECT_ELEMENT === $type ) {
-				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
-					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
-					return;
-				}
-			}
-
-			$element = array();
-			// array flattener.
-			$custom_attributes =
-			array(
-				'min'  => '',
-				'max'  => '',
-				'step' => '',
-			);
-			$custom_attributes = array_intersect_key( $element_options, $custom_attributes ); // Gets the new values.
-
-			if ( ! empty( $custom_attributes ) ) {
-				$element = array_diff_key( $element_options, $custom_attributes ); // Unsets those specific keys.
-
-				$element['custom_attributes'] = $custom_attributes; // Add the Flaterned version.
-			}
-
-			if ( isset( $element_options['desc_tip'] ) ) {
-				$desc_tip = $element_options['desc_tip'];
-				if ( WC_SiftScience_Html::WC_CHECKBOX_ELEMENT === $type ) {
-					$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
-					// desc_tip sanitized from being true or not being a stirng.
-				}
-			}
-
-			switch ( $type ) {
-				case WC_SiftScience_Html::WC_CUSTOM_ELEMENT:
-					$type     = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
-					$callback = array( $this->html, 'display_custom_settings_row' );
-					add_action( 'woocommerce_admin_field_' . $type, $callback );
-					// This intentionally falls through to the next section.
-
-				case WC_SiftScience_Html::WC_CHECKBOX_ELEMENT:
-				case WC_SiftScience_Html::WC_NUMBER_ELEMENT:
-				case WC_SiftScience_Html::WC_TEXT_ELEMENT:
-				case WC_SiftScience_Html::WC_SELECT_ELEMENT:
-					if ( ! empty( $element_options ) ) {
-						$element = array_merge( $element, $element_options );
-					}
-					// $element_options added.
-
-				case WC_SiftScience_Html::WC_TITLE_ELEMENT:
-					if ( ! empty( $desc ) ) {
-						$element['desc'] = $desc;
-					}
-
-					if ( ! empty( $label ) ) {
-						$element['title'] = $label;
-					}
-					// Title and description are added all What's left [id and type].
-
-				case WC_SiftScience_Html::WC_SECTIONEND_ELEMENT:
-					$element['id']   = $id;
-					$element['type'] = $type;
-					break;
-
-				default:
-					$this->logger->log_error( $type . ' is not a valid type!' );
-					break;
-			}
-
-			return $element;
 		}
 
 		/**
