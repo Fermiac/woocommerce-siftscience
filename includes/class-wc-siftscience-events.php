@@ -366,7 +366,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $order_id The Order ID.
 		 */
 		public function send_transaction( $order_id ) {
-			$data           = $this->transactions->create_transaction( $order_id );
+			$data           = $this->transaction->create_transaction( $order_id );
 			$this->events[] = $data;
 		}
 
