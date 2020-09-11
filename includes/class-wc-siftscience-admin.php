@@ -98,6 +98,32 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$this->logger->log_info( '[api check response] ' . wp_json_encode( $response ) );
 			return isset( $response->status ) && ( 0 === $response->status || 54 === $response->status );
 		}
+
+		/**
+		 * Enqueues the a javascript file for inclusion at end of page
+		 *
+		 * @param string $name Name of the script to enqueue.
+		 * @param string $file Filename of the js file.
+		 * @param array  $deps Array of dependencies.
+		 */
+		private static function enqueue_script( $name, $file, $deps ) {
+			$version = time(); // TODO: Make this switchable for dev purposes.
+			$path    = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
+			wp_enqueue_script( $name, $path, $deps, $version, true );
+		}
+
+		/**
+		 * Adds the settings tabs in Woo configs
+		 *
+		 * @param array $pages The current array of pages.
+		 *
+		 * @return array The resulting pages
+		 */
+		public function add_settings_page( $pages ) {
+			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
+			return $pages;
+		}
+
 		/**
 		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
 		 */
@@ -147,191 +173,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
 			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
-		}
-
-		/**
-		 * Enqueues the a javascript file for inclusion at end of page
-		 *
-		 * @param string $name Name of the script to enqueue.
-		 * @param string $file Filename of the js file.
-		 * @param array  $deps Array of dependencies.
-		 */
-		private static function enqueue_script( $name, $file, $deps ) {
-			$version = time(); // TODO: Make this switchable for dev purposes.
-			$path    = plugins_url( "dist/$file.js", dirname( __FILE__ ) );
-			wp_enqueue_script( $name, $path, $deps, $version, true );
-		}
-
-		/**
-		 * Outputs the debug page in settings
-		 */
-		private function output_settings_debug() {
-			$log_file = dirname( __DIR__ ) . '/debug.log';
-
-			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
-				// @codingStandardsIgnoreStart
-				$fh = fopen( $log_file, 'w' );
-				fclose( $fh );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
-				// @codingStandardsIgnoreEnd
-				exit;
-			}
-
-			$logs = 'none';
-
-			$GLOBALS['hide_save_button'] = true;
-
-			if ( file_exists( $log_file ) ) {
-				// @codingStandardsIgnoreStart
-				$logs = file_get_contents( $log_file );
-				// @codingStandardsIgnoreEnd
-			}
-
-			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
-				// SSL check logic.
-				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
-				$body        = $response['body'];
-				$tls_version = json_decode( $body )->tls_version;
-				$data        = "TLS Version: $tls_version Full Data: $body";
-
-				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
-				exit;
-			}
-
-			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
-			if ( false !== $ssl_data ) {
-				delete_transient( 'wc-siftsci-ssl-log' );
-			}
-
-			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
-			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
-
-			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs );
-		}
-
-		/**
-		 * Outputs the reporting tab in settings
-		 */
-		private function output_settings_reporting() {
-			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
-				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
-				exit();
-			}
-
-			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
-		}
-
-		/**
-		 * Outputs the stats page in settings
-		 */
-		private function output_settings_stats() {
-			$GLOBALS['hide_save_button'] = true;
-
-			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
-				$this->stats->clear_stats();
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
-				exit;
-			}
-
-			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
-			if ( 'none' === $stats ) {
-				echo '<p>No stats stored yet</p>';
-				return;
-			}
-
-			$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
-			$stats = json_decode( $stats, true );
-			ksort( $stats );
-			$this->html->display_stats_tables( $stats, $url );
-		}
-
-		/**
-		 * This function is filling form element in the HTML page {Reporting}.
-		 *
-		 * @return Array []
-		 */
-		private function get_settings_reporting() {
-			return array(
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TITLE_ELEMENT,
-					'siftsci_title_reporting',
-					'Sift Debug & Reporting Settings'
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
-					'anon_id',
-					'Anonymous ID',
-					$this->get_anon_id_content()
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
-					WC_SiftScience_Options::SEND_STATS,
-					'Enable Reporting',
-					'Send anonymous statistics and error details.',
-					array( 'desc_tip' => $this->get_reporting_checkbox_description() )
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_SELECT_ELEMENT,
-					WC_SiftScience_Options::LOG_LEVEL_KEY,
-					'Log Level',
-					'How much logging information to generate',
-					array(
-						'options' =>
-							array(
-								2 => 'Errors',
-								1 => 'Errors & Warnings',
-								0 => 'Errors, Warnings & Info',
-							),
-					)
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
-					'sifsci_section_reporting'
-				),
-			);
-		}
-
-		/**
-		 * Saves the settings
-		 */
-		public function save_settings() {
-			global $current_section;
-			switch ( $current_section ) {
-				case '':
-					WC_Admin_Settings::save_fields( $this->get_settings_main() );
-					$is_api_working = $this->check_api();
-					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
-					if ( $is_api_working ) {
-						WC_Admin_Settings::add_message( 'API is correctly configured' );
-					} else {
-						WC_Admin_Settings::add_error( 'API settings are broken' );
-					}
-					break;
-				case 'reporting':
-					WC_Admin_Settings::save_fields( $this->get_settings_reporting() );
-					break;
-				default:
-					break;
-			}
-		}
-
-		/**
-		 * Adds the settings tabs in Woo configs
-		 *
-		 * @param array $pages The current array of pages.
-		 *
-		 * @return array The resulting pages
-		 */
-		public function add_settings_page( $pages ) {
-			$pages[ self::ADMIN_ID ] = self::ADMIN_LABEL;
-			return $pages;
 		}
 
 		/**
@@ -427,6 +268,166 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
+		 * Outputs the reporting tab in settings
+		 */
+		private function output_settings_reporting() {
+			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
+				delete_option( WC_SiftScience_Options::GUID );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
+				exit();
+			}
+
+			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
+		}
+
+		/**
+		 * This function is filling form element in the HTML page {Reporting}.
+		 *
+		 * @return Array []
+		 */
+		private function get_settings_reporting() {
+			return array(
+				$this->html->create_element(
+					WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					'siftsci_title_reporting',
+					'Sift Debug & Reporting Settings'
+				),
+
+				$this->html->create_element(
+					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
+					'anon_id',
+					'Anonymous ID',
+					$this->get_anon_id_content()
+				),
+
+				$this->html->create_element(
+					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+					WC_SiftScience_Options::SEND_STATS,
+					'Enable Reporting',
+					'Send anonymous statistics and error details.',
+					array( 'desc_tip' => $this->get_reporting_checkbox_description() )
+				),
+
+				$this->html->create_element(
+					WC_SiftScience_Html::WC_SELECT_ELEMENT,
+					WC_SiftScience_Options::LOG_LEVEL_KEY,
+					'Log Level',
+					'How much logging information to generate',
+					array(
+						'options' =>
+							array(
+								2 => 'Errors',
+								1 => 'Errors & Warnings',
+								0 => 'Errors, Warnings & Info',
+							),
+					)
+				),
+
+				$this->html->create_element(
+					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					'sifsci_section_reporting'
+				),
+			);
+		}
+
+		/**
+		 * Outputs the stats page in settings
+		 */
+		private function output_settings_stats() {
+			$GLOBALS['hide_save_button'] = true;
+
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
+				$this->stats->clear_stats();
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
+				exit;
+			}
+
+			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
+			if ( 'none' === $stats ) {
+				echo '<p>No stats stored yet</p>';
+				return;
+			}
+
+			$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
+			$stats = json_decode( $stats, true );
+			ksort( $stats );
+			$this->html->display_stats_tables( $stats, $url );
+		}
+
+		/**
+		 * Outputs the debug page in settings
+		 */
+		private function output_settings_debug() {
+			$log_file = dirname( __DIR__ ) . '/debug.log';
+
+			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
+				// @codingStandardsIgnoreStart
+				$fh = fopen( $log_file, 'w' );
+				fclose( $fh );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
+				// @codingStandardsIgnoreEnd
+				exit;
+			}
+
+			$logs = 'none';
+
+			$GLOBALS['hide_save_button'] = true;
+
+			if ( file_exists( $log_file ) ) {
+				// @codingStandardsIgnoreStart
+				$logs = file_get_contents( $log_file );
+				// @codingStandardsIgnoreEnd
+			}
+
+			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
+				// SSL check logic.
+				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
+				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
+				$body        = $response['body'];
+				$tls_version = json_decode( $body )->tls_version;
+				$data        = "TLS Version: $tls_version Full Data: $body";
+
+				set_transient( 'wc-siftsci-ssl-log', $data );
+				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
+				exit;
+			}
+
+			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
+			if ( false !== $ssl_data ) {
+				delete_transient( 'wc-siftsci-ssl-log' );
+			}
+
+			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
+			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
+
+			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs );
+		}
+
+		/**
+		 * Saves the settings
+		 */
+		public function save_settings() {
+			global $current_section;
+			switch ( $current_section ) {
+				case '':
+					WC_Admin_Settings::save_fields( $this->get_settings_main() );
+					$is_api_working = $this->check_api();
+					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
+					if ( $is_api_working ) {
+						WC_Admin_Settings::add_message( 'API is correctly configured' );
+					} else {
+						WC_Admin_Settings::add_error( 'API settings are broken' );
+					}
+					break;
+				case 'reporting':
+					WC_Admin_Settings::save_fields( $this->get_settings_reporting() );
+					break;
+				default:
+					break;
+			}
+		}
+
+		/**
 		 * This function handles admin-notices action and decides to show update, improve notices
 		 */
 		public function settings_notice() {
@@ -476,11 +477,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
 				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_nonce_name( $var_name ) );
 
-			if ( false === $is_valid_input ) {
-				return false;
-			}
-
-			return sanitize_key( $_GET[ $var_name ] );
+			return ( true === $is_valid_input ) ? sanitize_key( $_GET[ $var_name ] ) : false;
 		}
 
 		/**
