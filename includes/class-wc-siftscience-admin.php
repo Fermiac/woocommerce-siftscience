@@ -315,7 +315,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					}
 					break;
 				case 'reporting':
-					WC_Admin_Settings::save_fields( $this->get_settings_stats() );
+					WC_Admin_Settings::save_fields( $this->get_settings_reporting() );
 					break;
 				default:
 					break;
