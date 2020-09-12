@@ -336,16 +336,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</tr>
 			<?php
 		}
-		public function make_textarea( $date ) {
-			$content = $data['desc'];
-			?>
-			<tr valign="top">
-				<td class="forminp">
-					<textarea><?php echo esc_textarea( $content ); ?></textarea>
-				</td>
-			</tr>
-			<?php
-		}
+
 		/**
 		 *
 		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
