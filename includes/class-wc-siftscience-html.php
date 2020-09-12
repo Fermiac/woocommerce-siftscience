@@ -306,12 +306,19 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<textarea readonly="readonly"><?php echo esc_textarea( $logs ); ?></textarea>
 			</div>
 			<style type="text/css">
+				h2, textarea{
+					width: 60%; 
+				}
+
 				textarea{
-					height:200px; 
-					width:500px;
+					height:300px; 
 					background-color: rgba(255,255,255,.2);
 					overflow: auto;
 					resize: none;
+				}
+				h2{
+					border-bottom: 1px solid rgba( 0, 0, 0, .5);
+					padding-bottom: 10px;
 				}
 			</style>
 			<?php
