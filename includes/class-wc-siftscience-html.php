@@ -293,7 +293,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			if ( false !== $ssl_data ) :
 				?>
 				<div>
-					<p><?php echo esc_html( $ssl_data ); ?></p>
+					<textarea readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
 				</div>
 				<?php
 			endif;
@@ -303,8 +303,17 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 			</h2>
 			<div>
-				<p> <?php echo nl2br( esc_html( $logs ) ); ?> </p>
+				<textarea readonly="readonly"><?php echo esc_textarea( $logs ); ?></textarea>
 			</div>
+			<style type="text/css">
+				textarea{
+					height:200px; 
+					width:500px;
+					background-color: rgba(255,255,255,.2);
+					overflow: auto;
+					resize: none;
+				}
+			</style>
 			<?php
 		}
 
