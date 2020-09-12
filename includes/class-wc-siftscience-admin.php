@@ -359,7 +359,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
-
 			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
@@ -368,8 +367,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				// @codingStandardsIgnoreEnd
 				exit;
 			}
-
-			$logs = 'none';
 
 			$GLOBALS['hide_save_button'] = true;
 
@@ -400,7 +397,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
 			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
 
-			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs );
+			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, ( empty( $logs ) ) ? 'None' : $logs );
 		}
 
 		/**
