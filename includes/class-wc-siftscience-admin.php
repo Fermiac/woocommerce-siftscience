@@ -380,9 +380,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				// SSL check logic.
 				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
 				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
-				$body        = $response['body'];
+				$body        = wp_json_encode( json_decode( $response['body'] ), JSON_PRETTY_PRINT );
 				$tls_version = json_decode( $body )->tls_version;
-				$data        = "TLS Version: $tls_version Full Data: $body";
+				$data        = "TLS Version: $tls_version\n\nFull Data:\n$body";
 
 				set_transient( 'wc-siftsci-ssl-log', $data );
 				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
