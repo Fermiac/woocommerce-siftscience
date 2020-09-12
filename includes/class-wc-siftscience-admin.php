@@ -359,7 +359,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private function output_settings_debug() {
 			$log_file = dirname( __DIR__ ) . '/debug.log';
-
 			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
 				// @codingStandardsIgnoreStart
 				$fh = fopen( $log_file, 'w' );
@@ -368,8 +367,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				// @codingStandardsIgnoreEnd
 				exit;
 			}
-
-			$logs = 'none';
 
 			$GLOBALS['hide_save_button'] = true;
 

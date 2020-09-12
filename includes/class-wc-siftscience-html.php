@@ -303,7 +303,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 			</h2>
 			<div>
-				<p><?php echo nl2br( esc_html( $logs ) ); ?></p>
+				<p>
+				<?php
+				if ( empty( $logs ) ) {
+					echo 'None';
+				} else {
+					echo nl2br( esc_html( $logs ) );
+				}
+				?>
+				</p>
 			</div>
 			<?php
 		}
