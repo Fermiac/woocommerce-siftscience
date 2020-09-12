@@ -397,7 +397,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
 			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
 
-			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs );
+			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, ( empty( $logs ) ) ? 'None' : $logs );
 		}
 
 		/**
