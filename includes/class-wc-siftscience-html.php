@@ -32,7 +32,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public const WC_SELECT_ELEMENT     = 'select';
 		public const WC_CHECKBOX_ELEMENT   = 'checkbox';
 		public const WC_SECTIONEND_ELEMENT = 'sectionend';
-		public const WC_CUSTOM_ELEMENT     = 'custom';
+		public const WC_CUSTOM_ELEMENT     = 'wc_sift_';
 
 		/**
 		 * WC_SiftScience_Html constructor.
@@ -109,7 +109,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 			switch ( $type ) {
 				case self::WC_CUSTOM_ELEMENT:
-					$type = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
+					$type .= $id; // this is the custom type name needed by WooCommerce.
 					add_action( 'woocommerce_admin_field_' . $type, array( $this, 'display_custom_settings_row' ) );
 					// This intentionally falls through to the next section.
 
