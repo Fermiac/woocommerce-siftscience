@@ -252,7 +252,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			</div>
 			<style type="text/css">
 				div.stats table:not(:last-child){
-					border-bottom: 1px solid rgba( 0, 0, 0, .5 );
+					border-bottom: 1px solid #ccd0d4;
 					padding-bottom: 3px;
 					margin-bottom: 5px;
 				}
@@ -317,12 +317,12 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					height:300px; 
 					background-color: rgba(255,255,255,.5);
 					overflow: auto;
-					border: 1px solid rgba( 0, 0, 0, .5);
+					border: 1px solid #ccd0d4;
 					padding-left: 3px !important; 
 				}
 
 				h2{
-					border-bottom: 1px solid rgba( 0, 0, 0, .5);
+					border-bottom: 1px solid #ccd0d4;
 					padding-bottom: 10px;
 				}
 			</style>
