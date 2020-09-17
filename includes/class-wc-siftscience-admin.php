@@ -145,259 +145,233 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		public function output_settings_fields() {
 			global $current_section;
 			switch ( $current_section ) {
+
 				case 'debug':
-					$this->output_settings_debug();
+					$log_file = dirname( __DIR__ ) . '/debug.log';
+					if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
+						// @codingStandardsIgnoreStart
+						$fh = fopen( $log_file, 'w' );
+						fclose( $fh );
+						wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
+						// @codingStandardsIgnoreEnd
+						exit;
+					}
+
+					$GLOBALS['hide_save_button'] = true;
+
+					if ( file_exists( $log_file ) ) {
+						// @codingStandardsIgnoreStart
+						$logs = file_get_contents( $log_file );
+						// @codingStandardsIgnoreEnd
+					}
+
+					if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
+						// SSL check logic.
+						// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
+						$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
+						$body        = wp_json_encode( json_decode( $response['body'] ), JSON_PRETTY_PRINT );
+						$tls_version = json_decode( $body )->tls_version;
+						$data        = "TLS Version: $tls_version\n\nFull Data:\n$body";
+
+						set_transient( 'wc-siftsci-ssl-log', $data );
+						wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
+						exit;
+					}
+
+					$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
+					if ( false !== $ssl_data ) {
+						delete_transient( 'wc-siftsci-ssl-log' );
+					}
+
+					$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
+					$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
+
+					$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, ( empty( $logs ) ) ? 'None' : $logs );
 					break;
+
 				case 'reporting':
-					$this->output_settings_reporting();
+					if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
+						delete_option( WC_SiftScience_Options::GUID );
+						wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
+						exit();
+					}
+
+					WC_Admin_Settings::output_fields( $this->get_section_fields( 'reporting' ) );
 					break;
+
 				case 'stats':
-					$this->output_settings_stats();
+					$GLOBALS['hide_save_button'] = true;
+
+					if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
+						$this->stats->clear_stats();
+						wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
+						exit;
+					}
+
+					$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
+					if ( 'none' === $stats ) {
+						echo '<p>No stats stored yet</p>';
+						return;
+					}
+
+					$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
+					$stats = json_decode( $stats, true );
+					ksort( $stats );
+					$this->html->display_stats_tables( $stats, $url );
 					break;
+
 				default:
-					$this->output_settings_main();
+					WC_Admin_Settings::output_fields( $this->get_section_fields( 'main' ) );
+					$this->html->display_batch_table();
+
+					self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
+					self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
+					self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
+					wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
 					break;
 			}
 		}
 
 		/**
-		 * Outputs the main settings page
-		 * Creates the HTML table for the batch upload control
-		 */
-		private function output_settings_main() {
-			WC_Admin_Settings::output_fields( $this->get_settings_main() );
-
-			$this->html->display_batch_table();
-
-			self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
-			self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
-			self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
-			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
-		}
-
-		/**
-		 * This function is filling form element in the main HTML page {Sift sittings}.
+		 * This function adding wc elements for the hovem sunsection.
 		 *
-		 * @return Array []
-		 */
-		private function get_settings_main() {
-			return array(
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TITLE_ELEMENT,
-					'siftsci_title_id',
-					'Sift Settings'
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::API_KEY,
-					'Rest API Key',
-					'The API key for production'
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::JS_KEY,
-					'Javascript Snippet Key',
-					'Javascript snippet key for production'
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::THRESHOLD_GOOD,
-					'Good Score Threshold',
-					'Scores below this value are considered good and shown in green',
-					array(
-						'default'  => 30,
-						'min'      => 0,
-						'max'      => 100,
-						'step'     => 1,
-						'css'      => 'width:75px;',
-						'desc_tip' => true,
-					)
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::THRESHOLD_BAD,
-					'Bad Score Threshold',
-					'Scores above this value are considered bad and shown in red',
-					array(
-						'default'  => 60,
-						'min'      => 0,
-						'max'      => 100,
-						'step'     => 1,
-						'css'      => 'width:75px;',
-						'desc_tip' => true,
-					)
-				),
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TEXT_ELEMENT,
-					WC_SiftScience_Options::NAME_PREFIX,
-					'User & Order Name Prefix',
-					'Prefix to give order and user names.',
-					array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
-					WC_SiftScience_Options::AUTO_SEND_ENABLED,
-					'Automatically Send Data',
-					'Automatically send data to Sift when an order is created'
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_NUMBER_ELEMENT,
-					WC_SiftScience_Options::MIN_ORDER_VALUE,
-					'Auto Send Minimum Value',
-					'Set to zero to send all orders.',
-					array(
-						'default'  => 0,
-						'min'      => 0,
-						'step'     => 1,
-						'css'      => 'width:75px;',
-						'desc_tip' => 'Orders less than this value will not be automatically sent to sift.',
-					)
-				),
-
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
-					'sifsci_section_main'
-				),
-			);
-		}
-
-		/**
-		 * Outputs the reporting tab in settings
-		 */
-		private function output_settings_reporting() {
-			if ( '1' === $this->get_value( self::GET_VAR_RESET_GUID ) ) {
-				delete_option( WC_SiftScience_Options::GUID );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_RESET_GUID ) );
-				exit();
-			}
-
-			WC_Admin_Settings::output_fields( $this->get_settings_reporting() );
-		}
-
-		/**
-		 * This function is filling form element in the HTML page {Reporting}.
+		 * @param String $sub_section the name of the subsection.
 		 *
-		 * @return Array []
+		 * @return Array $wc_fields the dictionary in which All fields are added.
 		 */
-		private function get_settings_reporting() {
-			return array(
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_TITLE_ELEMENT,
-					'siftsci_title_reporting',
-					'Sift Debug & Reporting Settings'
-				),
+		private function get_section_fields( $sub_section ) {
 
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
-					'anon_id',
-					'Anonymous ID',
-					$this->get_anon_id_content()
-				),
+			if ( 'main' === $sub_section ) {
+				return array(
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_TITLE_ELEMENT,
+						'siftsci_title_id',
+						'Sift Settings'
+					),
 
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
-					WC_SiftScience_Options::SEND_STATS,
-					'Enable Reporting',
-					'Send anonymous statistics and error details.',
-					array( 'desc_tip' => $this->get_reporting_checkbox_description() )
-				),
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+						WC_SiftScience_Options::API_KEY,
+						'Rest API Key',
+						'The API key for production'
+					),
 
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_SELECT_ELEMENT,
-					WC_SiftScience_Options::LOG_LEVEL_KEY,
-					'Log Level',
-					'How much logging information to generate',
-					array(
-						'options' =>
-							array(
-								2 => 'Errors',
-								1 => 'Errors & Warnings',
-								0 => 'Errors, Warnings & Info',
-							),
-					)
-				),
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+						WC_SiftScience_Options::JS_KEY,
+						'Javascript Snippet Key',
+						'Javascript snippet key for production'
+					),
 
-				$this->html->create_element(
-					WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
-					'sifsci_section_reporting'
-				),
-			);
-		}
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+						WC_SiftScience_Options::THRESHOLD_GOOD,
+						'Good Score Threshold',
+						'Scores below this value are considered good and shown in green',
+						array(
+							'default'  => 30,
+							'min'      => 0,
+							'max'      => 100,
+							'step'     => 1,
+							'css'      => 'width:75px;',
+							'desc_tip' => true,
+						)
+					),
 
-		/**
-		 * Outputs the stats page in settings
-		 */
-		private function output_settings_stats() {
-			$GLOBALS['hide_save_button'] = true;
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+						WC_SiftScience_Options::THRESHOLD_BAD,
+						'Bad Score Threshold',
+						'Scores above this value are considered bad and shown in red',
+						array(
+							'default'  => 60,
+							'min'      => 0,
+							'max'      => 100,
+							'step'     => 1,
+							'css'      => 'width:75px;',
+							'desc_tip' => true,
+						)
+					),
 
-			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_STATS ) ) {
-				$this->stats->clear_stats();
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_STATS ) );
-				exit;
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+						WC_SiftScience_Options::NAME_PREFIX,
+						'User & Order Name Prefix',
+						'Prefix to give order and user names.',
+						array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+						WC_SiftScience_Options::AUTO_SEND_ENABLED,
+						'Automatically Send Data',
+						'Automatically send data to Sift when an order is created'
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+						WC_SiftScience_Options::MIN_ORDER_VALUE,
+						'Auto Send Minimum Value',
+						'Set to zero to send all orders.',
+						array(
+							'default'  => 0,
+							'min'      => 0,
+							'step'     => 1,
+							'css'      => 'width:75px;',
+							'desc_tip' => 'Orders less than this value will not be automatically sent to sift.',
+						)
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+						'sifsci_section_main'
+					),
+				);
+
+			} elseif ( 'reporting' === $sub_section ) {
+				return array(
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_TITLE_ELEMENT,
+						'siftsci_title_reporting',
+						'Sift Debug & Reporting Settings'
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
+						'anon_id',
+						'Anonymous ID',
+						$this->get_anon_id_content()
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+						WC_SiftScience_Options::SEND_STATS,
+						'Enable Reporting',
+						'Send anonymous statistics and error details.',
+						array( 'desc_tip' => $this->get_reporting_checkbox_description() )
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_SELECT_ELEMENT,
+						WC_SiftScience_Options::LOG_LEVEL_KEY,
+						'Log Level',
+						'How much logging information to generate',
+						array(
+							'options' =>
+								array(
+									2 => 'Errors',
+									1 => 'Errors & Warnings',
+									0 => 'Errors, Warnings & Info',
+								),
+						)
+					),
+
+					$this->html->create_element(
+						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+						'sifsci_section_reporting'
+					),
+				);
 			}
-
-			$stats = get_option( WC_SiftScience_Options::STATS, 'none' );
-			if ( 'none' === $stats ) {
-				echo '<p>No stats stored yet</p>';
-				return;
-			}
-
-			$url   = $this->bound_nonce_url( self::GET_VAR_CLEAR_STATS, '1' );
-			$stats = json_decode( $stats, true );
-			ksort( $stats );
-			$this->html->display_stats_tables( $stats, $url );
-		}
-
-		/**
-		 * Outputs the debug page in settings
-		 */
-		private function output_settings_debug() {
-			$log_file = dirname( __DIR__ ) . '/debug.log';
-			if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
-				// @codingStandardsIgnoreStart
-				$fh = fopen( $log_file, 'w' );
-				fclose( $fh );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_CLEAR_LOGS ) );
-				// @codingStandardsIgnoreEnd
-				exit;
-			}
-
-			$GLOBALS['hide_save_button'] = true;
-
-			if ( file_exists( $log_file ) ) {
-				// @codingStandardsIgnoreStart
-				$logs = file_get_contents( $log_file );
-				// @codingStandardsIgnoreEnd
-			}
-
-			if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
-				// SSL check logic.
-				// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
-				$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
-				$body        = wp_json_encode( json_decode( $response['body'] ), JSON_PRETTY_PRINT );
-				$tls_version = json_decode( $body )->tls_version;
-				$data        = "TLS Version: $tls_version\n\nFull Data:\n$body";
-
-				set_transient( 'wc-siftsci-ssl-log', $data );
-				wp_safe_redirect( $this->unbound_nonce_url( self::GET_VAR_TEST_SSL ) );
-				exit;
-			}
-
-			$ssl_data = get_transient( 'wc-siftsci-ssl-log' );
-			if ( false !== $ssl_data ) {
-				delete_transient( 'wc-siftsci-ssl-log' );
-			}
-
-			$ssl_url = $this->bound_nonce_url( self::GET_VAR_TEST_SSL, '1' );
-			$log_url = $this->bound_nonce_url( self::GET_VAR_CLEAR_LOGS, '1' );
-
-			$this->html->display_debugging_info( $ssl_data, $ssl_url, $log_url, ( empty( $logs ) ) ? 'None' : $logs );
 		}
 
 		/**
@@ -405,22 +379,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		public function save_settings() {
 			global $current_section;
-			switch ( $current_section ) {
-				case '':
-					WC_Admin_Settings::save_fields( $this->get_settings_main() );
-					$is_api_working = $this->check_api();
-					update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
-					if ( $is_api_working ) {
-						WC_Admin_Settings::add_message( 'API is correctly configured' );
-					} else {
-						WC_Admin_Settings::add_error( 'API settings are broken' );
-					}
-					break;
-				case 'reporting':
-					WC_Admin_Settings::save_fields( $this->get_settings_reporting() );
-					break;
-				default:
-					break;
+			WC_Admin_Settings::save_fields( $this->get_section_fields( $current_section ) );
+
+			if ( 'main' === $current_section ) {
+				$is_api_working = $this->check_api();
+				update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
+				if ( $is_api_working ) {
+					WC_Admin_Settings::add_message( 'API is correctly configured' );
+				} else {
+					WC_Admin_Settings::add_error( 'API settings are broken' );
+				}
 			}
 		}
 
