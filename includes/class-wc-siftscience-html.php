@@ -310,7 +310,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					width: 60%; 
 				}
 
-
 				pre.wrap {
 					white-space: pre-wrap;
 				}
