@@ -196,7 +196,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						exit();
 					}
 
-					WC_Admin_Settings::output_fields( $this->get_section_fields( $current_section ) );
+					WC_Admin_Settings::output_fields( $this->get_section_fields( 'reporting' ) );
 					break;
 
 				case 'stats':
@@ -221,7 +221,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					break;
 
 				default:
-					WC_Admin_Settings::output_fields( $this->get_section_fields( $current_section ) );
+					WC_Admin_Settings::output_fields( $this->get_section_fields( 'main' ) );
 					$this->html->display_batch_table();
 
 					self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
@@ -240,10 +240,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @return Array $wc_fields the dictionary in which All fields are added.
 		 */
 		private function get_section_fields( $sub_section ) {
-			$wc_fields = array(
 
-				'main'      => array(
-
+			if ( 'main' === $sub_section ) {
+				return array(
 					$this->html->create_element(
 						WC_SiftScience_Html::WC_TITLE_ELEMENT,
 						'siftsci_title_id',
@@ -327,10 +326,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
 						'sifsci_section_main'
 					),
-				),
+				);
 
-				'reporting' => array(
-
+			} elseif ( 'reporting' === $sub_section ) {
+				return array(
 					$this->html->create_element(
 						WC_SiftScience_Html::WC_TITLE_ELEMENT,
 						'siftsci_title_reporting',
@@ -371,10 +370,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
 						'sifsci_section_reporting'
 					),
-				),
-			);
-
-			return $wc_fields[ $sub_section ];
+				);
+			}
 		}
 
 		/**
