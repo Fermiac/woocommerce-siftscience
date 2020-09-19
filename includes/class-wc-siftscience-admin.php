@@ -100,7 +100,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Enqueues the a javascript file for inclusion at end of page
+		 * Enqueues the a javascript file for inclusion in page
 		 *
 		 * @param string $name Name of the script to enqueue.
 		 * @param string $file Filename of the js file.
@@ -113,7 +113,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Adds the settings tabs in Woo configs
+		 * Adds the settings tabs in Woo configs, hooks woocommerce_settings_tabs_array filter
 		 *
 		 * @param array $pages The current array of pages.
 		 *
@@ -125,7 +125,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * This function sets sub-tab titles in  woocomemearce sift settings tab.
+		 * This function sets sub-tab titles in  woocomemearce sift settings tab, hooks woocommerce_sections_siftsci filter.
 		 */
 		public function get_sections() {
 
@@ -140,7 +140,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Outputs the settings in the WooCommerce tab
+		 * Outputs the settings in the WooCommerce tab, hooks woocommerce_settings_siftsci action.
+		 *
+		 * @global String $current_section
 		 */
 		public function output_settings_fields() {
 			global $current_section;
@@ -166,8 +168,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					}
 
 					if ( '1' === $this->get_value( self::GET_VAR_TEST_SSL ) ) {
-						// SSL check logic.
-						// Note: I found how to do this here: https://tecadmin.net/test-tls-version-php/.
+						// Note: SSL check logic reference: https://tecadmin.net/test-tls-version-php/.
 						$response    = wp_remote_get( 'https://www.howsmyssl.com/a/check' );
 						$body        = wp_json_encode( json_decode( $response['body'] ), JSON_PRETTY_PRINT );
 						$tls_version = json_decode( $body )->tls_version;
@@ -233,11 +234,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * This function adding wc elements for the hovem sunsection.
+		 * This function adding wc elements for the intended subsection.
 		 *
 		 * @param String $sub_section the name of the subsection.
 		 *
-		 * @return Array $wc_fields the dictionary in which All fields are added.
+		 * @return Array [] the dictionary in which All fields are added.
 		 */
 		private function get_section_fields( $sub_section ) {
 
@@ -375,7 +376,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Saves the settings
+		 * Saves the settings, hooks woocommerce_settings_save_siftsci action.
+		 *
+		 * @global String $current_section
 		 */
 		public function save_settings() {
 			global $current_section;
@@ -393,7 +396,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * This function handles admin-notices action and decides to show update, improve notices
+		 * This function decides to show update or improve notices, hooks admin-notices action.
 		 */
 		public function settings_notice() {
 			// Check to display update notice.
@@ -429,7 +432,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * This function will validate GET var with its nonce
+		 * This function will validate GET var with its nonce.
 		 *
 		 * @param String $var_name the  get variable name.
 		 *
@@ -446,7 +449,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * This function attaches '_nonce' to the get variable name
+		 * This function attaches '_nonce' to the get variable name.
 		 *
 		 * @param String $get_var the GET array variable.
 		 *
@@ -457,7 +460,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Creates a variable URL with it's nonce respectivly
+		 * Creates a variable URL with it's nonce respectivly.
 		 *
 		 * @param String $get_var_name  the GET variable.
 		 * @param String $get_var_value the assigned value.
@@ -472,20 +475,21 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Retunning a URL dispatching the required GET var and the nonce related
+		 * Retunning a URL dispatching the required GET var and the nonce related.
 		 *
 		 * @param String $get_var_name the required GET variable.
 		 *
-		 * @return String the dispatched URL from the GET var and it's nonce.
+		 * @return String the dispatched URL from the GET var and the nonce related.
 		 */
 		private function unbound_nonce_url( $get_var_name ) {
 			return remove_query_arg( array( $get_var_name, $this->get_nonce_name( $get_var_name ) ) );
 		}
 
 		/**
-		 * Gets the content that goes in the Anonymous ID row in reporting
+		 * Gets the desc that goes in the Anonymous ID custom element in reporting.
 		 *
 		 * @return string
+		 * @see get_section_fields( 'reporting' )
 		 */
 		private function get_anon_id_content() {
 			$anon_id  = $this->options->get_guid();
@@ -494,9 +498,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Gets the content that goes in the description under the reporting
+		 * Gets the desc_tip that goes under the checkbox.
 		 *
 		 * @return string
+		 * @see get_section_fields( 'reporting' )
 		 */
 		private function get_reporting_checkbox_description() {
 			$url     = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
