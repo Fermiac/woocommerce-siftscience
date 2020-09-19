@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Transaction' ) ) :
 		/**
 		 * Create transaction object for sift
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/transaction
 		 * @param string $order_id The order id.
 		 *
 		 * @return array

@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 		/**
 		 * Add item to cart event data
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		 * @param string $cart_item_key ID for cart item.
 		 *
 		 * @return mixed|void
@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 		/**
 		 * Remove from cart event data
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
 		 * @param string $cart_item_key Cart item key.
 		 *
 		 * @return array

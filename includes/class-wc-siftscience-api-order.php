@@ -72,6 +72,8 @@ if ( ! class_exists( 'WC_SiftScience_Api_Order' ) ) :
 		/**
 		 * Create order event
 		 *
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/create-order
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/update-order
 		 * @param string $order_id Order id.
 		 * @param string $type Event type.
 		 *
@@ -116,7 +118,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Order' ) ) :
 		/**
 		 * Create formatted object for order status
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/order-status
 		 * @param string $order_id The order ID.
 		 *
 		 * @return array
