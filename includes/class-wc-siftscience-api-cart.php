@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 		/**
 		 * Add item to cart event data
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		 * @param string $cart_item_key ID for cart item.
 		 *
 		 * @return mixed|void
@@ -64,7 +64,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user_id );
+				$data['$user_id'] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_add_to_cart', $data );
@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 		/**
 		 * Remove from cart event data
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
 		 * @param string $cart_item_key Cart item key.
 		 *
 		 * @return array
@@ -97,7 +97,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user_id );
+				$data['$user_id'] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_remove_from_cart', $data );

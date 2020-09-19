@@ -51,6 +51,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Items' ) ) :
 		/**
 		 * Create item event.
 		 *
+		 * @link https://sift.com/developers/docs/curl/events-api/complex-field-types/item
 		 * @param WC_Order_Item $wc_item The order item.
 		 * @param WC_Order      $order The order of the order item.
 		 *

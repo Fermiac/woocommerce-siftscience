@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 		/**
 		 * Successful login event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/login
 		 * @param WP_User $user The user object.
 		 *
 		 * @return array
@@ -46,7 +46,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 		public function login_success( WP_User $user ) {
 			$data = array(
 				'$type'         => '$login',
-				'$user_id'      => $this->options->get_user_id_from_user_id( $user->ID ),
+				'$user_id'      => $this->options->get_sift_user_id( $user->ID ),
 				'$session_id'   => $this->options->get_session_id(),
 				'$login_status' => '$success',
 			);
@@ -57,7 +57,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 		/**
 		 * Failed login event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/login
 		 * @param string $username The attempted username.
 		 *
 		 * @return array
@@ -71,7 +71,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 
 			$user = get_user_by( 'login', $username );
 			if ( false !== $user ) {
-				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user->ID );
+				$data['$user_id'] = $this->options->get_sift_user_id( $user->ID );
 			}
 
 			return apply_filters( 'wc_siftscience_login_failure', $data );
@@ -80,7 +80,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 		/**
 		 * The logout event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/logout
 		 * @param string $user_id Logged out user id.
 		 *
 		 * @return array
@@ -90,7 +90,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 			if ( null !== $user_id && 0 !== $user_id ) {
 				$data = array(
 					'$type'    => '$logout',
-					'$user_id' => $this->options->get_user_id_from_user_id( $user_id ),
+					'$user_id' => $this->options->get_sift_user_id( $user_id ),
 				);
 			}
 

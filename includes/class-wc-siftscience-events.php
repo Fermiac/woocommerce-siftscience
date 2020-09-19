@@ -195,7 +195,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$user_id = $this->options->get_current_user_id();
 			if ( null !== $user_id ) {
-				$data['user_id'] = $this->options->get_user_id_from_user_id( $user_id );
+				$data['user_id'] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			$name = 'wc-siftsci';
@@ -218,21 +218,20 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds the login success event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/login
 		 * @param string $username Name of the user.
 		 * @param object $user User object.
 		 */
 		public function login_success( $username, $user ) {
 			$data           = $this->login->login_success( $user );
 			$this->events[] = $data;
-
 			$this->link_session_to_user( $user->ID );
 		}
 
 		/**
 		 * Adds the login failure event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/login
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/login
 		 * @param object $username User object.
 		 */
 		public function login_failure( $username ) {
@@ -242,7 +241,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds logout event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/logout
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/logout
 		 */
 		public function logout() {
 			$data           = $this->login->logout( $this->saved_user_id );
@@ -252,21 +251,20 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds account creation event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/create-account
 		 * @param string $user_id User ID.
 		 */
 		public function create_account( $user_id ) {
 			$user           = get_userdata( $user_id );
 			$data           = $this->account->create_account( $user_id, $user );
 			$this->events[] = $data;
-
 			$this->link_session_to_user( $user->ID );
 		}
 
 		/**
 		 * Adds event for an account getting updated
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-account
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/update-account
 		 * @param string $user_id User's ID.
 		 * @param array  $old_user_data Old data before change.
 		 */
@@ -290,7 +288,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds event for order update
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-order
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/update-order
 		 * @param string $order_id Order ID.
 		 */
 		public function update_order( $order_id ) {
@@ -311,7 +309,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds the event for the order status update
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/order-status
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/order-status
 		 * @param string $order_id Order ID.
 		 */
 		public function update_order_status( $order_id ) {
@@ -362,7 +360,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Sends transaction data to sift
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/transaction
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/transaction
 		 * @param string $order_id The Order ID.
 		 */
 		public function send_transaction( $order_id ) {
@@ -373,7 +371,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds event for item added to cart
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/add-item-to-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/add-item-to-cart
 		 * @param string $cart_item_key The Cart Key.
 		 */
 		public function add_to_cart( $cart_item_key ) {
@@ -384,7 +382,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds event for item removed from cart
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/remove-item-from-cart
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/remove-item-from-cart
 		 * @param string $cart_item_key The key of the cart item.
 		 */
 		public function remove_from_cart( $cart_item_key ) {
@@ -395,7 +393,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * Adds the event for when user is link to session id
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/link-session-to-user
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/link-session-to-user
 		 * @param string $user_id ID of the user.
 		 */
 		public function link_session_to_user( $user_id ) {
