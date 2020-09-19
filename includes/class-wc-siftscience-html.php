@@ -283,6 +283,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
 			?>
 			<h2>
+				<img src="" alt="Copy to clipboard" />
 				SSL Check
 				<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Test SSL</a>
 			</h2>
@@ -299,6 +300,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			endif;
 			?>
 			<h2>
+				<img src="" alt="Copy to clipboard" />
 				Logs
 				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 			</h2>
