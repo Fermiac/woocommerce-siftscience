@@ -69,6 +69,11 @@ if ( ! class_exists( 'WC_SiftScience_Api_Login' ) ) :
 				'$session_id'   => $this->options->get_session_id(),
 			);
 
+			$user = get_user_by( 'login', $username );
+			if ( false !== $user ) {
+				$data['$user_id'] = $this->options->get_sift_user_id( $user->ID );
+			}
+
 			return apply_filters( 'wc_siftscience_login_failure', $data );
 		}
 
