@@ -64,7 +64,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user_id );
+				$data['$user_id'] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_add_to_cart', $data );
@@ -97,7 +97,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Cart' ) ) :
 
 			$user_id = get_current_user_id();
 			if ( 0 !== $user_id ) {
-				$data['$user_id'] = $this->options->get_user_id_from_user_id( $user_id );
+				$data['$user_id'] = $this->options->get_sift_user_id( $user_id );
 			}
 
 			return apply_filters( 'wc_siftscience_remove_from_cart', $data );

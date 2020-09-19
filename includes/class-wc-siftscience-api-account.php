@@ -38,7 +38,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 		/**
 		 * Create account event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/create-account
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/create-account
 		 * @param string  $user_id ID of the user.
 		 * @param WP_User $user The user object.
 		 *
@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 		public function create_account( $user_id, WP_User $user ) {
 			$data = array(
 				'$type'       => '$create_account',
-				'$user_id'    => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'    => $this->options->get_sift_user_id( $user_id ),
 				'$session_id' => $this->options->get_session_id(),
 				'$user_email' => $user->user_email,
 				'$name'       => $user->first_name . ' ' . $user->last_name,
@@ -59,7 +59,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 		/**
 		 * Format update account event
 		 *
-		 * @link https://sift.com/developers/docs/v204/curl/events-api/reserved-events/update-account
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/update-account
 		 * @param string $user_id User's ID.
 		 * @param array  $old_user_data Old user data before change.
 		 *
@@ -69,7 +69,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 			$user = get_userdata( $user_id );
 			$data = array(
 				'$type'             => '$update_account',
-				'$user_id'          => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'          => $this->options->get_sift_user_id( $user_id ),
 				'$changed_password' => $this->is_password_changed( $user_id, $old_user_data ),
 				'$user_email'       => $user->user_email,
 				'$name'             => $user->first_name . ' ' . $user->last_name,
@@ -81,6 +81,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 		/**
 		 * Add session data to user data.
 		 *
+		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/link-session-to-user
 		 * @param string $user_id User's id.
 		 *
 		 * @return array
@@ -88,7 +89,7 @@ if ( ! class_exists( 'WC_SiftScience_Api_Account' ) ) :
 		public function link_session_to_user( $user_id ) {
 			$data = array(
 				'$type'       => '$link_session_to_user',
-				'$user_id'    => $this->options->get_user_id_from_user_id( $user_id ),
+				'$user_id'    => $this->options->get_sift_user_id( $user_id ),
 				'$session_id' => $this->options->get_session_id(),
 			);
 
