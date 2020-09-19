@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 		 * @param WC_SiftScience_Options $options Options service.
 		 * @param WC_SiftScience_Logger  $logger Logger service.
 		 */
-		public function __construct(WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
 			$this->options = $options;
 			$this->logger  = $logger;
 		}
@@ -77,7 +77,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 		 * Sends a good/bad label to Sift
 		 *
 		 * @param string $user_id ID of the user to label.
-		 * @param bool $is_bad Is bad.
+		 * @param bool   $is_bad Is bad.
 		 *
 		 * @return array|WP_Error
 		 */
@@ -131,7 +131,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 		 * Common function for sending request to sift
 		 *
 		 * @param string $url URL to use.
-		 * @param array $args Arguments of the request.
+		 * @param array  $args Arguments of the request.
 		 *
 		 * @return array|WP_Error
 		 */
