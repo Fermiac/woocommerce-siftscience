@@ -281,10 +281,11 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $logs     the logs retrieved gtom debug DOT log file.
 		 */
 		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
+			$img_url = plugins_url( 'images/clipboard.png', dirname( __FILE__ ) );
 			?>
 			<h2>
-				<img src="" alt="Copy to clipboard" />
-				SSL Check
+				<img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" />
+				<span>SSL Check</span>
 				<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Test SSL</a>
 			</h2>
 			<div>
@@ -300,8 +301,8 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			endif;
 			?>
 			<h2>
-				<img src="" alt="Copy to clipboard" />
-				Logs
+				<img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" />
+				<span>Logs</span>
 				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 			</h2>
 			<div>
@@ -315,6 +316,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				pre.wrap {
 					white-space: pre-wrap;
 				}
+
 				pre{
 					height:300px; 
 					background-color: rgba(255,255,255,.5);
@@ -324,8 +326,28 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				}
 
 				h2{
-					border-bottom: 1px solid #ccd0d4;
+					border-bottom: 1px double #ccd0d4;
 					padding-bottom: 10px;
+				}
+
+				h2 span{
+					padding-left: 3px;
+					border-left: 1px solid #ccd0d4;
+				}
+
+				h2 img {
+					cursor: pointer;
+					opacity: .3;
+					margin-top: 5px;
+				}
+
+				h2 a{
+					float: right;
+					margin-right: 81%;
+				}
+
+				h2 *{
+					vertical-align: baseline;
 				}
 			</style>
 			<?php
