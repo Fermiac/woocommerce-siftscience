@@ -284,7 +284,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			$img_url = plugins_url( 'images/clipboard.png', dirname( __FILE__ ) );
 			?>
 			<h2>
-				<img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" />
 				<span>SSL Check</span>
 				<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Test SSL</a>
 			</h2>
@@ -295,18 +294,22 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 			if ( false !== $ssl_data ) :
 				?>
 				<div>
-					<pre><?php echo esc_html( $ssl_data ); ?></pre>
+					<pre><!--
+					--><div><img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" /></div><!--
+					--><?php echo esc_html( $ssl_data ); ?></pre>
 				</div>
 				<?php
 			endif;
 			?>
 			<h2>
-				<img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" />
 				<span>Logs</span>
 				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 			</h2>
 			<div>
-				<pre class="wrap"><?php echo esc_html( $logs ); ?></pre>
+				<pre class="wrap"><!--
+					--><div><img src="<?php echo esc_url( $img_url ); ?>" title="Copy to clipboard" alt="" /></div><!--
+					--><?php echo esc_html( $logs ); ?>
+				</pre>
 			</div>
 			<style type="text/css">
 				h2, pre{
@@ -322,7 +325,15 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					background-color: rgba(255,255,255,.5);
 					overflow: auto;
 					border: 1px solid #ccd0d4;
-					padding-left: 3px !important; 
+					padding-left: 3px !important;
+				}
+				pre div{
+					direction: rtl;
+					margin:3px;
+				}
+				pre img {
+					cursor: pointer;
+					opacity: .3;
 				}
 
 				h2{
@@ -331,20 +342,10 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				}
 
 				h2 span{
-					padding-left: 3px;
-					border-left: 1px solid #ccd0d4;
+					width: 80px;
+					display: inline-block;
 				}
 
-				h2 img {
-					cursor: pointer;
-					opacity: .3;
-					margin-top: 5px;
-				}
-
-				h2 a{
-					float: right;
-					margin-right: 81%;
-				}
 
 				h2 *{
 					vertical-align: baseline;
