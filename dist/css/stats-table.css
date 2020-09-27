@@ -1,0 +1,21 @@
+div.stats table:not(:last-child){
+    border-bottom: 1px solid #ccd0d4;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+}
+
+div.stats table{
+    width: 300px;
+}
+
+div.stats tbody tr td:first-child{
+    width: 50px;
+}
+
+div.stats th{
+    text-align:left;
+}
+
+div.stats th span{
+    color: #00A0D2;
+}
