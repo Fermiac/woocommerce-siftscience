@@ -210,6 +210,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $url   this url is used to clear stats.
 		 */
 		public function display_stats_tables( $stats, $url ) {
+			self::enqueue_style( 'stats-table' );
 			?>
 			<h2>
 				Statistics
@@ -250,25 +251,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					endforeach; // Outer.
 			?>
 			</div>
-			<style type="text/css">
-				div.stats table:not(:last-child){
-					border-bottom: 1px solid #ccd0d4;
-					padding-bottom: 3px;
-					margin-bottom: 5px;
-				}
-				div.stats table{
-					width: 300px;
-				}
-				div.stats tbody tr td:first-child{
-					width: 50px;
-				}
-				div.stats th{
-					text-align:left;
-				}
-				div.stats th span{
-					color: #00A0D2;
-				}
-			</style>
 			<?php
 		}
 
@@ -351,7 +333,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
 		/**
 		 *
-		 * Thos function echos sift control for backfilling orders the div id must be batch-upload.
+		 * Those function echos sift control for backfilling orders the div id must be batch-upload.
 		 */
 		public function display_batch_table() {
 			?>
@@ -366,6 +348,16 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				</tbody>
 			</table>
 			<?php
+		}
+
+		/**
+		 * Enqueues a CSS from from the dist/css directory
+		 *
+		 * @param string $css_name The name of the CSS file (without the .css ending).
+		 */
+		private static function enqueue_style( $css_name ) {
+			$path = plugin_dir_url( __DIR__ ) . "dist/css/$css_name.css";
+			wp_enqueue_style( "wc-sift-$css_name", $path, array(), time() );
 		}
 	}
 endif;
