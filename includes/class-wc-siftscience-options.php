@@ -184,17 +184,6 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		/**
-		 * Gets the path to the React App
-		 *
-		 * @return string
-		 */
-		public function get_react_app_path() {
-			return defined( 'WP_SIFTSCI_DEV' )
-				? WP_SIFTSCI_DEV
-				: plugin_dir_url( __DIR__ ) . 'dist/js/app.js';
-		}
-
-		/**
 		 * Gets (and sets if not already set) the stats guid for the store
 		 *
 		 * @return string
