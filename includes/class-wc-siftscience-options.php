@@ -191,7 +191,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public function get_react_app_path() {
 			return defined( 'WP_SIFTSCI_DEV' )
 				? WP_SIFTSCI_DEV
-				: plugins_url( 'dist/app.js', dirname( __FILE__ ) );
+				: plugin_dir_url( __DIR__ ) . 'dist/js/app.js';
 		}
 
 		/**
