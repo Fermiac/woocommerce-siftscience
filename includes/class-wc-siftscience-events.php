@@ -199,7 +199,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			$name = 'wc-siftsci';
-			$path = plugin_dir_url( __DIR__ ) . 'dist/wc-siftsci.js';
+			$path = plugin_dir_url( __DIR__ ) . 'dist/js/wc-siftsci.js';
 			$v    = $this->options->get_version();
 			$key  = '_wc_siftsci_js_input_data';
 			$data = apply_filters( 'wc_siftscience_js_script_data', $data );

@@ -108,7 +108,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		private static function enqueue_script( $name, $file, $deps ) {
 			$version = time(); // TODO: Make this switchable for dev purposes.
-			$path    = plugin_dir_url( __DIR__ ) . "dist/$file.js";
+			$path    = plugin_dir_url( __DIR__ ) . "dist/js/$file.js";
 			wp_enqueue_script( $name, $path, $deps, $version, true );
 		}
 
