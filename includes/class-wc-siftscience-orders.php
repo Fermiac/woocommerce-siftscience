@@ -61,7 +61,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		 */
 		private function add_react_app() {
 			$data = array(
-				'imgPath'       => plugins_url( 'images/', dirname( __FILE__ ) ),
+				'imgPath'       => plugin_dir_url( __DIR__ ) . 'dist/images/',
 				'api'           => admin_url( 'admin-ajax.php' ),
 				'thresholdGood' => $this->options->get_threshold_good(),
 				'thresholdBad'  => $this->options->get_threshold_bad(),

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Logger' ) ) :
 
-	require_once dirname( __FILE__ ) . '/class-wc-siftscience-options.php';
+	require_once __DIR__ . '/class-wc-siftscience-options.php';
 
 	/**
 	 * Class WC_SiftScience_Logger

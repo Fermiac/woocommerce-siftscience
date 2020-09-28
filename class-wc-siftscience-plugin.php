@@ -28,8 +28,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		session_start();
 	}
 
-	require_once dirname( __FILE__ ) . '/class-wc-siftscience-dependencies.php';
-	WC_SiftScience_Dependencies::require_all_php_files( dirname( __FILE__ ) . '/includes' );
+	require_once __DIR__ . '/class-wc-siftscience-dependencies.php';
+	WC_SiftScience_Dependencies::require_all_php_files( __DIR__ . '/includes' );
 
 	/**
 	 * Class WC_SiftScience_Plugin Main class for the Sift plugin

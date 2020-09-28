@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Stripe' ) ) :
 
-	require_once dirname( dirname( __FILE__ ) ) . '/class-wc-siftscience-events.php';
-	require_once dirname( dirname( __FILE__ ) ) . '/class-wc-siftscience-logger.php';
-	require_once dirname( dirname( __FILE__ ) ) . '/class-wc-siftscience-stats.php';
+	require_once dirname( __DIR__ ) . '/class-wc-siftscience-events.php';
+	require_once dirname( __DIR__ ) . '/class-wc-siftscience-logger.php';
+	require_once dirname( __DIR__ ) . '/class-wc-siftscience-stats.php';
 
 	/**
 	 * Class WC_SiftScience_Stripe Stripe payment type management
