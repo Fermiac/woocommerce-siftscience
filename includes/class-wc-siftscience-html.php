@@ -263,52 +263,56 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $logs     the logs retrieved gtom debug DOT log file.
 		 */
 		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
+			self::enqueue_style( 'debug-info' );
+			$can_copy_logs = false;
+			$can_copy_ssl  = false !== $ssl_data;
+			$copy_img_src  = '';
+			if ( empty( $logs ) ) {
+				$logs = 'None';
+			} else {
+				$can_copy_logs = true;
+			}
+			if ( true === $can_copy_logs || true === $can_copy_ssl ) {
+				$copy_img_src = plugin_dir_url( __DIR__ ) . 'dist/images/clipboard.png';
+			}
 			?>
-			<h2>
-				SSL Check
-				<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Test SSL</a>
-			</h2>
-			<div>
-				<p>Starting in September 2020, Sift.com will require TLS1.2. Click "Test SSL" to test your store.</p>
-			</div>
-			<?php
-			if ( false !== $ssl_data ) :
-				?>
-				<div>
-					<pre><?php echo esc_html( $ssl_data ); ?></pre>
-				</div>
+			<h2 class="debug-header">
 				<?php
-			endif;
-			?>
-			<h2>
-				Logs
-				<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
+				if ( true === $can_copy_logs ) :
+					?>
+					<img title="Copy to clipboard" alt="" src="<?php echo esc_url( $copy_img_src ); ?>" />
+					<span class="debug-header-text">Logs</span>
+					<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
+					<?php
+				else :
+					?>
+					Logs
+					<?php
+				endif;
+				?>
 			</h2>
-			<div>
-				<pre class="wrap"><?php echo esc_html( $logs ); ?></pre>
-			</div>
-			<style type="text/css">
-				h2, pre{
-					width: 60%; 
-				}
-
-				pre.wrap {
-					white-space: pre-wrap;
-				}
-				pre{
-					height:300px; 
-					background-color: rgba(255,255,255,.5);
-					overflow: auto;
-					border: 1px solid #ccd0d4;
-					padding-left: 3px !important; 
-				}
-
-				h2{
-					border-bottom: 1px solid #ccd0d4;
-					padding-bottom: 10px;
-				}
-			</style>
-			<?php
+			<textarea class="debug-info" readonly="readonly"><?php echo esc_textarea( $logs ); ?></textarea>
+			<h2 class="debug-header">
+				<?php
+				if ( true === $can_copy_ssl ) :
+					?>
+					<img title="Copy to clipboard" alt="" src="<?php echo esc_url( $copy_img_src ); ?>" />
+					<span class="debug-header-text">SSL</span>
+				</h2>
+				<textarea class="debug-info" readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
+					<?php
+				else :
+					?>
+					SSL
+					<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Check SSL</a>
+				</h2>
+				<div>
+					<p>
+						Starting in <em>September 2020</em>, Sift.com will require <strong>TLS1.2</strong>. Click "Check SSL" to test your store.
+					</p>
+				</div>
+					<?php
+			endif;
 		}
 
 		/**
@@ -357,7 +361,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		private static function enqueue_style( $css_name ) {
 			$path = plugin_dir_url( __DIR__ ) . "dist/css/$css_name.css";
-			wp_enqueue_style( "wc-sift-$css_name", $path, array(), time() );
+			wp_enqueue_style( 'wc-sift-' . $css_name, $path, array(), time() );
 		}
 	}
 endif;
