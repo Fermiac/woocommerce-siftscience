@@ -210,7 +210,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $url   this url is used to clear stats.
 		 */
 		public function display_stats_tables( $stats, $url ) {
-			self::enqueue_style( 'stats-table' );
+			$this->enqueue_style( 'stats-table' );
 			?>
 			<h2>
 				Statistics
@@ -263,24 +263,30 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $logs     the logs retrieved gtom debug DOT log file.
 		 */
 		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
-			self::enqueue_style( 'debug-info' );
-			$can_copy_logs = false;
-			$can_copy_ssl  = false !== $ssl_data;
-			$copy_img_src  = '';
+			$this->enqueue_style( 'debug-info' );
+			$can_copy_logs     = false;
+			$can_copy_ssl      = false !== $ssl_data;
+			$clipboard_img_src = '';
 			if ( empty( $logs ) ) {
 				$logs = 'None';
 			} else {
 				$can_copy_logs = true;
 			}
 			if ( true === $can_copy_logs || true === $can_copy_ssl ) {
-				$copy_img_src = plugin_dir_url( __DIR__ ) . 'dist/images/clipboard.png';
+				$clipboard_img_src = plugin_dir_url( __DIR__ ) . 'dist/images/clipboard.png';
+				$this->enqueue_script( 'wc-siftsci-copy', 'copy' );
 			}
 			?>
 			<h2 class="debug-header">
 				<?php
 				if ( true === $can_copy_logs ) :
 					?>
-					<img title="Copy to clipboard" alt="" src="<?php echo esc_url( $copy_img_src ); ?>" />
+					<img 
+						alt="" 
+						onclick="copyInfo('debugLog')" 
+						title="Copy to clipboard" 
+						src="<?php echo esc_url( $clipboard_img_src ); ?>" 
+					/>
 					<span class="debug-header-text">Logs</span>
 					<a class="page-title-action" href="<?php echo esc_url( $log_url ); ?>">Clear Logs</a>
 					<?php
@@ -291,15 +297,20 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				endif;
 				?>
 			</h2>
-			<textarea class="debug-info" readonly="readonly"><?php echo esc_textarea( $logs ); ?></textarea>
+			<textarea id="debugLog" class="debug-info" readonly="readonly"><?php echo esc_textarea( $logs ); ?></textarea>
 			<h2 class="debug-header">
 				<?php
 				if ( true === $can_copy_ssl ) :
 					?>
-					<img title="Copy to clipboard" alt="" src="<?php echo esc_url( $copy_img_src ); ?>" />
+					<img 
+						alt="" 
+						onclick="copyInfo('debugSSL')" 
+						title="Copy to clipboard" 
+						src="<?php echo esc_url( $clipboard_img_src ); ?>" 
+					/>
 					<span class="debug-header-text">SSL</span>
 				</h2>
-				<textarea class="debug-info" readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
+				<textarea id="debugSSL" class="debug-info" readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
 					<?php
 				else :
 					?>
@@ -357,11 +368,24 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		/**
 		 * Enqueues a CSS from from the dist/css directory
 		 *
-		 * @param string $css_name The name of the CSS file (without the .css ending).
+		 * @param string $css_name The name of the CSS file without extension.
 		 */
-		private static function enqueue_style( $css_name ) {
-			$path = plugin_dir_url( __DIR__ ) . "dist/css/$css_name.css";
-			wp_enqueue_style( 'wc-sift-' . $css_name, $path, array(), time() );
+		public function enqueue_style( $css_name ) {
+			$src = plugin_dir_url( __DIR__ ) . "dist/css/$css_name.css";
+			wp_enqueue_style( 'wc-sift-' . $css_name, $src, array(), time() );
+		}
+
+		/**
+		 * Enqueues the a javascript file for inclusion in page
+		 *
+		 * @param string $name Name of the script to enqueue.
+		 * @param string $file_name the javascript Filename without extension.
+		 * @param array  $deps Array of dependencies.
+		 */
+		public function enqueue_script( $name, $file_name, $deps = array() ) {
+			$version = time(); // TODO: Make this switchable for dev purposes.
+			$src     = plugin_dir_url( __DIR__ ) . "dist/js/$file_name.js";
+			wp_enqueue_script( $name, $src, $deps, $version, true );
 		}
 	}
 endif;
