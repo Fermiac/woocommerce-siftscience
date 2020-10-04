@@ -100,19 +100,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Enqueues the a javascript file for inclusion in page
-		 *
-		 * @param string $name Name of the script to enqueue.
-		 * @param string $file Filename of the js file.
-		 * @param array  $deps Array of dependencies.
-		 */
-		private static function enqueue_script( $name, $file, $deps ) {
-			$version = time(); // TODO: Make this switchable for dev purposes.
-			$path    = plugin_dir_url( __DIR__ ) . "dist/js/$file.js";
-			wp_enqueue_script( $name, $path, $deps, $version, true );
-		}
-
-		/**
 		 * Adds the settings tabs in Woo configs, hooks woocommerce_settings_tabs_array filter
 		 *
 		 * @param array $pages The current array of pages.
@@ -225,9 +212,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					WC_Admin_Settings::output_fields( $this->get_section_fields( 'main' ) );
 					$this->html->display_batch_table();
 
-					self::enqueue_script( 'wc-siftsci-vuejs', 'vue-dev', array() );
-					self::enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
-					self::enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
+					$this->html->enqueue_script( 'wc-siftsci-vuejs', 'vue-dev');
+					$this->html->enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
+					$this->html->enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
 					wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
 					break;
 			}
