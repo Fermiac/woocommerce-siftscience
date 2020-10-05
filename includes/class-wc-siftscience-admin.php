@@ -64,27 +64,36 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @var WC_SiftScience_Html
 		 */
 		private $html;
+		/**
+		 * WC element creator
+		 *
+		 * @var WC_SiftScience_Element
+		 */
+		private $wc_element;
 
 		/**
 		 * WC_SiftScience_Admin constructor.
 		 *
-		 * @param WC_SiftScience_Options $options Options service.
-		 * @param WC_SiftScience_Comm    $comm Communication service.
-		 * @param WC_SiftScience_Html    $html HTML service.
-		 * @param WC_SiftScience_Logger  $logger Logger service.
-		 * @param WC_SiftScience_Stats   $stats Stats service.
+		 * @param WC_SiftScience_Options $options    Options service.
+		 * @param WC_SiftScience_Comm    $comm       Communication service.
+		 * @param WC_SiftScience_Html    $html       HTML service.
+		 * @param WC_SiftScience_Logger  $logger     Logger service.
+		 * @param WC_SiftScience_Stats   $stats      Stats service.
+		 * @param WC_SiftScience_Element $wc_element WC element.
 		 */
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Html $html,
 				WC_SiftScience_Logger $logger,
-				WC_SiftScience_Stats $stats ) {
-			$this->options = $options;
-			$this->comm    = $comm;
-			$this->html    = $html;
-			$this->logger  = $logger;
-			$this->stats   = $stats;
+				WC_SiftScience_Stats $stats,
+				WC_SiftScience_Element $wc_element ) {
+			$this->options    = $options;
+			$this->comm       = $comm;
+			$this->html       = $html;
+			$this->logger     = $logger;
+			$this->stats      = $stats;
+			$this->wc_element = $wc_element;
 		}
 
 		/**
@@ -210,7 +219,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				default:
 					WC_Admin_Settings::output_fields( $this->get_section_fields( 'main' ) );
-					$this->html->display_batch_table();
+					$this->wc_element->add_batch_table();
 
 					$this->html->enqueue_script( 'wc-siftsci-vuejs', 'vue-dev' );
 					$this->html->enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
@@ -231,28 +240,28 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			if ( 'main' === $sub_section ) {
 				return array(
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::TITLE,
 						'siftsci_title_id',
 						'Sift Settings'
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::TEXT,
 						WC_SiftScience_Options::API_KEY,
 						'Rest API Key',
 						'The API key for production'
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::TEXT,
 						WC_SiftScience_Options::JS_KEY,
 						'Javascript Snippet Key',
 						'Javascript snippet key for production'
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::NUMBER,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
 						'Good Score Threshold',
 						'Scores below this value are considered good and shown in green',
@@ -266,8 +275,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						)
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::NUMBER,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Threshold',
 						'Scores above this value are considered bad and shown in red',
@@ -281,23 +290,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						)
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_TEXT_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::TEXT,
 						WC_SiftScience_Options::NAME_PREFIX,
 						'User & Order Name Prefix',
 						'Prefix to give order and user names.',
 						array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::CHECKBOX,
 						WC_SiftScience_Options::AUTO_SEND_ENABLED,
 						'Automatically Send Data',
 						'Automatically send data to Sift when an order is created'
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_NUMBER_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::NUMBER,
 						WC_SiftScience_Options::MIN_ORDER_VALUE,
 						'Auto Send Minimum Value',
 						'Set to zero to send all orders.',
@@ -310,37 +319,37 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						)
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::SECTIONEND,
 						'sifsci_section_main'
 					),
 				);
 
 			} elseif ( 'reporting' === $sub_section ) {
 				return array(
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_TITLE_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::TITLE,
 						'siftsci_title_reporting',
 						'Sift Debug & Reporting Settings'
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_CUSTOM_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
 						'anon_id',
 						'Anonymous ID',
 						$this->get_anon_id_content()
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_CHECKBOX_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::CHECKBOX,
 						WC_SiftScience_Options::SEND_STATS,
 						'Enable Reporting',
 						'Send anonymous statistics and error details.',
 						array( 'desc_tip' => $this->get_reporting_checkbox_description() )
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_SELECT_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::SELECT,
 						WC_SiftScience_Options::LOG_LEVEL_KEY,
 						'Log Level',
 						'How much logging information to generate',
@@ -354,8 +363,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						)
 					),
 
-					$this->html->create_element(
-						WC_SiftScience_Html::WC_SECTIONEND_ELEMENT,
+					$this->wc_element->create(
+						WC_SiftScience_Element::SECTIONEND,
 						'sifsci_section_reporting'
 					),
 				);
