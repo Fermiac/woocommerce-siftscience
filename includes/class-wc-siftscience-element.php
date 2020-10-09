@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for creating wc elements according to WoocCmmearce library.
+ * Class for creating wc elements according to WooCommerce library.
  *
  * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
 	/**
-	 * Class for adding WoocCmmearce elements.
+	 * Class for adding WooCommerce elements.
 	 */
 	class WC_SiftScience_Element {
 		/**
@@ -52,7 +52,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * desc_tip Mixed [string]
 		 *     field type of checkbox; the desc_tip text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * desc_tip is added in element options [X] sanitized to fasle.
+		 * desc_tip is added in element options [X] sanitized to False.
 		 *
 		 * @param string $type            Element type name.
 		 * @param string $id              HTMLElement ID.
