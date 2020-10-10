@@ -1,6 +1,6 @@
 <?php
 /**
- * This class henarates html to display subsections stated in the admin file.
+ * This class generates html for subsections as stated in the admin file.
  *
  * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce

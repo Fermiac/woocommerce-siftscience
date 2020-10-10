@@ -1,6 +1,6 @@
 <?php
 /**
- * This class creates ec element according to woocommearce library soecs.
+ * Class for creating wc elements according to WooCommerce library.
  *
  * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce
@@ -14,9 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
 	/**
-	 * Helper class for generating html
-	 *
-	 * Class WC_SiftScience_Element
+	 * Class for adding WooCommerce elements.
 	 */
 	class WC_SiftScience_Element {
 		/**
@@ -35,7 +33,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		public const CUSTOM     = 'custom';
 
 		/**
-		 * WC_SiftScience_Html constructor.
+		 * WC_SiftScience_Element constructor.
 		 *
 		 * @param WC_SiftScience_Logger $logger Logger service.
 		 */
@@ -54,10 +52,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * desc_tip Mixed [string]
 		 *     field type of checkbox; the desc_tip text is going underneath control
 		 *     field type of select, number or text; a question mark pop-up appears before control with desc_tip text
-		 * desc_tip is added in element options [X] sanitized.
+		 * desc_tip is added in element options [X] sanitized to False.
 		 *
 		 * @param string $type            Element type name.
-		 * @param string $id              HtmlElement ID.
+		 * @param string $id              HTMLElement ID.
 		 * @param string $label           Element label.
 		 * @param string $desc            Description text.
 		 * @param array  $element_options Element special options.
@@ -67,7 +65,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 */
 		public function create( $type, $id, $label = '', $desc = '', $element_options = array() ) {
 
-			// $element_options must have level 2 options array forb the select element.
+			// $element_options must have level 2 array['options'] for the select element.
 			if ( self::SELECT === $type ) {
 				if ( ! isset( $element_options['options'] ) || empty( $element_options['options'] ) ) {
 					$this->logger->log_error( 'Drop down ' . $id . ' cannot be empty!' );
@@ -99,10 +97,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 							$element_options['desc_tip'] = ( is_string( $desc_tip ) && ! empty( $desc_tip ) ) ? $desc_tip : false;
 						}
 					}
-					// element_options exists so there is a description.
+					// since element_options exists so there must be a description.
 				case 4:
 					$desc = ( empty( $desc ) ) ? '[Empty description]' : $desc;
-					// description exists so there is a label.
+					// since description exists so there must be a label.
 				case 3:
 					$label = ( empty( $label ) ) ? '[Empty lable]' : $label;
 			}
@@ -136,7 +134,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		}
 
 		/**
-		 * This function states a custom inline element.
+		 * This function constructs a custom inline element.
 		 *
 		 * @param Array $data The data array of this setting line.
 		 */
@@ -157,7 +155,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
 		/**
 		 *
-		 * Adds batvh_upload element the div must have the id of batch-upload.
+		 * Adds batch_upload element, the div must have the ID of batch-upload.
 		 */
 		public function add_batch_table() {
 			?>
