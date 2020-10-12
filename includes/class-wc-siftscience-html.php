@@ -13,20 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
-	require_once 'interface-wc-siftscience-idisplay.php';
-
 	/**
 	 * Helper class for generating html
 	 *
 	 * Class WC_SiftScience_Html
 	 */
-	class WC_SiftScience_Html implements WC_SiftScience_IDisplay {
+	class WC_SiftScience_Html {
 
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section
 		 *
-		 * @param Array  $sections     the sections to be displayed.
-		 * @param String $admin_id     The admin Id.
+		 * @param Array  $sections the sections to be displayed.
+		 * @param String $admin_id The admin Id.
 		 *
 		 * @global String $current_section
 		 */
@@ -152,14 +150,16 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
 			$this->enqueue_style( 'debug-info' );
-			$can_copy_logs     = false;
-			$can_copy_ssl      = false !== $ssl_data;
-			$clipboard_img_src = '';
+			$can_copy_logs = false;
+			$can_copy_ssl  = false !== $ssl_data;
+
 			if ( empty( $logs ) ) {
 				$logs = 'None';
 			} else {
 				$can_copy_logs = true;
 			}
+
+			$clipboard_img_src = '';
 			if ( true === $can_copy_logs || true === $can_copy_ssl ) {
 				$clipboard_img_src = plugin_dir_url( __DIR__ ) . 'dist/images/clipboard.png';
 				$this->enqueue_script( 'wc-siftsci-copy', 'copy' );
@@ -190,26 +190,24 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				<?php
 				if ( true === $can_copy_ssl ) :
 					?>
-					<img 
-						alt="" 
-						onclick="copyInfo('debugSSL')" 
-						title="Copy to clipboard" 
-						src="<?php echo esc_url( $clipboard_img_src ); ?>" 
-					/>
-					<span class="debug-header-text">SSL</span>
-				</h2>
-				<textarea id="debugSSL" class="debug-info" readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
+				<img 
+					alt="" 
+					onclick="copyInfo('debugSSL')" 
+					title="Copy to clipboard" 
+					src="<?php echo esc_url( $clipboard_img_src ); ?>" 
+				/>
+				<span class="debug-header-text">SSL</span>
+			</h2>
+			<textarea id="debugSSL" class="debug-info" readonly="readonly"><?php echo esc_textarea( $ssl_data ); ?></textarea>
 					<?php
 				else :
 					?>
-					SSL
-					<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Check SSL</a>
-				</h2>
-				<div>
-					<p>
-						Starting in <em>September 2020</em>, Sift.com will require <strong>TLS1.2</strong>. Click "Check SSL" to test your store.
-					</p>
-				</div>
+				SSL
+				<a class="page-title-action" href="<?php echo esc_url( $ssl_url ); ?>">Check SSL</a>
+			</h2>
+			<div>
+				<p>Starting in <em>September 2020</em>, Sift.com will require <strong>TLS1.2</strong>. Click "Check SSL" to test your store.</p>
+			</div>
 					<?php
 			endif;
 		}
