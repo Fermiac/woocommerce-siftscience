@@ -13,12 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
+	require_once 'interface-wc-siftscience-idisplay.php';
+
 	/**
 	 * Helper class for generating html
 	 *
 	 * Class WC_SiftScience_Html
 	 */
-	class WC_SiftScience_Html {
+	class WC_SiftScience_Html implements WC_SiftScience_IDisplay {
 
 		/**
 		 * This function displayes sections in a bar separated list in regards of the current section
@@ -210,45 +212,6 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 				</div>
 					<?php
 			endif;
-		}
-
-		/**
-		 * This function displays a custom row in the admin settings page
-		 *
-		 * @param Array $data The data array of this setting line.
-		 */
-		public function display_custom_settings_row( $data ) {
-			$title   = $data['title'];
-			$content = $data['desc'];
-			?>
-			<tr valign="top">
-				<th scope="row" class="titledesc">
-					<?php echo esc_html( $title ); ?>
-				</th>
-				<td class="forminp">
-					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
-				</td>
-			</tr>
-			<?php
-		}
-
-		/**
-		 *
-		 * Those function echos sift control for backfilling orders the div id must be batch-upload.
-		 */
-		public function display_batch_table() {
-			?>
-			<table class="form-table">
-				<tbody>
-					<tr valign="top">
-						<th scope="row" class="titledesc">Batch Upload</th>
-						<td class="forminp forminp-text">
-							<div id="batch-upload"></div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<?php
 		}
 
 		/**
