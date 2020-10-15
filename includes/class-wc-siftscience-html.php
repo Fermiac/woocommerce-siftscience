@@ -171,7 +171,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					?>
 					<img 
 						alt="" 
-						onclick="copyInfo('debugLog')" 
+						onclick="copyInfo( this, 'debugLog' )" 
 						title="Copy to clipboard" 
 						src="<?php echo esc_url( $clipboard_img_src ); ?>" 
 					/>
@@ -192,7 +192,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 					?>
 				<img 
 					alt="" 
-					onclick="copyInfo('debugSSL')" 
+					onclick="copyInfo( this, 'debugSSL' )" 
 					title="Copy to clipboard" 
 					src="<?php echo esc_url( $clipboard_img_src ); ?>" 
 				/>
