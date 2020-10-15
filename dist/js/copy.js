@@ -1,13 +1,13 @@
 window._wc_siftsci_js_sender = null;
 function copyInfo( source, elementId ) {
-	
+
 	var sender = window._wc_siftsci_js_sender;
-	if( null === sender || void 0 === sender ) {
-		sender       = source;
-		source.title = 'Copied';
-	} else {
+
+	if( null != sender || void 0 != sender ) {
 		sender.title = 'Copy to clipboard';
 	}
+	
+	window._wc_siftsci_js_sender = source;
 
 	var element = document.getElementById( elementId );
 
