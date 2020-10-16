@@ -3,7 +3,7 @@ function copyInfo( source, elementId ) {
 
 	var sender = window._wc_siftsci_js_sender;
 
-	if( null != sender || void 0 != sender ) {
+	if( null !== sender ) {
 		sender.title = 'Copy to clipboard';
 	}
 	
