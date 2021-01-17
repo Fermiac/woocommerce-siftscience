@@ -221,9 +221,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					WC_Admin_Settings::output_fields( $this->get_section_fields( 'main' ) );
 					$this->wc_element->add_batch_table();
 
-					$this->html->enqueue_script( 'wc-siftsci-vuejs', 'vue-dev' );
-					$this->html->enqueue_script( 'wc-siftsci-control', 'BatchUpload.umd', array( 'wc-siftsci-vuejs' ) );
-					$this->html->enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-control' ) );
+					$this->html->enqueue_script( 'wc-siftsci-vuejs', 'vue.global' );
+					$this->html->enqueue_script( 'wc-siftsci-api', 'api' );
+					$this->html->enqueue_script( 'wc-siftsci-script', 'batch-upload', array( 'wc-siftsci-vuejs', 'wc-siftsci-api' ) );
 					wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', array( 'api' => admin_url( 'admin-ajax.php' ) ) );
 					break;
 			}
