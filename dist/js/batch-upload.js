@@ -5,13 +5,13 @@ const _sift_batch_upload = {
     <button type="button" class="button-primary wc-sift-button" style="margin-right: 5px;" @click="backfill">Back-Fill</button>
     <button type="button" class="button-primary wc-sift-button" style="margin-right: 5px;" @click="refresh">Refresh</button>
 
-    <p v-if="isError">{{ errorMessage }}</p>
-    <p v-if="isLoading">Loading...</p>
-    <p v-if="isBackfill">Backfilling order #{{ orderId }}</p>
-    <p v-if="isStats">
-        Orders: {{ totalOrders }} <br />
-        Backfilled: {{ numBackfilled }} <br />
-        Not Backfilled: {{ numNotBackfilled }}
+    <p v-if="status === 'error'">{{ error.text || error.toString() }}</p>
+    <p v-if="status === 'loading'">Loading...</p>
+    <p v-if="status === 'backfill'">Backfilling order #{{ orderId }}</p>
+    <p v-if="status === 'stats'">
+        Orders: {{ notBackfilled.length + backfilled.length }} <br />
+        Backfilled: {{ backfilled.length }} <br />
+        Not Backfilled: {{ notBackfilled.length }}
     </p>
 </div>`,
     name: 'BatchUpload',
@@ -26,32 +26,6 @@ const _sift_batch_upload = {
             notBackfilled: [],
             backfilled: [],
         }
-    },
-    computed: {
-        isError() {
-            return this.status === 'error'
-        },
-        errorMessage() {
-            return this.error.text || this.error.toString()
-        },
-        isLoading() {
-            return this.status === 'loading'
-        },
-        isBackfill() {
-            return this.status === 'backfill'
-        },
-        isStats() {
-            return this.status === 'stats'
-        },
-        totalOrders() {
-            return this.notBackfilled.length + this.backfilled.length
-        },
-        numBackfilled() {
-            return this.backfilled.length
-        },
-        numNotBackfilled() {
-            return this.notBackfilled.length
-        },
     },
     methods: {
         async clearAll() {
