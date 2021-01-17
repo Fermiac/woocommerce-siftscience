@@ -46,10 +46,11 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		 * WC_SiftScience_Orders constructor.
 		 *
 		 * @param WC_SiftScience_Options $options The options service.
+		 * @param WC_SiftScience_Html    $html    HTML service.
 		 */
 		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Html $html ) {
 			$this->options = $options;
-			$this->html = $html;
+			$this->html    = $html;
 		}
 
 		/**
