@@ -1,7 +1,7 @@
 version: '3'
 services:
   wordpress:
-    image: wordpressdev/wc-demo
+    image: wp-woocommerce
     ports:
       - "80:80"
       - "8085:8085"

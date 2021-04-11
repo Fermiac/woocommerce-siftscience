@@ -148,7 +148,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param String $log_url  an action button to clear logs this is it's url.
 		 * @param String $logs     the logs retrieved gtom debug DOT log file.
 		 */
-		public function display_debugging_info( $ssl_data, $ssl_url, $log_url, $logs ) {
+		public function display_debugging_info( $ssl_data, string $ssl_url, string $log_url, string $logs ) {
 			$this->enqueue_style( 'debug-info' );
 			$can_copy_logs = false;
 			$can_copy_ssl  = false !== $ssl_data;
