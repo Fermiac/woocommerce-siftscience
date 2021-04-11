@@ -36,12 +36,21 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		private $options;
 
 		/**
+		 * HTML service
+		 *
+		 * @var WC_SiftScience_Html
+		 */
+		private $html;
+
+		/**
 		 * WC_SiftScience_Orders constructor.
 		 *
 		 * @param WC_SiftScience_Options $options The options service.
+		 * @param WC_SiftScience_Html    $html    HTML service.
 		 */
-		public function __construct( WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Html $html ) {
 			$this->options = $options;
+			$this->html    = $html;
 		}
 
 		/**
@@ -67,10 +76,9 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 				'thresholdBad'  => $this->options->get_threshold_bad(),
 			);
 
-			$js_files_dir = plugin_dir_url( __DIR__ ) . 'dist/js';
-			wp_enqueue_script( 'wc-siftsci-vuejs', $js_files_dir . '/vue-dev.js', array(), time(), true );
-			wp_enqueue_script( 'wc-siftsci-control', $js_files_dir . '/OrderControl.umd.js', array( 'wc-siftsci-vuejs' ), time(), true );
-			wp_enqueue_script( 'wc-siftsci-script', $js_files_dir . '/order-control.js', array( 'wc-siftsci-control' ), time(), true );
+			$this->html->enqueue_script( 'wc-siftsci-vuejs', 'vue.global' );
+			$this->html->enqueue_script( 'wc-siftsci-api', 'api' );
+			$this->html->enqueue_script( 'wc-siftsci-script', 'order-control', array( 'wc-siftsci-vuejs', 'wc-siftsci-api' ) );
 			wp_localize_script( 'wc-siftsci-script', '_siftsci_app_data', $data );
 		}
 
