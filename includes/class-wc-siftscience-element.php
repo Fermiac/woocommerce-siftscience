@@ -141,13 +141,14 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		public function custom_inline_element( $data ) {
 			$title   = $data['title'];
 			$content = $data['desc'];
+			$kses = isset( $data['kses'] ) ? $data['kses'] : array( 'a' => array( 'href' => array() ) );
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
+					<?php echo wp_kses( $content, $kses ); ?>
 				</td>
 			</tr>
 			<?php

@@ -276,6 +276,21 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						WC_SiftScience_Options::THRESHOLD_GOOD . '_2',
+						'Good Score Threshold(2)',
+						'Put custom <b>html</b> here: <select><option>first</option><option>second</option></select>',
+						array(
+							'kses' => array(
+								'a' => array( 'href' => array() ),
+								'b' => array(),
+								'select' => array(),
+								'option' => array()
+							)
+						)
+					),
+
+					$this->wc_element->create(
 						WC_SiftScience_Element::NUMBER,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Threshold',
