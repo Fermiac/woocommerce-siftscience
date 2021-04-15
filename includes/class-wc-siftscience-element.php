@@ -126,7 +126,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					break;
 
 				default:
-					$this->logger->log_error( $type . ' is not a valid type!' );
+					$this->logger->log_error( $type . ' isn\'t a valid type!' );
 					break;
 			}
 
