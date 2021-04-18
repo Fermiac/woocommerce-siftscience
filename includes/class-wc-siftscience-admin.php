@@ -323,7 +323,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						'anon_id1',
 						'To be placed',
-						'Something written'
+						'Something written',
+						array(
+							'callback' => 'custom_inline_element1'
+						)
 					),
 
 					$this->wc_element->create(
@@ -344,7 +347,10 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						'anon_id',
 						'Anonymous ID',
-						$this->get_anon_id_content()
+						$this->get_anon_id_content(),
+						array(
+							'callback' => 'custom_inline_element'
+						)
 					),
 
 					$this->wc_element->create(
