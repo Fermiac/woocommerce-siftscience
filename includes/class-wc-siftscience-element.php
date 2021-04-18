@@ -134,34 +134,15 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		}
 
 		/**
-		 * This function constructs a custom inline element.
-		 *
-		 * @param Array $data The data array of this setting line.
-		 */
-		public function custom_inline_element( $data ) {
-			$title   = $data['title'];
-			$content = $data['desc'];
-			?>
-            <tr valign="top">
-                <th scope="row" class="titledesc">
-					<?php echo esc_html( $title ); ?>
-                </th>
-                <td class="forminp">
-					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
-                </td>
-            </tr>
-			<?php
-		}
-
-		/**
-		 * This function constructs a custom inline element.
+		 * This function constructs the custom html for the anonymouse ID field
 		 *
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function anon_id_callback( $data ) {
-			$title    = $data['title'];
-			$anon_id  = wp_kses( $data['anon_id'], array() );
-			$rest_url = wp_kses( $data['reset_url'], array() );
+			$title       = $data['title'];
+			$anon_id     = wp_kses( $data['anon_id'], array() );
+			$rest_url    = wp_kses( $data['reset_url'], array() );
+			$description = wp_kses( $data['desc'], array() );
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -169,6 +150,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 				</th>
 				<td class="forminp">
 					<?php echo $anon_id; ?> (<a href='<?php echo $rest_url; ?>'>Reset</a>)
+					<p class="description"><?php echo $description; ?></p>
 				</td>
 			</tr>
 			<?php
