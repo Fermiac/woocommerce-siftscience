@@ -337,7 +337,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						'anon_id',
 						'Anonymous ID',
-						$this->get_anon_id_content()
+						'The randomly generated anonymous ID that is used report stats.',
+						array(
+							'callback'  => 'anon_id_callback',
+							'anon_id'   => $this->options->get_guid(),
+							'reset_url' => $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' ),
+						)
 					),
 
 					$this->wc_element->create(

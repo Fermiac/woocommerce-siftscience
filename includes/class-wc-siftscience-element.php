@@ -108,7 +108,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			switch ( $type ) {
 				case self::CUSTOM:
 					$type = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
-					add_action( 'woocommerce_admin_field_' . $type, array( $this, 'custom_inline_element' ) );
+					add_action( 'woocommerce_admin_field_' . $type, array( $this, $element_options['callback'] ) );
 					// This intentionally falls through to the next section.
 
 				case self::TEXT:
@@ -134,20 +134,21 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		}
 
 		/**
-		 * This function constructs a custom inline element.
+		 * This function constructs the custom html for the anonymouse ID field
 		 *
 		 * @param Array $data The data array of this setting line.
 		 */
-		public function custom_inline_element( $data ) {
-			$title   = $data['title'];
-			$content = $data['desc'];
+		public function anon_id_callback( $data ) {
+			$title = $data['title'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
+					<?php echo wp_kses( $data['anon_id'], array() ); ?>
+					(<a href='<?php echo wp_kses( $data['reset_url'], array() ); ?>'>Reset</a>)
+					<p class="description"><?php echo wp_kses( $data['desc'], array() ); ?></p>
 				</td>
 			</tr>
 			<?php
