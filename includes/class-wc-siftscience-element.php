@@ -139,18 +139,16 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function anon_id_callback( $data ) {
-			$title       = $data['title'];
-			$anon_id     = wp_kses( $data['anon_id'], array() );
-			$rest_url    = wp_kses( $data['reset_url'], array() );
-			$description = wp_kses( $data['desc'], array() );
+			$title = $data['title'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo $anon_id; ?> (<a href='<?php echo $rest_url; ?>'>Reset</a>)
-					<p class="description"><?php echo $description; ?></p>
+					<?php echo wp_kses( $data['anon_id'], array() ); ?>
+					(<a href='<?php echo wp_kses( $data['reset_url'], array() ); ?>'>Reset</a>)
+					<p class="description"><?php echo wp_kses( $data['desc'], array() ); ?></p>
 				</td>
 			</tr>
 			<?php
