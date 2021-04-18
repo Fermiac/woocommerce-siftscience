@@ -320,6 +320,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'anon_id1',
+						'To be placed',
+						'Something written'
+					),
+
+					$this->wc_element->create(
 						WC_SiftScience_Element::SECTIONEND,
 						'sifsci_section_main'
 					),

@@ -110,6 +110,8 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					$type = 'wc_sift_' . $id; // this is the custom type name needed by WooCommerce.
 					if ( 'anon_id' === $id ) {
 						add_action( 'woocommerce_admin_field_' . $type, array( $this, 'custom_inline_element' ) );
+					} elseif ( 'anon_id1' === $id ) {
+						add_action( 'woocommerce_admin_field_' . $type, array( $this, 'custom_inline_element1' ) );
 					}
 					// This intentionally falls through to the next section.
 
@@ -150,6 +152,26 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 				</th>
 				<td class="forminp">
 					<?php echo wp_kses( $content, array( 'a' => array( 'href' => array() ) ) ); ?>
+				</td>
+			</tr>
+			<?php
+		}
+
+		/**
+		 * This function constructs a custom inline element.
+		 *
+		 * @param Array $data The data array of this setting line.
+		 */
+		public function custom_inline_element1( $data ) {
+			$title   = $data['title'];
+			$content = $data['desc'];
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo esc_html( $title ); ?>
+				</th>
+				<td class="forminp">
+					<?php echo esc_html( $content ); ?>
 				</td>
 			</tr>
 			<?php
