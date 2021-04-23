@@ -142,8 +142,9 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		public function output_settings_fields() {
 			global $current_section;
-			switch ( $current_section ) {
+			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
+			switch ( $selected_section ) {
 				case 'debug':
 					$log_file = dirname( __DIR__ ) . '/debug.log';
 					if ( '1' === $this->get_value( self::GET_VAR_CLEAR_LOGS ) ) {
@@ -157,6 +158,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 					$GLOBALS['hide_save_button'] = true;
 
+					$logs = '';
 					if ( file_exists( $log_file ) ) {
 						// @codingStandardsIgnoreStart
 						$logs = file_get_contents( $log_file );
@@ -383,9 +385,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 */
 		public function save_settings() {
 			global $current_section;
-			WC_Admin_Settings::save_fields( $this->get_section_fields( $current_section ) );
+			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
-			if ( 'main' === $current_section ) {
+			$fields = $this->get_section_fields( $selected_section );
+			WC_Admin_Settings::save_fields( $fields );
+
+			if ( 'main' === $selected_section ) {
 				$is_api_working = $this->check_api();
 				update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
 				if ( $is_api_working ) {
@@ -413,7 +418,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					$this->html->disply_update_notice( $settings_url );
 				}
 			}
-			// Check to dispkay improve notice.
+
+			// Check to display improve notice.
 			$is_send_stat_set = get_option( WC_SiftScience_Options::SEND_STATS, 'not_set' );
 
 			if ( 'not_set' === $is_send_stat_set ) {
