@@ -487,18 +487,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		}
 
 		/**
-		 * Gets the desc that goes in the Anonymous ID custom element in reporting.
-		 *
-		 * @return string
-		 * @see get_section_fields( 'reporting' )
-		 */
-		private function get_anon_id_content() {
-			$anon_id  = $this->options->get_guid();
-			$rest_url = $this->bound_nonce_url( self::GET_VAR_RESET_GUID, '1' );
-			return "$anon_id (<a href='$rest_url'>Reset</a>)";
-		}
-
-		/**
 		 * Gets the desc_tip that goes under the checkbox.
 		 *
 		 * @return string

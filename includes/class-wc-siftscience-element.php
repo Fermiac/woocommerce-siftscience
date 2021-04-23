@@ -146,9 +146,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo wp_kses( $data['anon_id'], array() ); ?>
-					(<a href='<?php echo wp_kses( $data['reset_url'], array() ); ?>'>Reset</a>)
-					<p class="description"><?php echo wp_kses( $data['desc'], array() ); ?></p>
+					<?php echo esc_html( $data['anon_id'] ); ?>
+					(<a href="<?php echo esc_url( $data['reset_url'] ); ?>">Reset</a>)
+					<p class="description"><?php echo esc_html( $data['desc'] ); ?></p>
 				</td>
 			</tr>
 			<?php
