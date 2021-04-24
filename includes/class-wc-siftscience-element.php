@@ -26,6 +26,13 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 */
 		private $logger;
 
+		/**
+		 * Class for accessing order status information
+		 *
+		 * @var WC_SiftScience_Order_Status
+		 */
+		private $status;
+
 		public const TITLE      = 'title';
 		public const TEXT       = 'text';
 		public const NUMBER     = 'number';
@@ -37,9 +44,11 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * WC_SiftScience_Element constructor.
 		 *
-		 * @param WC_SiftScience_Logger $logger Logger service.
+		 * @param WC_SiftScience_Order_Status $status Order status manager.
+		 * @param WC_SiftScience_Logger       $logger Logger service.
 		 */
-		public function __construct( WC_SiftScience_Logger $logger ) {
+		public function __construct( WC_SiftScience_Order_Status $status, WC_SiftScience_Logger $logger ) {
+			$this->status = $status;
 			$this->logger = $logger;
 		}
 
