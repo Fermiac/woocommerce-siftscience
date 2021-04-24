@@ -450,7 +450,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			// Check that nonce is valid and input value exists.
 			$is_valid_input = isset( $_GET[ $var_name ], $_GET[ $nonce_name ] )
-				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $this->get_nonce_name( $var_name ) );
+				&& wp_verify_nonce( sanitize_key( $_GET[ $nonce_name ] ), $nonce_name );
 
 			return ( true === $is_valid_input ) ? sanitize_key( $_GET[ $var_name ] ) : false;
 		}
