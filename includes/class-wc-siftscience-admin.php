@@ -243,6 +243,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			if ( 'main' === $sub_section ) {
 				return array(
 					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'siftsci_title_test',
+						'nothing',
+						'nothing',
+						array(
+							'callback' => 'show_order_statuses'
+						)
+					),
+
+					$this->wc_element->create(
 						WC_SiftScience_Element::TITLE,
 						'siftsci_title_id',
 						'Sift Settings'

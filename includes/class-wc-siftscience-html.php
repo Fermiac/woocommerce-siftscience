@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 	class WC_SiftScience_Html {
 
 		/**
-		 * This function displayes sections in a bar separated list in regards of the current section
+		 * This function displays sections in a bar separated list in regards of the current section
 		 *
 		 * @param Array  $sections the sections to be displayed.
 		 * @param String $admin_id The admin Id.
