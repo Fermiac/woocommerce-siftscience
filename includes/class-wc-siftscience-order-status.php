@@ -17,17 +17,26 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 	 * Class WC_SiftScience_Orders
 	 */
 	class WC_SiftScience_Order_Status {
+
+		/**
+		 * @var array A cache for storing the list of order statuses
+		 */
+		private $statuses = null;
+
 		/**
 		 * Gets a list of available statuses
 		 *
 		 * @return array The full list of statuses and order can have.
 		 */
 		public function get_status_options() {
-			$result = array( 'none' => 'Do Nothing' );
-			foreach ( wc_get_order_statuses() as $key => $val ) {
-				$result[$key] = $val;
+			if ( $this->statuses === null ) {
+				$this->statuses = array( 'none' => 'Do Nothing' );
+				foreach ( wc_get_order_statuses() as $key => $val ) {
+					$this->statuses[$key] = $val;
+				}
 			}
-			return $result;
+
+			return $this->statuses;
 		}
 	}
 

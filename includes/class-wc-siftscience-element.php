@@ -26,13 +26,6 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 */
 		private $logger;
 
-		/**
-		 * The status service
-		 *
-		 * @var WC_SiftScience_Order_Status
-		 */
-		private $status;
-
 		public const TITLE      = 'title';
 		public const TEXT       = 'text';
 		public const NUMBER     = 'number';
@@ -46,8 +39,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 *
 		 * @param WC_SiftScience_Logger $logger Logger service.
 		 */
-		public function __construct( WC_SiftScience_Order_Status $status, WC_SiftScience_Logger $logger ) {
-			$this->status = $status;
+		public function __construct( WC_SiftScience_Logger $logger ) {
 			$this->logger = $logger;
 		}
 
@@ -159,24 +151,6 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $data['anon_id'] ); ?>
 					(<a href="<?php echo esc_url( $data['reset_url'] ); ?>">Reset</a>)
 					<p class="description"><?php echo esc_html( $data['desc'] ); ?></p>
-				</td>
-			</tr>
-			<?php
-		}
-
-		public function show_order_statuses( $data ) {
-			$statuses = $this->status->get_status_options();
-			?>
-			<tr valign="top">
-				<th scope="row" class="titledesc">
-					Order Statuses:
-				</th>
-				<td class="forminp">
-					<ul>
-					<?php foreach ( $statuses as $k => $v ) : ?>
-						<li><?php echo esc_html( $k ) . ' = ' . esc_html( $v ); ?></li>
-					<?php endforeach; ?>
-					</ul>
 				</td>
 			</tr>
 			<?php
