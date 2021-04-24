@@ -19,7 +19,9 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 	class WC_SiftScience_Order_Status {
 
 		/**
-		 * @var array A cache for storing the list of order statuses
+		 * Cache of order status options to avoid fetching it too many times
+		 *
+		 * @var array List of status options
 		 */
 		private $statuses = null;
 
@@ -29,10 +31,10 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		 * @return array The full list of statuses and order can have.
 		 */
 		public function get_status_options() {
-			if ( $this->statuses === null ) {
+			if ( null === $this->statuses ) {
 				$this->statuses = array( 'none' => 'Do Nothing' );
 				foreach ( wc_get_order_statuses() as $key => $val ) {
-					$this->statuses[$key] = $val;
+					$this->statuses[ $key ] = $val;
 				}
 			}
 
