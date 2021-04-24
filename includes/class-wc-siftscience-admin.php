@@ -317,7 +317,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'min'      => 0,
 							'step'     => 1,
 							'css'      => 'width:75px;',
-							'desc_tip' => 'Orders less than this value will not be automatically sent to sift.',
+							'desc_tip' => 'Orders less than this value won\'t be automatically sent to sift.',
 						)
 					),
 
