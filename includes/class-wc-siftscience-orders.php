@@ -88,7 +88,7 @@ if ( ! class_exists( 'WC_SiftScience_Orders' ) ) :
 		 *
 		 * @param array $columns The columns list to be filtered.
 		 *
-		 * @return array The new list of colums with the new column added
+		 * @return array The new list of columns with the new column added
 		 */
 		public function create_header( $columns ) {
 			$newcolumns = array();

@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
+	require_once 'class-wc-siftscience-order-status.php';
+
 	/**
 	 * Class for adding WooCommerce elements.
 	 */
@@ -23,6 +25,13 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @var WC_SiftScience_Logger
 		 */
 		private $logger;
+
+		/**
+		 * Class for accessing order status information
+		 *
+		 * @var WC_SiftScience_Order_Status
+		 */
+		private $status;
 
 		public const TITLE      = 'title';
 		public const TEXT       = 'text';
@@ -35,9 +44,11 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * WC_SiftScience_Element constructor.
 		 *
-		 * @param WC_SiftScience_Logger $logger Logger service.
+		 * @param WC_SiftScience_Order_Status $status Order status manager.
+		 * @param WC_SiftScience_Logger       $logger Logger service.
 		 */
-		public function __construct( WC_SiftScience_Logger $logger ) {
+		public function __construct( WC_SiftScience_Order_Status $status, WC_SiftScience_Logger $logger ) {
+			$this->status = $status;
 			$this->logger = $logger;
 		}
 
