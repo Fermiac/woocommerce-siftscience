@@ -167,7 +167,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $title ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo esc_html( implode( ', ', $data['desc'] ) ); ?>
+					<?php echo esc_html( implode( ', ', explode( '|', $data['desc'] ) ) ); ?>
 				</td>
 			</tr>
 			<?php

@@ -307,7 +307,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						'Cid',
 						'disc label',
-						$this->status->get_status_options(),
+						implode( '|', $this->status->get_status_options() ),
 						array(
 							'callback' => 'gb_callback',
 						)
