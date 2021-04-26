@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 
+	require_once __DIR__ . '/class-wc-siftscience-options.php';
+
 	/**
 	 * Class WC_SiftScience_Orders
 	 */
@@ -29,6 +31,49 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 			}
 
 			return $result;
+		}
+
+		/**
+		 * Checks the order sift score and updates the order status if needed
+		 *
+		 * @param WC_Order $order Order to update.
+		 * @param int      $score The score received by the order.
+		 */
+		public function try_update_order_status( WC_Order $order, int $score ) {
+			$threshold_good = get_option( WC_SiftScience_Options::THRESHOLD_GOOD );
+			$threshold_bad  = get_option( WC_SiftScience_Options::THRESHOLD_BAD );
+
+			if ( $score < $threshold_good ) {
+				$note = 'Sift score is good. Order status updated.';
+				$key  = WC_SiftScience_Options::ORDER_STATUS_IF_GOOD;
+			} elseif ( $score > $threshold_bad ) {
+				$note = 'Sift score is bad. Order status updated.';
+				$key  = WC_SiftScience_Options::ORDER_STATUS_IF_BAD;
+			} else {
+				$note = 'Sift score is between the thresholds. Order status updated.';
+				$key  = WC_SiftScience_Options::ORDER_STATUS_IF_MID;
+			}
+
+			$this->try_apply_status( $order, $key, $note );
+		}
+
+		/**
+		 * Performs the operation of fetching the order status config option
+		 * and applying it to the order.
+		 *
+		 * @param WC_Order $order The order to be processed.
+		 * @param string   $key   The key from from which to fetch the option value.
+		 * @param string   $note  The note to add to the status change.
+		 */
+		private function try_apply_status( WC_Order $order, string $key, string $note ) {
+			$value = get_option( $key );
+			$value = $value ? 'none' : $value;
+
+			if ( 'none' === $value ) {
+				return;
+			}
+
+			$order->set_status( $value, $note );
 		}
 	}
 
