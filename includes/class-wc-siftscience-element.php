@@ -13,8 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
-	require_once 'class-wc-siftscience-order-status.php';
-
 	/**
 	 * Class for adding WooCommerce elements.
 	 */
@@ -25,13 +23,6 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @var WC_SiftScience_Logger
 		 */
 		private $logger;
-
-		/**
-		 * Class for accessing order status information
-		 *
-		 * @var WC_SiftScience_Order_Status
-		 */
-		private $status;
 
 		public const TITLE      = 'title';
 		public const TEXT       = 'text';
@@ -44,11 +35,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * WC_SiftScience_Element constructor.
 		 *
-		 * @param WC_SiftScience_Order_Status $status Order status manager.
-		 * @param WC_SiftScience_Logger       $logger Logger service.
+		 * @param WC_SiftScience_Logger $logger Logger service.
 		 */
-		public function __construct( WC_SiftScience_Order_Status $status, WC_SiftScience_Logger $logger ) {
-			$this->status = $status;
+		public function __construct( WC_SiftScience_Logger $logger ) {
 			$this->logger = $logger;
 		}
 
@@ -165,6 +154,24 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			<?php
 		}
 
+		/**
+		 * This function constructs the custom html for the anonymouse ID field
+		 *
+		 * @param Array $data The data array of this setting line.
+		 */
+		public function gb_callback( $data ) {
+			$title = $data['title'];
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo esc_html( $title ); ?>
+				</th>
+				<td class="forminp">
+					<?php echo esc_html( implode( ', ', $data['desc'] ) ); ?>
+				</td>
+			</tr>
+			<?php
+		}
 		/**
 		 *
 		 * Adds batch_upload element, the div must have the ID of batch-upload.

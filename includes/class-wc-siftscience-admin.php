@@ -15,6 +15,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-html.php';
+	require_once 'class-wc-siftscience-order-status.php';
 
 	/**
 	 * Class WC_SiftScience_Admin
@@ -72,24 +73,34 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $wc_element;
 
 		/**
+		 * Class for accessing order status information
+		 *
+		 * @var WC_SiftScience_Order_Status
+		 */
+		private $status;
+
+		/**
 		 * WC_SiftScience_Admin constructor.
 		 *
-		 * @param WC_SiftScience_Options $options    Options service.
-		 * @param WC_SiftScience_Comm    $comm       Communication service.
-		 * @param WC_SiftScience_Html    $html       HTML service.
-		 * @param WC_SiftScience_Logger  $logger     Logger service.
-		 * @param WC_SiftScience_Stats   $stats      Stats service.
-		 * @param WC_SiftScience_Element $wc_element WC element.
+		 * @param WC_SiftScience_Options      $options    Options service.
+		 * @param WC_SiftScience_Comm         $comm       Communication service.
+		 * @param WC_SiftScience_Order_Status $status     Order status manager.
+		 * @param WC_SiftScience_Html         $html       HTML service.
+		 * @param WC_SiftScience_Logger       $logger     Logger service.
+		 * @param WC_SiftScience_Stats        $stats      Stats service.
+		 * @param WC_SiftScience_Element      $wc_element WC element.
 		 */
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Comm $comm,
+				WC_SiftScience_Order_Status $status,
 				WC_SiftScience_Html $html,
 				WC_SiftScience_Logger $logger,
 				WC_SiftScience_Stats $stats,
 				WC_SiftScience_Element $wc_element ) {
 			$this->options    = $options;
 			$this->comm       = $comm;
+			$this->status     = $status;
 			$this->html       = $html;
 			$this->logger     = $logger;
 			$this->stats      = $stats;
@@ -289,6 +300,16 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'step'     => 1,
 							'css'      => 'width:75px;',
 							'desc_tip' => true,
+						)
+					),
+
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'Cid',
+						'disc label',
+						$this->status->get_status_options(),
+						array(
+							'callback' => 'gb_callback',
 						)
 					),
 
