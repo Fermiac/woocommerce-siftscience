@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
+	require_once 'class-wc-siftscience-options.php';
 	/**
 	 * Class for adding WooCommerce elements.
 	 */
@@ -162,13 +163,16 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		public function gb_callback( $data ) {
 			$name    = '';
 			$default = 0;
+			$value   = 0;
 
 			if ( $data['is_good'] ) {
 				$name    = 'good';
 				$default = 30;
+				$value   = get_option( WC_SiftScience_Options::THRESHOLD_GOOD );
 			} else {
 				$name    = 'bad';
 				$default = 60;
+				$value   = get_option( WC_SiftScience_Options::THRESHOLD_BAD );
 			}
 			?>
 			<tr valign="top">
@@ -176,17 +180,19 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<input style="width:75px" type="number" min="0" max="100" 
+					<input style="width:75px" type="number" min="0" max="100" step="1"
 					<?php
-					echo 'default=' . esc_attr( $default ) . 'name=' . esc_attr( $name )
+					echo 'default=' . esc_attr( $default ) . ' name=' . esc_attr( $name ) . ' value=' . esc_attr( $value )
 					?>
 					/>
-					<select>
-						<option>
+					<select style="width: auto;">
 						<?php
-							echo wp_kses( join( '</option><option>', $data['status'] ), array( 'option' => array( 'value' => array() ) ) );
+						foreach ( $data['status'] as $key => $value ) :
+							?>
+								<option value=<?php echo esc_attr( $key ); ?>><?php echo esc_attr( $value ); ?></option>
+							<?php
+							endforeach;
 						?>
-						</option>
 					</select>
 					<p><?php echo esc_html( $data['desc'] ); ?></p>
 				</td>
