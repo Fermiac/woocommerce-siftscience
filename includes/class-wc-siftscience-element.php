@@ -160,14 +160,35 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function gb_callback( $data ) {
-			$title = $data['title'];
+			$name    = '';
+			$default = 0;
+
+			if ( $data['is_good'] ) {
+				$name    = 'good';
+				$default = 30;
+			} else {
+				$name    = 'bad';
+				$default = 60;
+			}
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
-					<?php echo esc_html( $title ); ?>
+					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<?php echo esc_html( implode( ', ', explode( '|', $data['desc'] ) ) ); ?>
+					<input style="width:75px" type="number" min="0" max="100" 
+					<?php
+					echo 'default=' . esc_attr( $default ) . 'name=' . esc_attr( $name )
+					?>
+					/>
+					<select>
+						<option>
+						<?php
+							echo wp_kses( join( '</option><option>', $data['status'] ), array( 'option' => array( 'value' => array() ) ) );
+						?>
+						</option>
+					</select>
+					<p><?php echo esc_html( $data['desc'] ); ?></p>
 				</td>
 			</tr>
 			<?php

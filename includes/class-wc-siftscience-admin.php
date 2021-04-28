@@ -306,10 +306,24 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					$this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
 						'Cid',
-						'disc label',
-						implode( '|', $this->status->get_status_options() ),
+						'good label',
+						'pop up needs JS',
 						array(
 							'callback' => 'gb_callback',
+							'status'   => $this->status->get_status_options(),
+							'is_good'  => '1',
+						)
+					),
+
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'Cid1',
+						'bad label',
+						'pop up needs JS',
+						array(
+							'callback' => 'gb_callback',
+							'status'   => $this->status->get_status_options(),
+							'is_good'  => '0',
 						)
 					),
 
