@@ -189,7 +189,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 						<?php
 						foreach ( $data['status'] as $key => $value ) :
 							?>
-								<option value=<?php echo esc_attr( $key ); ?>><?php echo esc_attr( $value ); ?></option>
+								<option value=<?php echo esc_attr( $key ); ?>><?php echo esc_html( $value ); ?></option>
 							<?php
 							endforeach;
 						?>
