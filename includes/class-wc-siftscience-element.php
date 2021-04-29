@@ -184,7 +184,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php
 					echo 'default=' . esc_attr( $default ) . ' name=' . esc_attr( $name ) . ' value=' . esc_attr( $value )
 					?>
-					/>
+					/>&nbsp;
 					<select style="width: auto;">
 						<?php
 						foreach ( $data['status'] as $key => $value ) :
