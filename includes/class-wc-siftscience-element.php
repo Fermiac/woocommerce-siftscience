@@ -19,6 +19,13 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 	 */
 	class WC_SiftScience_Element {
 		/**
+		 * The options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
+		private $options;
+
+		/**
 		 * The logger service
 		 *
 		 * @var WC_SiftScience_Logger
@@ -36,10 +43,12 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * WC_SiftScience_Element constructor.
 		 *
-		 * @param WC_SiftScience_Logger $logger Logger service.
+		 * @param WC_SiftScience_Options $options Options service.
+		 * @param WC_SiftScience_Logger  $logger  Logger service.
 		 */
-		public function __construct( WC_SiftScience_Logger $logger ) {
-			$this->logger = $logger;
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+			$this->logger  = $logger;
+			$this->options = $options;
 		}
 
 		/**
@@ -140,11 +149,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function anon_id_callback( $data ) {
-			$title = $data['title'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
-					<?php echo esc_html( $title ); ?>
+					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
 					<?php echo esc_html( $data['anon_id'] ); ?>
@@ -161,18 +169,13 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function gb_callback( $data ) {
-			$name    = '';
-			$default = 0;
-			$value   = 0;
+			$value = 0;
+			$nid   = $data['id'];
 
-			if ( $data['is_good'] ) {
-				$name    = 'good';
-				$default = 30;
-				$value   = get_option( WC_SiftScience_Options::THRESHOLD_GOOD );
+			if ( WC_SiftScience_Options::THRESHOLD_GOOD === $nid ) {
+				$value = $this->options->get_threshold_good();
 			} else {
-				$name    = 'bad';
-				$default = 60;
-				$value   = get_option( WC_SiftScience_Options::THRESHOLD_BAD );
+				$value = $this->options->get_threshold_bad();
 			}
 			?>
 			<tr valign="top">
@@ -180,9 +183,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<input style="width:75px" type="number" min="0" max="100" step="1"
+					<input type="number" min="0" max="100" step="1" style="width: 75px"
 					<?php
-					echo 'default=' . esc_attr( $default ) . ' name=' . esc_attr( $name ) . ' value=' . esc_attr( $value )
+						echo 'id=' . esc_attr( $nid ) . ' name=' . esc_attr( $nid ) . ' value=' . esc_attr( $value );
 					?>
 					/>&nbsp;
 					<select style="width: auto;">

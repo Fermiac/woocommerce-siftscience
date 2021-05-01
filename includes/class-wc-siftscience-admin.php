@@ -274,56 +274,24 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
-						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
-						'Good Score Threshold',
-						'Scores below this value are considered good and shown in green',
+						'Good Score Limit',
+						'pop up needs JS',
 						array(
-							'default'  => 30,
-							'min'      => 0,
-							'max'      => 100,
-							'step'     => 1,
-							'css'      => 'width:75px;',
-							'desc_tip' => true,
+							'callback' => 'gb_callback',
+							'status'   => $this->status->get_status_options(),
 						)
 					),
 
 					$this->wc_element->create(
-						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
-						'Bad Score Threshold',
-						'Scores above this value are considered bad and shown in red',
-						array(
-							'default'  => 60,
-							'min'      => 0,
-							'max'      => 100,
-							'step'     => 1,
-							'css'      => 'width:75px;',
-							'desc_tip' => true,
-						)
-					),
-
-					$this->wc_element->create(
-						WC_SiftScience_Element::CUSTOM,
-						'Cid',
-						'good label',
+						'Bad Score Limit',
 						'pop up needs JS',
 						array(
 							'callback' => 'gb_callback',
 							'status'   => $this->status->get_status_options(),
-							'is_good'  => '1',
-						)
-					),
-
-					$this->wc_element->create(
-						WC_SiftScience_Element::CUSTOM,
-						'Cid1',
-						'bad label',
-						'pop up needs JS',
-						array(
-							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
-							'is_good'  => '0',
 						)
 					),
 
