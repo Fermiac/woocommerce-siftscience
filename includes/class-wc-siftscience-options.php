@@ -49,6 +49,9 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
 		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
 
+		public const ORDER_STATUS_IF_GOOD = self::SCHEMA . 'status_if_good';
+		public const ORDER_STATUS_IF_BAD  = self::SCHEMA . 'status_if_bad';
+
 		/**
 		 * WC_SiftScience_Options constructor.
 		 */
