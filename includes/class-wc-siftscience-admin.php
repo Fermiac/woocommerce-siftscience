@@ -31,6 +31,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_TEST_SSL    = self::GET_VAR_SCHEMA . 'test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
+		private const CUSTOM_FIELDS = array(
+			WC_SiftScience_Options::THRESHOLD_GOOD,
+			WC_SiftScience_Options::THRESHOLD_BAD,
+			WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
+			WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
+		);
+
 		/**
 		 * The options service
 		 *
@@ -392,6 +399,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$fields = $this->get_section_fields( $selected_section );
 			WC_Admin_Settings::save_fields( $fields );
+			$this->save_custom_fields();
 
 			if ( 'main' === $selected_section ) {
 				$is_api_working = $this->check_api();
@@ -505,6 +513,34 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$url     = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$message = 'Help us improve this plugin by automatically reporting errors and statistics. ';
 			return "$message More info <a target='_blank' href='$url'>here</a>.";
+		}
+
+		/**
+		 * Saves custom fields that aren't covered by WooCommerce's automatic method
+		 */
+		private function save_custom_fields() {
+			if ( ! isset( $_POST['nonce'] ) ) {
+				return;
+			}
+
+			$nonce = sanitize_key( $_POST['nonce'] );
+			if ( ! wp_verify_nonce( $nonce ) ) {
+				return;
+			}
+
+			$data = $_POST;
+
+			if ( empty( $data ) ) {
+				return;
+			}
+
+			foreach ( self::CUSTOM_FIELDS as $f ) {
+				if ( ! isset( $data[ $f ] ) ) {
+					continue;
+				}
+
+				update_option( $f, wc_clean( $data[ $f ] ) );
+			}
 		}
 	}
 endif;
