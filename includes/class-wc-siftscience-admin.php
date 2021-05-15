@@ -15,6 +15,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 	require_once 'class-wc-siftscience-options.php';
 	require_once 'class-wc-siftscience-html.php';
+	require_once 'class-wc-siftscience-order-status.php';
 
 	/**
 	 * Class WC_SiftScience_Admin
@@ -72,24 +73,34 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private $wc_element;
 
 		/**
+		 * Class for accessing order status information
+		 *
+		 * @var WC_SiftScience_Order_Status
+		 */
+		private $status;
+
+		/**
 		 * WC_SiftScience_Admin constructor.
 		 *
-		 * @param WC_SiftScience_Options $options    Options service.
-		 * @param WC_SiftScience_Comm    $comm       Communication service.
-		 * @param WC_SiftScience_Html    $html       HTML service.
-		 * @param WC_SiftScience_Logger  $logger     Logger service.
-		 * @param WC_SiftScience_Stats   $stats      Stats service.
-		 * @param WC_SiftScience_Element $wc_element WC element.
+		 * @param WC_SiftScience_Options      $options    Options service.
+		 * @param WC_SiftScience_Comm         $comm       Communication service.
+		 * @param WC_SiftScience_Order_Status $status     Order status manager.
+		 * @param WC_SiftScience_Html         $html       HTML service.
+		 * @param WC_SiftScience_Logger       $logger     Logger service.
+		 * @param WC_SiftScience_Stats        $stats      Stats service.
+		 * @param WC_SiftScience_Element      $wc_element WC element.
 		 */
 		public function __construct(
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Comm $comm,
+				WC_SiftScience_Order_Status $status,
 				WC_SiftScience_Html $html,
 				WC_SiftScience_Logger $logger,
 				WC_SiftScience_Stats $stats,
 				WC_SiftScience_Element $wc_element ) {
 			$this->options    = $options;
 			$this->comm       = $comm;
+			$this->status     = $status;
 			$this->html       = $html;
 			$this->logger     = $logger;
 			$this->stats      = $stats;
@@ -263,32 +274,24 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
-						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
-						'Good Score Threshold',
-						'Scores below this value are considered good and shown in green',
+						'Good Score Limit',
+						'pop up needs JS',
 						array(
-							'default'  => 30,
-							'min'      => 0,
-							'max'      => 100,
-							'step'     => 1,
-							'css'      => 'width:75px;',
-							'desc_tip' => true,
+							'callback' => 'gb_callback',
+							'status'   => $this->status->get_status_options(),
 						)
 					),
 
 					$this->wc_element->create(
-						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
-						'Bad Score Threshold',
-						'Scores above this value are considered bad and shown in red',
+						'Bad Score Limit',
+						'pop up needs JS',
 						array(
-							'default'  => 60,
-							'min'      => 0,
-							'max'      => 100,
-							'step'     => 1,
-							'css'      => 'width:75px;',
-							'desc_tip' => true,
+							'callback' => 'gb_callback',
+							'status'   => $this->status->get_status_options(),
 						)
 					),
 

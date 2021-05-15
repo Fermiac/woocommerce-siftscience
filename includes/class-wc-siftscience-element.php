@@ -13,25 +13,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
-	require_once 'class-wc-siftscience-order-status.php';
-
+	require_once 'class-wc-siftscience-options.php';
 	/**
 	 * Class for adding WooCommerce elements.
 	 */
 	class WC_SiftScience_Element {
+		/**
+		 * The options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
+		private $options;
+
 		/**
 		 * The logger service
 		 *
 		 * @var WC_SiftScience_Logger
 		 */
 		private $logger;
-
-		/**
-		 * Class for accessing order status information
-		 *
-		 * @var WC_SiftScience_Order_Status
-		 */
-		private $status;
 
 		public const TITLE      = 'title';
 		public const TEXT       = 'text';
@@ -44,12 +43,12 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * WC_SiftScience_Element constructor.
 		 *
-		 * @param WC_SiftScience_Order_Status $status Order status manager.
-		 * @param WC_SiftScience_Logger       $logger Logger service.
+		 * @param WC_SiftScience_Options $options Options service.
+		 * @param WC_SiftScience_Logger  $logger  Logger service.
 		 */
-		public function __construct( WC_SiftScience_Order_Status $status, WC_SiftScience_Logger $logger ) {
-			$this->status = $status;
-			$this->logger = $logger;
+		public function __construct( WC_SiftScience_Options $options, WC_SiftScience_Logger $logger ) {
+			$this->logger  = $logger;
+			$this->options = $options;
 		}
 
 		/**
@@ -150,11 +149,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function anon_id_callback( $data ) {
-			$title = $data['title'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
-					<?php echo esc_html( $title ); ?>
+					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
 					<?php echo esc_html( $data['anon_id'] ); ?>
@@ -165,6 +163,45 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			<?php
 		}
 
+		/**
+		 * This function constructs the custom html for the anonymouse ID field
+		 *
+		 * @param Array $data The data array of this setting line.
+		 */
+		public function gb_callback( $data ) {
+			$value = 0;
+			$nid   = $data['id'];
+
+			if ( WC_SiftScience_Options::THRESHOLD_GOOD === $nid ) {
+				$value = $this->options->get_threshold_good();
+			} else {
+				$value = $this->options->get_threshold_bad();
+			}
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo esc_html( $data['title'] ); ?>
+				</th>
+				<td class="forminp">
+					<input type="number" min="0" max="100" step="1" style="width: 75px"
+					<?php
+						echo 'id=' . esc_attr( $nid ) . ' name=' . esc_attr( $nid ) . ' value=' . esc_attr( $value );
+					?>
+					/>&nbsp;
+					<select style="width: auto;">
+						<?php
+						foreach ( $data['status'] as $key => $value ) :
+							?>
+								<option value=<?php echo esc_attr( $key ); ?>><?php echo esc_html( $value ); ?></option>
+							<?php
+							endforeach;
+						?>
+					</select>
+					<p><?php echo esc_html( $data['desc'] ); ?></p>
+				</td>
+			</tr>
+			<?php
+		}
 		/**
 		 *
 		 * Adds batch_upload element, the div must have the ID of batch-upload.
