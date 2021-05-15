@@ -245,91 +245,126 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		/**
 		 * This function adding wc elements for the intended subsection.
 		 *
-		 * @param String $sub_section the name of the subsection.
+		 * @param String  $sub_section The name of the subsection.
+		 * @param Boolean $is_save     Set to true if the object is being used for a save operation.
 		 *
 		 * @return Array [] the dictionary in which All fields are added.
 		 */
-		private function get_section_fields( $sub_section ) {
+		private function get_section_fields( string $sub_section, bool $is_save = false ) {
 
 			if ( 'main' === $sub_section ) {
-				return array(
-					$this->wc_element->create(
-						WC_SiftScience_Element::TITLE,
-						'siftsci_title_id',
-						'Sift Settings'
-					),
+				$status_options = $this->status->get_status_options();
+				$elements       = array();
 
-					$this->wc_element->create(
-						WC_SiftScience_Element::TEXT,
-						WC_SiftScience_Options::API_KEY,
-						'Rest API Key',
-						'The API key for production'
-					),
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::TITLE,
+					'siftsci_title_id',
+					'Sift Settings'
+				);
 
-					$this->wc_element->create(
-						WC_SiftScience_Element::TEXT,
-						WC_SiftScience_Options::JS_KEY,
-						'Javascript Snippet Key',
-						'Javascript snippet key for production'
-					),
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::TEXT,
+					WC_SiftScience_Options::API_KEY,
+					'Rest API Key',
+					'The API key for production'
+				);
 
-					$this->wc_element->create(
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::TEXT,
+					WC_SiftScience_Options::JS_KEY,
+					'Javascript Snippet Key',
+					'Javascript snippet key for production'
+				);
+
+				if ( !$is_save ) {
+					$elements[] = $this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
 						'Good Score Limit',
 						'pop up needs JS',
 						array(
 							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'status'   => $status_options,
 						)
-					),
+					);
 
-					$this->wc_element->create(
+					$elements[] = $this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Limit',
 						'pop up needs JS',
 						array(
 							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'status'   => $status_options,
 						)
-					),
-
-					$this->wc_element->create(
+					);
+				} else {
+					$elements[] = $this->wc_element->create(
 						WC_SiftScience_Element::TEXT,
-						WC_SiftScience_Options::NAME_PREFIX,
-						'User & Order Name Prefix',
-						'Prefix to give order and user names.',
-						array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
-					),
+						WC_SiftScience_Options::THRESHOLD_GOOD,
+						'',
+						''
+					);
 
-					$this->wc_element->create(
-						WC_SiftScience_Element::CHECKBOX,
-						WC_SiftScience_Options::AUTO_SEND_ENABLED,
-						'Automatically Send Data',
-						'Automatically send data to Sift when an order is created'
-					),
+					$elements[] = $this->wc_element->create(
+						WC_SiftScience_Element::TEXT,
+						WC_SiftScience_Options::THRESHOLD_BAD,
+						'',
+						''
+					);
 
-					$this->wc_element->create(
-						WC_SiftScience_Element::NUMBER,
-						WC_SiftScience_Options::MIN_ORDER_VALUE,
-						'Auto Send Minimum Value',
-						'Set to zero to send all orders.',
-						array(
-							'default'  => 0,
-							'min'      => 0,
-							'step'     => 1,
-							'css'      => 'width:75px;',
-							'desc_tip' => 'Orders less than this value won\'t be automatically sent to sift.',
-						)
-					),
+					$elements[] = $this->wc_element->create(
+						WC_SiftScience_Element::SELECT,
+						WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
+						'',
+						'',
+						array( 'options' => $status_options )
+					);
 
-					$this->wc_element->create(
-						WC_SiftScience_Element::SECTIONEND,
-						'sifsci_section_main'
-					),
+					$elements[] = $this->wc_element->create(
+						WC_SiftScience_Element::SELECT,
+						WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
+						'',
+						'',
+						array( 'options' => $status_options )
+					);
+				}
+
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::TEXT,
+					WC_SiftScience_Options::NAME_PREFIX,
+					'User & Order Name Prefix',
+					'Prefix to give order and user names.',
+					array( 'desc_tip' => 'Useful when you have have multiple stores and one Sift account.' )
 				);
 
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::CHECKBOX,
+					WC_SiftScience_Options::AUTO_SEND_ENABLED,
+					'Automatically Send Data',
+					'Automatically send data to Sift when an order is created'
+				);
+
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::NUMBER,
+					WC_SiftScience_Options::MIN_ORDER_VALUE,
+					'Auto Send Minimum Value',
+					'Set to zero to send all orders.',
+					array(
+						'default'  => 0,
+						'min'      => 0,
+						'step'     => 1,
+						'css'      => 'width:75px;',
+						'desc_tip' => 'Orders less than this value won\'t be automatically sent to sift.',
+					)
+				);
+
+				$elements[] = $this->wc_element->create(
+					WC_SiftScience_Element::SECTIONEND,
+					'sifsci_section_main'
+				);
+
+				return $elements;
 			} elseif ( 'reporting' === $sub_section ) {
 				return array(
 					$this->wc_element->create(
@@ -390,7 +425,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			global $current_section;
 			$selected_section = empty( $current_section ) ? 'main' : $current_section;
 
-			$fields = $this->get_section_fields( $selected_section );
+			$fields = $this->get_section_fields( $selected_section, true );
 			WC_Admin_Settings::save_fields( $fields );
 
 			if ( 'main' === $selected_section ) {
