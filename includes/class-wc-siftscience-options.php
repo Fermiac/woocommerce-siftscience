@@ -51,7 +51,6 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public const ORDER_STATUS_IF_GOOD = self::SCHEMA . 'status_if_good';
 		public const ORDER_STATUS_IF_BAD  = self::SCHEMA . 'status_if_bad';
-		public const ORDER_STATUS_IF_MID  = self::SCHEMA . 'status_if_mid';
 
 		/**
 		 * WC_SiftScience_Options constructor.

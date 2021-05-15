@@ -50,8 +50,7 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 				$note = 'Sift score is bad. Order status updated.';
 				$key  = WC_SiftScience_Options::ORDER_STATUS_IF_BAD;
 			} else {
-				$note = 'Sift score is between the thresholds. Order status updated.';
-				$key  = WC_SiftScience_Options::ORDER_STATUS_IF_MID;
+				return;
 			}
 
 			$this->try_apply_status( $order, $key, $note );
