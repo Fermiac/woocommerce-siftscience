@@ -172,11 +172,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			$value = 0;
 			$nid   = $data['id'];
 
-			if ( WC_SiftScience_Options::THRESHOLD_GOOD === $nid ) {
-				$value = $this->options->get_threshold_good();
-			} else {
-				$value = $this->options->get_threshold_bad();
-			}
+			$value = ( WC_SiftScience_Options::THRESHOLD_GOOD === $nid )
+				? $this->options->get_threshold_good()
+				: $this->options->get_threshold_bad();
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
