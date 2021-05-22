@@ -284,7 +284,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
 						'Good Score Limit',
-						'Limit defining "good" orders, and what status to set in that case.',
+						'Limit defining good orders, and what status to set in that case.',
 						array(
 							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
 							'select_value'    => $this->options->get_status_if_good(),
@@ -298,7 +298,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Limit',
-						'Limit defining "bad" orders, and what status to set in that case.',
+						'Limit defining bad orders, and what status to set in that case.',
 						array(
 							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
 							'select_value'    => $this->options->get_status_if_bad(),
@@ -536,11 +536,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * Saves custom fields that aren't covered by WooCommerce's automatic method
 		 */
 		private function save_custom_fields() {
-			if ( ! isset( $_REQUEST['_woosift_nonce'] ) ) {
-				return;
-			}
-
-			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['_woosift_nonce'] ), 'woo-sifscience-settings' ) ) {
+			if ( ! ( isset( $_REQUEST['_woosift_nonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_woosift_nonce'] ), 'woo-sifscience-settings' ) ) ) {
 				return;
 			}
 
@@ -549,8 +545,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					continue;
 				}
 
-				$val = sanitize_key( $_REQUEST[ $f ] );
-				update_option( $f, $val );
+				update_option( $f, sanitize_key( $_REQUEST[ $f ] ) );
 			}
 		}
 	}
