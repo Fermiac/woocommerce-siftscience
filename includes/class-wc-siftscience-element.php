@@ -180,22 +180,18 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function gb_callback( $data ) {
-			$nid    = $data['id'];
-			$sid    = $data['select_id'];
-			$value  = $data['threshold_value'];
-			$svalue = $data['select_value'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<input type="number" min="0" max="100" step="1" style="width: 75px" name="<?php echo esc_attr( $nid ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+					<input type="number" min="0" max="100" step="1" style="width: 75px" name="<?php echo esc_attr( $data['id'] ); ?>" value="<?php echo esc_attr( $data['threshold_value'] ); ?>" />
 					&nbsp;
-					<select style="width: auto;" name="<?php echo esc_attr( $sid ); ?>" >
+					<select style="width: auto;" name="<?php echo esc_attr( $data['select_id'] ); ?>" >
 						<?php
 						foreach ( $data['status'] as $key => $value ) :
-							$selected = $key === $svalue ? ' selected' : '';
+							$selected = $key === $data['select_value'] ? ' selected' : '';
 							?>
 								<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $selected ); ?>><?php echo esc_html( $value ); ?></option>
 							<?php
