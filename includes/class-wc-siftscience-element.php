@@ -190,10 +190,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					&nbsp;
 					<select style="width: auto;" name="<?php echo esc_attr( $data['select_id'] ); ?>" >
 						<?php
+						$select_value = $data['select_value'];
 						foreach ( $data['status'] as $key => $value ) :
-							$selected = $key === $data['select_value'] ? ' selected' : '';
 							?>
-								<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $selected ); ?>><?php echo esc_html( $value ); ?></option>
+								<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $key === $select_value ? ' selected' : '' ); ?>><?php echo esc_html( $value ); ?></option>
 							<?php
 							endforeach;
 						?>
