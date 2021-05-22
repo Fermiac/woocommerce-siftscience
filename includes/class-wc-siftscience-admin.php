@@ -284,7 +284,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
 						'Good Score Limit',
-						'pop up needs JS',
+						'Limit defining "good" orders, and what status to set in that case.',
 						array(
 							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
 							'select_value'    => $this->options->get_status_if_good(),
@@ -298,7 +298,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Limit',
-						'pop up needs JS',
+						'Limit defining "bad" orders, and what status to set in that case.',
 						array(
 							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
 							'select_value'    => $this->options->get_status_if_bad(),
