@@ -142,6 +142,24 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		/**
+		 * Gets the target order status if order is good
+		 *
+		 * @return string
+		 */
+		public function get_status_if_good() {
+			return get_option( self::ORDER_STATUS_IF_GOOD, 'none' );
+		}
+
+		/**
+		 * Gets the target order status if order is bad
+		 *
+		 * @return string
+		 */
+		public function get_status_if_bad() {
+			return get_option( self::ORDER_STATUS_IF_BAD, 'none' );
+		}
+
+		/**
 		 * Gets the ID of the current user
 		 *
 		 * @return int|null

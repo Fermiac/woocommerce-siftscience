@@ -43,3 +43,7 @@ The username and password are both set to `wordpress`.
 ## Linting
 
 https://rcorreia.com/wordpress-development/install-php-linter-windows-10-sublime-text-3/
+
+```
+docker run -v "$PWD/.:/wcs" -i nabsul/wordpress-phpcs:latest phpcs /wcs --extensions=php
+```

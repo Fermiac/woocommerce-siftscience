@@ -31,6 +31,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_TEST_SSL    = self::GET_VAR_SCHEMA . 'test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
+		private const CUSTOM_FIELDS = array(
+			WC_SiftScience_Options::THRESHOLD_GOOD,
+			WC_SiftScience_Options::THRESHOLD_BAD,
+			WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
+			WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
+		);
+
 		/**
 		 * The options service
 		 *
@@ -277,10 +284,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_GOOD,
 						'Good Score Limit',
-						'pop up needs JS',
+						'Limit defining good orders, and what status to set in that case.',
 						array(
-							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
+							'select_value'    => $this->options->get_status_if_good(),
+							'threshold_value' => $this->options->get_threshold_good(),
+							'callback'        => 'gb_callback',
+							'status'          => $this->status->get_status_options(),
 						)
 					),
 
@@ -288,10 +298,13 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						WC_SiftScience_Element::CUSTOM,
 						WC_SiftScience_Options::THRESHOLD_BAD,
 						'Bad Score Limit',
-						'pop up needs JS',
+						'Limit defining bad orders, and what status to set in that case.',
 						array(
-							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
+							'select_value'    => $this->options->get_status_if_bad(),
+							'threshold_value' => $this->options->get_threshold_bad(),
+							'callback'        => 'gb_callback',
+							'status'          => $this->status->get_status_options(),
 						)
 					),
 
@@ -321,6 +334,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'step'     => 1,
 							'css'      => 'width:75px;',
 							'desc_tip' => 'Orders less than this value won\'t be automatically sent to sift.',
+						)
+					),
+
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'_woosift_nonce',
+						'',
+						'',
+						array(
+							'nonce'    => wp_create_nonce( 'woo-sifscience-settings' ),
+							'callback' => 'nonce_callback',
 						)
 					),
 
@@ -392,6 +416,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			$fields = $this->get_section_fields( $selected_section );
 			WC_Admin_Settings::save_fields( $fields );
+			$this->save_custom_fields();
 
 			if ( 'main' === $selected_section ) {
 				$is_api_working = $this->check_api();
@@ -505,6 +530,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 			$url     = 'https://github.com/Fermiac/woocommerce-siftscience/wiki/Statistics-Collection';
 			$message = 'Help us improve this plugin by automatically reporting errors and statistics. ';
 			return "$message More info <a target='_blank' href='$url'>here</a>.";
+		}
+
+		/**
+		 * Saves custom fields that aren't covered by WooCommerce's automatic method
+		 */
+		private function save_custom_fields() {
+			if ( ! ( isset( $_REQUEST['_woosift_nonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_woosift_nonce'] ), 'woo-sifscience-settings' ) ) ) {
+				return;
+			}
+
+			foreach ( self::CUSTOM_FIELDS as $f ) {
+				if ( ! isset( $_REQUEST[ $f ] ) ) {
+					continue;
+				}
+
+				update_option( $f, sanitize_key( $_REQUEST[ $f ] ) );
+			}
 		}
 	}
 endif;

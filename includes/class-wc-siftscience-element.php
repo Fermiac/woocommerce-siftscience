@@ -144,6 +144,17 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		}
 
 		/**
+		 * This function constructs a hidden nonce form input value
+		 *
+		 * @param Array $data The data array of this setting line.
+		 */
+		public function nonce_callback( $data ) {
+			?>
+			<input type="hidden" name="<?php echo esc_attr( $data['id'] ); ?>" value="<?php echo esc_attr( $data['nonce'] ); ?>" />
+			<?php
+		}
+
+		/**
 		 * This function constructs the custom html for the anonymouse ID field
 		 *
 		 * @param Array $data The data array of this setting line.
@@ -169,28 +180,20 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		 * @param Array $data The data array of this setting line.
 		 */
 		public function gb_callback( $data ) {
-			$value = 0;
-			$nid   = $data['id'];
-
-			$value = ( WC_SiftScience_Options::THRESHOLD_GOOD === $nid )
-				? $this->options->get_threshold_good()
-				: $this->options->get_threshold_bad();
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<input type="number" min="0" max="100" step="1" style="width: 75px"
-					<?php
-						echo 'id=' . esc_attr( $nid ) . ' name=' . esc_attr( $nid ) . ' value=' . esc_attr( $value );
-					?>
-					/>&nbsp;
-					<select style="width: auto;">
+					<input type="number" min="0" max="100" step="1" style="width: 75px" name="<?php echo esc_attr( $data['id'] ); ?>" value="<?php echo esc_attr( $data['threshold_value'] ); ?>" />
+					&nbsp;
+					<select style="width: auto;" name="<?php echo esc_attr( $data['select_id'] ); ?>" >
 						<?php
+						$select_value = $data['select_value'];
 						foreach ( $data['status'] as $key => $value ) :
 							?>
-								<option value=<?php echo esc_attr( $key ); ?>><?php echo esc_html( $value ); ?></option>
+								<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $key === $select_value ? ' selected' : '' ); ?>><?php echo esc_html( $value ); ?></option>
 							<?php
 							endforeach;
 						?>
