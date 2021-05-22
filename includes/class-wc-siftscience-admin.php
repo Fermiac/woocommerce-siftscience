@@ -544,13 +544,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				return;
 			}
 
-			$data = $_REQUEST;
 			foreach ( self::CUSTOM_FIELDS as $f ) {
-				if ( ! isset( $data[ $f ] ) ) {
+				if ( ! isset( $_REQUEST[ $f ] ) ) {
 					continue;
 				}
 
-				$val = wc_clean( wp_unslash( $data[ $f ] ) );
+				$val = sanitize_key( $_REQUEST[ $f ] );
 				update_option( $f, $val );
 			}
 		}
