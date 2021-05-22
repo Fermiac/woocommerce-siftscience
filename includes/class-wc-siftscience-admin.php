@@ -286,8 +286,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						'Good Score Limit',
 						'pop up needs JS',
 						array(
-							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
+							'select_value'    => $this->options->get_status_if_good(),
+							'threshold_value' => $this->options->get_threshold_good(),
+							'callback'        => 'gb_callback',
+							'status'          => $this->status->get_status_options(),
 						)
 					),
 
@@ -297,8 +300,11 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 						'Bad Score Limit',
 						'pop up needs JS',
 						array(
-							'callback' => 'gb_callback',
-							'status'   => $this->status->get_status_options(),
+							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
+							'select_value'    => $this->options->get_status_if_bad(),
+							'threshold_value' => $this->options->get_threshold_bad(),
+							'callback'        => 'gb_callback',
+							'status'          => $this->status->get_status_options(),
 						)
 					),
 
@@ -328,6 +334,17 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'step'     => 1,
 							'css'      => 'width:75px;',
 							'desc_tip' => 'Orders less than this value won\'t be automatically sent to sift.',
+						)
+					),
+
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'_woosift_nonce',
+						'',
+						'',
+						array(
+							'nonce'    => wp_create_nonce( 'woo-sifscience-settings' ),
+							'callback' => 'nonce_callback',
 						)
 					),
 
@@ -519,27 +536,22 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * Saves custom fields that aren't covered by WooCommerce's automatic method
 		 */
 		private function save_custom_fields() {
-			if ( ! isset( $_POST['nonce'] ) ) {
+			if ( ! isset( $_REQUEST['_woosift_nonce'] ) ) {
 				return;
 			}
 
-			$nonce = sanitize_key( $_POST['nonce'] );
-			if ( ! wp_verify_nonce( $nonce ) ) {
+			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['_woosift_nonce'] ), 'woo-sifscience-settings' ) ) {
 				return;
 			}
 
-			$data = $_POST;
-
-			if ( empty( $data ) ) {
-				return;
-			}
-
+			$data = $_REQUEST;
 			foreach ( self::CUSTOM_FIELDS as $f ) {
 				if ( ! isset( $data[ $f ] ) ) {
 					continue;
 				}
 
-				update_option( $f, wc_clean( $data[ $f ] ) );
+				$val = wc_clean( wp_unslash( $data[ $f ] ) );
+				update_option( $f, $val );
 			}
 		}
 	}

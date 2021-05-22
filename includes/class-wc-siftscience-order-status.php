@@ -16,9 +16,26 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 	require_once __DIR__ . '/class-wc-siftscience-options.php';
 
 	/**
-	 * Class WC_SiftScience_Orders
+	 * Class WC_SiftScience_Order_Status
 	 */
 	class WC_SiftScience_Order_Status {
+
+		/**
+		 * The options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
+		private $options;
+
+		/**
+		 * WC_SiftScience_Order_Status constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 */
+		public function __construct( WC_SiftScience_Options $options ) {
+			$this->options = $options;
+		}
+
 		/**
 		 * Gets a list of available statuses
 		 *
@@ -45,10 +62,10 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 
 			if ( $score < $threshold_good ) {
 				$note  = 'Sift score is good. Order status updated.';
-				$value = get_option( WC_SiftScience_Options::ORDER_STATUS_IF_GOOD, 'none' );
+				$value = $this->options->get_status_if_good();
 			} elseif ( $score > $threshold_bad ) {
 				$note  = 'Sift score is bad. Order status updated.';
-				$value = get_option( WC_SiftScience_Options::ORDER_STATUS_IF_BAD, 'none' );
+				$value = $this->options->get_status_if_bad();
 			} else {
 				// Score is in mid range. Do Nothing.
 				return;
