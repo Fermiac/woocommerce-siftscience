@@ -100,7 +100,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			add_action( 'woocommerce_checkout_order_processed', array( $events, 'update_order_status' ), 100 );
 
 			add_action( 'woocommerce_new_order', array( $events, 'add_session_info' ), 100 );
-			add_action( 'woocommerce_order_status_changed', array( $events, 'chnage_order_status' ), 100 );
+			add_action( 'woocommerce_order_status_changed', array( $events, 'change_order_status' ), 100 );
 			add_action( 'post_updated', array( $events, 'update_order' ), 100 );
 			add_action( 'shutdown', array( $events, 'shutdown' ) );
 

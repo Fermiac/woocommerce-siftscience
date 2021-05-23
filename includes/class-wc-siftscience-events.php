@@ -34,12 +34,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 */
 		private $account;
 		/**
-		 * The api obj
-		 *
-		 * @var WC_SiftScience_Api
-		 */
-		private $api;
-		/**
 		 * Request formatting service
 		 *
 		 * @var WC_SiftScience_Api_Cart
@@ -112,7 +106,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * WC_SiftScience_Events constructor.
 		 *
-		 * @param WC_SiftScience_Api             $api         API object.
 		 * @param WC_SiftScience_Comm            $comm        Communications service.
 		 * @param WC_SiftScience_Options         $options     Options service.
 		 * @param WC_SiftScience_Api_Account     $account     Account request formatting service.
@@ -123,7 +116,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param WC_SiftScience_Logger          $logger      Logger service.
 		 */
 		public function __construct(
-				WC_SiftScience_Api $api,
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Api_Account $account,
@@ -132,7 +124,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				WC_SiftScience_Api_Order $order,
 				WC_SiftScience_Api_Transaction $transaction,
 				WC_SiftScience_Logger $logger ) {
-			$this->api         = $api;
 			$this->account     = $account;
 			$this->cart        = $cart;
 			$this->login       = $login;
@@ -449,7 +440,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 */
 		public function update_order_status( $order_id ) {
 			$order_id = wc_get_order( $order_id );
-			$user_id  = $this->api->get_user_id( $order_id );
+			$user_id  = $this->options->get_user_id( $order_id );
 		}
 	}
 
