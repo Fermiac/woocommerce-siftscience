@@ -33,7 +33,12 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @var WC_SiftScience_Api_Account
 		 */
 		private $account;
-
+		/**
+		 * The api obj
+		 *
+		 * @var WC_SiftScience_Api
+		 */
+		private $api;
 		/**
 		 * Request formatting service
 		 *
@@ -117,6 +122,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param WC_SiftScience_Logger          $logger      Logger service.
 		 */
 		public function __construct(
+				WC_SiftScience_Api $api;
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Api_Account $account,
@@ -125,6 +131,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				WC_SiftScience_Api_Order $order,
 				WC_SiftScience_Api_Transaction $transaction,
 				WC_SiftScience_Logger $logger ) {
+			$this->api         = $api;
 			$this->account     = $account;
 			$this->cart        = $cart;
 			$this->login       = $login;
@@ -312,7 +319,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/order-status
 		 * @param string $order_id Order ID.
 		 */
-		public function update_order_status( $order_id ) {
+		public function change_order_status( $order_id ) {
 			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
@@ -432,6 +439,16 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$this->send_transaction( $order_id );
 				$this->set_backfill( $order_id );
 			}
+		}
+
+		/**
+		 * Updates order status
+		 *
+		 * @param string $order_id The order ID.
+		 */
+		public function update_order_status( $order_id ) {
+			$order_id = wc_get_order( $order_id );
+			$user_id  = $this->api->get_user_id( $order_id );
 		}
 	}
 
