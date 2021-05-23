@@ -112,6 +112,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		/**
 		 * WC_SiftScience_Events constructor.
 		 *
+		 * @param WC_SiftScience_Api             $api         API object.
 		 * @param WC_SiftScience_Comm            $comm        Communications service.
 		 * @param WC_SiftScience_Options         $options     Options service.
 		 * @param WC_SiftScience_Api_Account     $account     Account request formatting service.
@@ -122,7 +123,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param WC_SiftScience_Logger          $logger      Logger service.
 		 */
 		public function __construct(
-				WC_SiftScience_Api $api;
+				WC_SiftScience_Api $api,
 				WC_SiftScience_Comm $comm,
 				WC_SiftScience_Options $options,
 				WC_SiftScience_Api_Account $account,
