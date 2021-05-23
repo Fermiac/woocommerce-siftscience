@@ -33,6 +33,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @var WC_SiftScience_Api_Account
 		 */
 		private $account;
+
 		/**
 		 * Request formatting service
 		 *
