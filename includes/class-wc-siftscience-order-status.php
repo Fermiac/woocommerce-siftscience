@@ -57,8 +57,8 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		 * @param int      $score The score received by the order.
 		 */
 		public function try_update_order_status( WC_Order $order, int $score ) {
-			$threshold_good = get_option( WC_SiftScience_Options::THRESHOLD_GOOD );
-			$threshold_bad  = get_option( WC_SiftScience_Options::THRESHOLD_BAD );
+			$threshold_good = $this->options->get_threshold_good();
+			$threshold_bad  = $this->options->get_threshold_good();
 
 			if ( $score < $threshold_good ) {
 				$note  = 'Sift score is good. Order status updated.';

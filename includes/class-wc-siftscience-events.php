@@ -449,7 +449,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 */
 		public function update_order_status( $order_id ) {
 			$order = wc_get_order( $order_id );
-			$this->order_status->try_update_order_status( $order, $this->options->get_user_id( $order ) );
+			$this->order_status->try_update_order_status( $order, $this->comm->get_user_score( $this->options->get_user_id( $order ) ) );
 		}
 	}
 
