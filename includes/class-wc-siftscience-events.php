@@ -433,7 +433,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param string $order_id The order ID.
 		 * @param string $type The type of event to send.
 		 */
-		private function send_order_event( $order_id, $type = 'create' ) {
+		private function send_order_event( string $order_id, string $type = 'create' ) {
 			$data = $this->order->create_order( $order_id, $type );
 			if ( null !== $data ) {
 				$this->events[] = $data;
@@ -447,9 +447,15 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 *
 		 * @param string $order_id The order ID.
 		 */
-		public function update_order_status( $order_id ) {
-			$order = wc_get_order( $order_id );
-			$this->order_status->try_update_order_status( $order, $this->comm->get_user_score( $this->options->get_user_id( $order ) ) );
+		public function update_order_status( string $order_id ) {
+			$order   = wc_get_order( $order_id );
+			$user_id = $this->options->get_user_id( $order );
+			$result  = $this->comm->get_user_score( $user_id );
+
+			if ( isset( $result, $result['scores'], $result['scores']['payment_abuse'], $result['scores']['payment_abuse']['score'] ) ) {
+				$score = $result['scores']['payment_abuse']['score'] * 100;
+				$this->order_status->try_update_order_status( $order, $score );
+			}
 		}
 	}
 
