@@ -177,9 +177,10 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 		/**
 		 * This function constructs the custom html for the anonymouse ID field
 		 *
-		 * @param Array $data The data array of this setting line.
+		 * @param array $data The data array of this setting line.
 		 */
-		public function gb_callback( $data ) {
+		public function gb_callback( array $data ) {
+			$state = $data['sift_state'];
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -188,14 +189,29 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 				<td class="forminp">
 					<input type="number" min="0" max="100" step="1" style="width: 75px" name="<?php echo esc_attr( $data['id'] ); ?>" value="<?php echo esc_attr( $data['threshold_value'] ); ?>" />
 					&nbsp;
-					<select style="width: auto;" name="<?php echo esc_attr( $data['select_id'] ); ?>" >
+					<span style="vertical-align: middle;">If score is <?php echo esc_html( $state ); ?> change order status from:</span>
+					&nbsp;
+					<select style="width: auto;" name="<?php echo esc_attr( $state ); ?>_from" >
 						<?php
-						$select_value = $data['select_value'];
+						$select_value = $data['auto_settings'][ $state . '_from' ];
 						foreach ( $data['status'] as $key => $value ) :
 							?>
 								<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $key === $select_value ? ' selected' : '' ); ?>><?php echo esc_html( $value ); ?></option>
 							<?php
 							endforeach;
+						?>
+					</select>
+					&nbsp;
+					<span style="vertical-align: middle;">to:</span>
+					&nbsp;
+					<select style="width: auto;" name="<?php echo esc_attr( $state ); ?>_to" >
+						<?php
+						$select_value = $data['auto_settings'][ $state . '_to' ];
+						foreach ( $data['status'] as $key => $value ) :
+							?>
+							<option value="<?php echo esc_attr( $key ); ?>"<?php echo esc_attr( $key === $select_value ? ' selected' : '' ); ?>><?php echo esc_html( $value ); ?></option>
+							<?php
+						endforeach;
 						?>
 					</select>
 					<p><?php echo esc_html( $data['desc'] ); ?></p>

@@ -31,13 +31,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private const GET_VAR_TEST_SSL    = self::GET_VAR_SCHEMA . 'test_ssl';
 		private const GET_VAR_CLEAR_LOGS  = self::GET_VAR_SCHEMA . 'clear_logs';
 
-		private const CUSTOM_FIELDS = array(
-			WC_SiftScience_Options::THRESHOLD_GOOD,
-			WC_SiftScience_Options::THRESHOLD_BAD,
-			WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
-			WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
-		);
-
 		/**
 		 * The options service
 		 *
@@ -259,6 +252,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function get_section_fields( $sub_section ) {
 
 			if ( 'main' === $sub_section ) {
+				$auto_update_settings = $this->options->get_order_auto_update_settings();
 				return array(
 					$this->wc_element->create(
 						WC_SiftScience_Element::TITLE,
@@ -282,12 +276,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 					$this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
-						WC_SiftScience_Options::THRESHOLD_GOOD,
+						'limit_good',
 						'Good Score Limit',
-						'Limit defining good orders, and what status to set in that case.',
+						'Scores lower than this limit are considered good.',
 						array(
-							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_GOOD,
-							'select_value'    => $this->options->get_status_if_good(),
+							'sift_state'      => 'good',
+							'auto_settings'   => $auto_update_settings,
 							'threshold_value' => $this->options->get_threshold_good(),
 							'callback'        => 'gb_callback',
 							'status'          => $this->status->get_status_options(),
@@ -296,12 +290,12 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 					$this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
-						WC_SiftScience_Options::THRESHOLD_BAD,
+						'limit_bad',
 						'Bad Score Limit',
-						'Limit defining bad orders, and what status to set in that case.',
+						'Scores higher than this limit are considered bad.',
 						array(
-							'select_id'       => WC_SiftScience_Options::ORDER_STATUS_IF_BAD,
-							'select_value'    => $this->options->get_status_if_bad(),
+							'sift_state'      => 'bad',
+							'auto_settings'   => $auto_update_settings,
 							'threshold_value' => $this->options->get_threshold_bad(),
 							'callback'        => 'gb_callback',
 							'status'          => $this->status->get_status_options(),
@@ -540,12 +534,21 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				return;
 			}
 
-			foreach ( self::CUSTOM_FIELDS as $f ) {
-				if ( ! isset( $_REQUEST[ $f ] ) ) {
-					continue;
-				}
+			if ( isset( $_REQUEST['limit_good'] ) ) {
+				$this->options->set_threshold_good( (int) sanitize_key( $_REQUEST['limit_good'] ) );
+			}
 
-				update_option( $f, sanitize_key( $_REQUEST[ $f ] ) );
+			if ( isset( $_REQUEST['limit_bad'] ) ) {
+				$this->options->set_threshold_bad( (int) sanitize_key( $_REQUEST['limit_bad'] ) );
+			}
+
+			if ( isset( $_REQUEST['good_from'], $_REQUEST['good_to'], $_REQUEST['bad_from'], $_REQUEST['bad_to'] ) ) {
+				$good_from = sanitize_key( $_REQUEST['good_from'] );
+				$good_to   = sanitize_key( $_REQUEST['good_to'] );
+				$bad_from  = sanitize_key( $_REQUEST['bad_from'] );
+				$bad_to    = sanitize_key( $_REQUEST['bad_to'] );
+
+				$this->options->set_order_auto_update_settings( $good_from, $good_to, $bad_from, $bad_to );
 			}
 		}
 	}
