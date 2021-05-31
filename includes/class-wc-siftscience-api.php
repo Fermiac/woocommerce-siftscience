@@ -121,7 +121,7 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 		 *
 		 * @return array The request result
 		 */
-		private function handle_request( string $action, string $order_id ) {
+		private function handle_request( $action, $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
 					'status' => 401,
