@@ -37,6 +37,7 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		/**
 		 * WC_SiftScience_Order_Status constructor.
 		 *
+		 * @param WC_SiftScience_Comm    $comm    Communications service.
 		 * @param WC_SiftScience_Options $options Options service.
 		 */
 		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options ) {
@@ -71,20 +72,20 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 			$bad_to    = $settings['bad_to'];
 
 			// Abort if there are no actions configure.
-			if ( ! in_array( 'non', array( $good_to, $bad_to ) ) ) {
+			if ( ! in_array( 'none', array( $good_to, $bad_to ), true ) ) {
 				return;
 			}
 
 			// Abort if the current status is not one of the configured "from" statuses.
 			$status = $order->get_status();
-			if ( ! in_array( $status, array( $good_from, $bad_from ) ) ) {
+			if ( ! in_array( $status, array( $good_from, $bad_from ), true ) ) {
 				return;
 			}
 
 			$user_id = $this->options->get_user_id( $order );
 			$result  = $this->comm->get_user_score( $user_id );
 
-			// abort if sift.com doesn't return a score
+			// abort if sift.com doesn't return a score.
 			if ( ! isset( $result, $result['scores'], $result['scores']['payment_abuse'], $result['scores']['payment_abuse']['score'] ) ) {
 				return;
 			}

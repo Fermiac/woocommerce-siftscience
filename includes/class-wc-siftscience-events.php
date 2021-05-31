@@ -115,14 +115,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				WC_SiftScience_Api_Cart $cart,
 				WC_SiftScience_Api_Login $login,
 				WC_SiftScience_Api_Order $order,
-				WC_SiftScience_Api_Transaction $transaction) {
-			$this->account      = $account;
-			$this->cart         = $cart;
-			$this->login        = $login;
-			$this->order        = $order;
-			$this->transaction  = $transaction;
-			$this->comm         = $comm;
-			$this->options      = $options;
+				WC_SiftScience_Api_Transaction $transaction ) {
+			$this->account     = $account;
+			$this->cart        = $cart;
+			$this->login       = $login;
+			$this->order       = $order;
+			$this->transaction = $transaction;
+			$this->comm        = $comm;
+			$this->options     = $options;
 
 			$this->saved_user_id = get_current_user_id();
 			$this->order_map     = array();

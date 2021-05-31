@@ -119,9 +119,9 @@ if ( ! class_exists( 'WC_SiftScience_Api' ) ) :
 		 * @param string $action The action to be performed.
 		 * @param string $order_id The ID of the order to perform the action on.
 		 *
-		 * @return array|array[] The request result
+		 * @return array The request result
 		 */
-		private function handle_request( $action, $order_id ) {
+		private function handle_request( string $action, string $order_id ) {
 			if ( ! is_super_admin() ) {
 				return array(
 					'status' => 401,
