@@ -457,7 +457,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			$bad_to   = $settings['bad_to'];
 
 			// Abort if there are no actions configure.
-			if ( ! in_array( 'none', array( $good_to, $bad_to ), true ) ) {
+			if ( 'none' === $good_to && 'none' === $bad_to ) {
 				return;
 			}
 

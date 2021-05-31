@@ -53,7 +53,9 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		public function get_status_options() {
 			$result = array( 'none' => 'Do Nothing' );
 			foreach ( wc_get_order_statuses() as $key => $val ) {
-				$result[ $key ] = $val;
+				// Remove the "wc-" prefix on status names because they're not elsewhere.
+				$k            = strpos( $key, 'wc-' ) === 0 ? substr( $key, 3 ) : $key;
+				$result[ $k ] = $val;
 			}
 
 			return $result;
@@ -82,11 +84,11 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 			$result  = $this->comm->get_user_score( $user_id );
 
 			// abort if sift.com doesn't return a score.
-			if ( ! isset( $result, $result['scores'], $result['scores']['payment_abuse'], $result['scores']['payment_abuse']['score'] ) ) {
+			if ( ! isset( $result->scores->payment_abuse->score ) ) {
 				return;
 			}
 
-			$score = $result['scores']['payment_abuse']['score'] * 100;
+			$score = $result->scores->payment_abuse->score * 100;
 
 			$threshold_good = $this->options->get_threshold_good();
 			$threshold_bad  = $this->options->get_threshold_bad();
@@ -103,7 +105,8 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 			}
 
 			if ( null !== $value ) {
-				$order->set_status( $value, $note );
+				$result = $order->set_status( $value, $note );
+				$result = $order->save();
 			}
 		}
 	}
