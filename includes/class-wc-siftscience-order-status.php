@@ -28,11 +28,19 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		private $options;
 
 		/**
+		 * The communications service
+		 *
+		 * @var WC_SiftScience_Comm
+		 */
+		private $comm;
+
+		/**
 		 * WC_SiftScience_Order_Status constructor.
 		 *
 		 * @param WC_SiftScience_Options $options Options service.
 		 */
-		public function __construct( WC_SiftScience_Options $options ) {
+		public function __construct( WC_SiftScience_Comm $comm, WC_SiftScience_Options $options ) {
+			$this->comm    = $comm;
 			$this->options = $options;
 		}
 
@@ -54,24 +62,50 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		 * Checks the order sift score and updates the order status if needed
 		 *
 		 * @param WC_Order $order Order to update.
-		 * @param int      $score The score received by the order.
 		 */
-		public function try_update_order_status( WC_Order $order, $score ) {
-			$threshold_good = $this->options->get_threshold_good();
-			$threshold_bad  = $this->options->get_threshold_bad();
+		public function try_update_order_status( WC_Order $order ) {
+			$settings  = $this->options->get_order_auto_update_settings();
+			$good_from = $settings['good_from'];
+			$good_to   = $settings['good_to'];
+			$bad_from  = $settings['bad_from'];
+			$bad_to    = $settings['bad_to'];
 
-			if ( $score < $threshold_good ) {
-				$note  = 'Sift score is good. Order status updated.';
-				$value = $this->options->get_status_if_good();
-			} elseif ( $score > $threshold_bad ) {
-				$note  = 'Sift score is bad. Order status updated.';
-				$value = $this->options->get_status_if_bad();
-			} else {
-				// Score is in mid range. Do Nothing.
+			// Abort if there are no actions configure.
+			if ( ! in_array( 'non', array( $good_to, $bad_to ) ) ) {
 				return;
 			}
 
-			if ( 'none' !== $value ) {
+			// Abort if the current status is not one of the configured "from" statuses.
+			$status = $order->get_status();
+			if ( ! in_array( $status, array( $good_from, $bad_from ) ) ) {
+				return;
+			}
+
+			$user_id = $this->options->get_user_id( $order );
+			$result  = $this->comm->get_user_score( $user_id );
+
+			// abort if sift.com doesn't return a score
+			if ( ! isset( $result, $result['scores'], $result['scores']['payment_abuse'], $result['scores']['payment_abuse']['score'] ) ) {
+				return;
+			}
+
+			$score = $result['scores']['payment_abuse']['score'] * 100;
+
+			$threshold_good = $this->options->get_threshold_good();
+			$threshold_bad  = $this->options->get_threshold_bad();
+
+			$note  = null;
+			$value = null;
+
+			if ( $score <= $threshold_good && $status === $good_from ) {
+				$note  = 'Sift score is good. Order status updated.';
+				$value = $good_to;
+			} elseif ( $score >= $threshold_bad && $status === $bad_from ) {
+				$note  = 'Sift score is bad. Order status updated.';
+				$value = $bad_to;
+			}
+
+			if ( null !== $value ) {
 				$order->set_status( $value, $note );
 			}
 		}

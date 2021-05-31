@@ -54,12 +54,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @var WC_SiftScience_Api_Order
 		 */
 		private $order;
-		/**
-		 * Order status collection from woocommearce.
-		 *
-		 * @var WC_SiftScience_Order_Status
-		 */
-		private $order_status;
+
 		/**
 		 * Request formatting service
 		 *
@@ -80,13 +75,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @var WC_SiftScience_Options
 		 */
 		private $options;
-
-		/**
-		 * Logger service
-		 *
-		 * @var WC_SiftScience_Logger
-		 */
-		private $logger;
 
 		/**
 		 * The current user id
@@ -118,9 +106,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param WC_SiftScience_Api_Cart        $cart         Cart request formatting service.
 		 * @param WC_SiftScience_Api_Login       $login        Login request formatting service.
 		 * @param WC_SiftScience_Api_Order       $order        Order request formatting service.
-		 * @param WC_SiftScience_Order_Status    $order_status Order status collection from woocommearce.
 		 * @param WC_SiftScience_Api_Transaction $transaction  Transaction request formatting service.
-		 * @param WC_SiftScience_Logger          $logger       Logger service.
 		 */
 		public function __construct(
 				WC_SiftScience_Comm $comm,
@@ -129,18 +115,14 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				WC_SiftScience_Api_Cart $cart,
 				WC_SiftScience_Api_Login $login,
 				WC_SiftScience_Api_Order $order,
-				WC_SiftScience_Order_Status $order_status,
-				WC_SiftScience_Api_Transaction $transaction,
-				WC_SiftScience_Logger $logger ) {
+				WC_SiftScience_Api_Transaction $transaction) {
 			$this->account      = $account;
 			$this->cart         = $cart;
 			$this->login        = $login;
 			$this->order        = $order;
-			$this->order_status = $order_status;
 			$this->transaction  = $transaction;
 			$this->comm         = $comm;
 			$this->options      = $options;
-			$this->logger       = $logger;
 
 			$this->saved_user_id = get_current_user_id();
 			$this->order_map     = array();
@@ -439,22 +421,6 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$this->events[] = $data;
 				$this->send_transaction( $order_id );
 				$this->set_backfill( $order_id );
-			}
-		}
-
-		/**
-		 * Updates order status
-		 *
-		 * @param string $order_id The order ID.
-		 */
-		public function update_order_status( string $order_id ) {
-			$order   = wc_get_order( $order_id );
-			$user_id = $this->options->get_user_id( $order );
-			$result  = $this->comm->get_user_score( $user_id );
-
-			if ( isset( $result, $result['scores'], $result['scores']['payment_abuse'], $result['scores']['payment_abuse']['score'] ) ) {
-				$score = $result['scores']['payment_abuse']['score'] * 100;
-				$this->order_status->try_update_order_status( $order, $score );
 			}
 		}
 	}
