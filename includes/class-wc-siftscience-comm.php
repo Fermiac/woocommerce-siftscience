@@ -137,7 +137,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 		 */
 		private function send_request( string $url, $args = array() ) {
 			$this->logger->log_info( "Sending Request to Sift API: $url" );
-			$this->logger->log_info( $args );
+			$this->logger->log_info( wp_json_encode( $args ) );
 			if ( ! isset( $args['method'] ) ) {
 				$args['method'] = 'GET';
 			}
@@ -148,7 +148,7 @@ if ( ! class_exists( 'WC_SiftScience_Comm' ) ) :
 			}
 
 			$result = wp_remote_request( $url, $args );
-			$this->logger->log_info( $result );
+			$this->logger->log_info( wp_json_encode( $result ) );
 			return $result;
 		}
 	}

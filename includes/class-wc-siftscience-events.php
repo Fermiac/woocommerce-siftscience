@@ -334,7 +334,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$min_value = (float) ( $this->options->get_min_order_value() );
 
-			if ( 0 === $min_value ) {
+			if ( 0.0 === $min_value ) {
 				return true;
 			}
 
