@@ -70,6 +70,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		private $comm;
 
 		/**
+		 * Communication service
+		 *
+		 * @var WC_SiftScience_Order_Status
+		 */
+		private $order_status;
+
+		/**
 		 * Options service
 		 *
 		 * @var WC_SiftScience_Options
@@ -98,6 +105,13 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		private $events;
 
 		/**
+		 * Cache of orders to check for status changes
+		 *
+		 * @var array
+		 */
+		private $status_checks;
+
+		/**
 		 * WC_SiftScience_Events constructor.
 		 *
 		 * @param WC_SiftScience_Comm            $comm         Communications service.
@@ -107,6 +121,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param WC_SiftScience_Api_Login       $login        Login request formatting service.
 		 * @param WC_SiftScience_Api_Order       $order        Order request formatting service.
 		 * @param WC_SiftScience_Api_Transaction $transaction  Transaction request formatting service.
+		 * @param WC_SiftScience_Order_Status    $order_status Transaction request formatting service.
 		 */
 		public function __construct(
 				WC_SiftScience_Comm $comm,
@@ -115,18 +130,21 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				WC_SiftScience_Api_Cart $cart,
 				WC_SiftScience_Api_Login $login,
 				WC_SiftScience_Api_Order $order,
-				WC_SiftScience_Api_Transaction $transaction ) {
-			$this->account     = $account;
-			$this->cart        = $cart;
-			$this->login       = $login;
-			$this->order       = $order;
-			$this->transaction = $transaction;
-			$this->comm        = $comm;
-			$this->options     = $options;
+				WC_SiftScience_Api_Transaction $transaction,
+				WC_SiftScience_Order_Status $order_status ) {
+			$this->account      = $account;
+			$this->cart         = $cart;
+			$this->login        = $login;
+			$this->order        = $order;
+			$this->transaction  = $transaction;
+			$this->comm         = $comm;
+			$this->options      = $options;
+			$this->order_status = $order_status;
 
 			$this->saved_user_id = get_current_user_id();
 			$this->order_map     = array();
 			$this->events        = array();
+			$this->status_checks = array();
 		}
 
 		/**
@@ -203,6 +221,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 */
 		public function shutdown() {
 			$this->send_queued_data();
+			$this->try_update_order_statuses();
 		}
 
 		/**
@@ -272,7 +291,9 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			if ( ! $this->is_auto_send( $order_id ) ) {
 				return;
 			}
-			$this->order_map[ $order_id ] = 'create';
+
+			$this->order_map[ $order_id ]     = 'create';
+			$this->status_checks[ $order_id ] = 1;
 		}
 
 		/**
@@ -292,7 +313,8 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 			}
 
 			if ( ! isset( $this->order_map[ $order_id ] ) ) {
-				$this->order_map[ $order_id ] = 'update';
+				$this->order_map[ $order_id ]     = 'update';
+				$this->status_checks[ $order_id ] = 1;
 			}
 		}
 
@@ -314,6 +336,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 
 			$this->events[] = $data;
 			$this->send_transaction( $order_id );
+			$this->status_checks[ $order_id ] = 1;
 		}
 
 		/**
@@ -353,7 +376,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @link https://sift.com/developers/docs/curl/events-api/reserved-events/transaction
 		 * @param string $order_id The Order ID.
 		 */
-		public function send_transaction( $order_id ) {
+		private function send_transaction( $order_id ) {
 			$data           = $this->transaction->create_transaction( $order_id );
 			$this->events[] = $data;
 		}
@@ -421,6 +444,25 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 				$this->events[] = $data;
 				$this->send_transaction( $order_id );
 				$this->set_backfill( $order_id );
+				$this->status_checks[ $order_id ] = 1;
+			}
+		}
+
+		/**
+		 * Check if any orders need their status updated
+		 */
+		private function try_update_order_statuses() {
+			$settings = $this->options->get_order_auto_update_settings();
+			$good_to  = $settings['good_to'];
+			$bad_to   = $settings['bad_to'];
+
+			// Abort if there are no actions configure.
+			if ( ! in_array( 'none', array( $good_to, $bad_to ), true ) ) {
+				return;
+			}
+
+			foreach ( $this->status_checks as $order_id => $value ) {
+				$this->order_status->try_update_order_status( $order_id );
 			}
 		}
 	}

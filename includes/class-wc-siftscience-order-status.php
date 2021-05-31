@@ -62,19 +62,15 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 		/**
 		 * Checks the order sift score and updates the order status if needed
 		 *
-		 * @param WC_Order $order Order to update.
+		 * @param int $order_id Order id to update.
 		 */
-		public function try_update_order_status( WC_Order $order ) {
+		public function try_update_order_status( $order_id ) {
+			$order     = wc_get_order( $order_id );
 			$settings  = $this->options->get_order_auto_update_settings();
 			$good_from = $settings['good_from'];
 			$good_to   = $settings['good_to'];
 			$bad_from  = $settings['bad_from'];
 			$bad_to    = $settings['bad_to'];
-
-			// Abort if there are no actions configure.
-			if ( ! in_array( 'none', array( $good_to, $bad_to ), true ) ) {
-				return;
-			}
 
 			// Abort if the current status is not one of the configured "from" statuses.
 			$status = $order->get_status();
