@@ -54,7 +54,7 @@ if ( ! class_exists( 'WC_SiftScience_Order_Status' ) ) :
 			$result = array( 'none' => 'Do Nothing' );
 			foreach ( wc_get_order_statuses() as $key => $val ) {
 				// Remove the "wc-" prefix on status names because they're not elsewhere.
-				$k            = strpos( $key, 'wc-' ) === 0 ? substr( $key, 3 ) : $key;
+				$k            = 0 === strpos( $key, 'wc-' ) ? substr( $key, 3 ) : $key;
 				$result[ $k ] = $val;
 			}
 
