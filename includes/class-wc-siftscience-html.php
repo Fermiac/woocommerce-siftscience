@@ -81,7 +81,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 *
 		 * @param string $settings_url the link to update plugin.
 		 */
-		public function disply_update_notice( $settings_url ) {
+		public function display_update_notice( $settings_url ) {
 			?>
 			<div class="notice notice-error is-dismissible">
 				<p>Sift configuration is invalid. <a href="<?php echo esc_url( $settings_url ); ?>">please update</a>.</p>

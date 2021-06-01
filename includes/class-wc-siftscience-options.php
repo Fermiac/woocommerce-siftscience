@@ -30,6 +30,14 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 */
 		private $log_level;
 
+		/**
+		 * Stores the most recent value of API config state.
+		 * We use this to avoid a race condition in WordPress's get_option().
+		 *
+		 * @var string
+		 */
+		private $is_setup_value;
+
 		private const SCHEMA = 'siftsci_';
 
 		public const GUID    = self::SCHEMA . 'guid';
@@ -55,8 +63,9 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 * WC_SiftScience_Options constructor.
 		 */
 		public function __construct() {
-			$this->version   = WC_SiftScience_Plugin::PLUGIN_VERSION;
-			$this->log_level = get_option( self::LOG_LEVEL_KEY, 2 );
+			$this->version        = WC_SiftScience_Plugin::PLUGIN_VERSION;
+			$this->log_level      = get_option( self::LOG_LEVEL_KEY, 2 );
+			$this->is_setup_value = get_option( self::IS_API_SETUP, '0' );
 		}
 
 		/**
@@ -182,7 +191,17 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 * @return bool
 		 */
 		public function is_setup() {
-			return ( '1' === get_option( self::IS_API_SETUP ) );
+			return '1' === $this->is_setup_value;
+		}
+
+		/**
+		 * Sets the status of the is_setup option
+		 *
+		 * @param bool $is_api_working Whether or not the API settings are correct.
+		 */
+		public function set_is_setup( $is_api_working ) {
+			$this->is_setup_value = $is_api_working ? '1' : '0';
+			update_option( self::IS_API_SETUP, $this->is_setup_value );
 		}
 
 		/**

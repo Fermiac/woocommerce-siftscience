@@ -444,7 +444,8 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 			if ( 'main' === $selected_section ) {
 				$is_api_working = $this->check_api();
-				update_option( WC_SiftScience_Options::IS_API_SETUP, $is_api_working ? 1 : 0 );
+				$this->options->set_is_setup( $is_api_working );
+
 				if ( $is_api_working ) {
 					WC_Admin_Settings::add_message( 'API is correctly configured' );
 				} else {
@@ -467,7 +468,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				if ( false === $is_valid_conf ) {
 					$settings_url = admin_url( 'admin.php?page=wc-settings&tab=siftsci' );
 
-					$this->html->disply_update_notice( $settings_url );
+					$this->html->display_update_notice( $settings_url );
 				}
 			}
 
