@@ -49,8 +49,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		public const IS_API_SETUP      = self::SCHEMA . 'is_api_setup';
 		public const STATS_LAST_SENT   = self::SCHEMA . 'stats_last_sent';
 
-		public const ORDER_STATUS_IF_GOOD = self::SCHEMA . 'status_if_good';
-		public const ORDER_STATUS_IF_BAD  = self::SCHEMA . 'status_if_bad';
+		public const ORDER_STATUS_AUTO_UPDATE = self::SCHEMA . 'order_status_auto_update';
 
 		/**
 		 * WC_SiftScience_Options constructor.
@@ -133,6 +132,15 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		/**
+		 * Gets the threshold for good users (lower is better)
+		 *
+		 * @param int $value The value of the good limit.
+		 */
+		public function set_threshold_good( int $value ) {
+			update_option( self::THRESHOLD_GOOD, $value );
+		}
+
+		/**
 		 * Gets the threshold for bad orders (higher is badder)
 		 *
 		 * @return int
@@ -142,21 +150,12 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		/**
-		 * Gets the target order status if order is good
+		 * Gets the threshold for good users (lower is better)
 		 *
-		 * @return string
+		 * @param int $value The value of the bad limit.
 		 */
-		public function get_status_if_good() {
-			return get_option( self::ORDER_STATUS_IF_GOOD, 'none' );
-		}
-
-		/**
-		 * Gets the target order status if order is bad
-		 *
-		 * @return string
-		 */
-		public function get_status_if_bad() {
-			return get_option( self::ORDER_STATUS_IF_BAD, 'none' );
+		public function set_threshold_bad( int $value ) {
+			update_option( self::THRESHOLD_BAD, $value );
 		}
 
 		/**
@@ -275,6 +274,48 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 */
 		public function get_sift_product_id( $product_id ) {
 			return $this->get_name_prefix() . 'product_' . $product_id;
+		}
+
+		/**
+		 * Gets auto-update order status setting
+		 *
+		 * @return array
+		 */
+		public function get_order_auto_update_settings() {
+			$default = $this->create_order_auto_update_array( 'wc-processing', 'none', 'wc-processing', 'none' );
+			return get_option( self::ORDER_STATUS_AUTO_UPDATE, $default );
+		}
+
+		/**
+		 * Sets auto-update order status setting
+		 *
+		 * @param string $good_from Start state for good orders.
+		 * @param string $good_to Target state for good orders.
+		 * @param string $bad_from Start state for bad orders.
+		 * @param string $bad_to Target state for bad orders.
+		 */
+		public function set_order_auto_update_settings( string $good_from, string $good_to, string $bad_from, string $bad_to ) {
+			$settings = $this->create_order_auto_update_array( $good_from, $good_to, $bad_from, $bad_to );
+			update_option( self::ORDER_STATUS_AUTO_UPDATE, $settings );
+		}
+
+		/**
+		 * Formats the array for auto-order-status settings
+		 *
+		 * @param string $good_from Start state for good orders.
+		 * @param string $good_to Target state for good orders.
+		 * @param string $bad_from Start state for bad orders.
+		 * @param string $bad_to Target state for bad orders.
+		 *
+		 * @return array
+		 */
+		private function create_order_auto_update_array( string $good_from, string $good_to, string $bad_from, string $bad_to ) {
+			return array(
+				'good_from' => $good_from,
+				'good_to'   => $good_to,
+				'bad_from'  => $bad_from,
+				'bad_to'    => $bad_to,
+			);
 		}
 
 		/**
