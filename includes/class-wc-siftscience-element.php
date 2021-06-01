@@ -187,8 +187,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<span style="vertical-align: middle;">From:</span>
-					&nbsp;
+					From:
 					<select style="width: auto;vertical-align: middle;" name="<?php echo esc_attr( $state ); ?>_from" >
 						<?php
 						$select_value = $data['auto_settings'][ $state . '_from' ];
@@ -199,9 +198,7 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 							endforeach;
 						?>
 					</select>
-					&nbsp;
-					<span style="vertical-align: middle;">To:</span>
-					&nbsp;
+					To:
 					<select style="width: auto;vertical-align: middle;" name="<?php echo esc_attr( $state ); ?>_to" >
 						<?php
 						$select_value = $data['auto_settings'][ $state . '_to' ];
