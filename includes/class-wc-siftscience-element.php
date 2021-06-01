@@ -187,11 +187,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 					<?php echo esc_html( $data['title'] ); ?>
 				</th>
 				<td class="forminp">
-					<input type="number" min="0" max="100" step="1" style="width: 75px" name="<?php echo esc_attr( $data['id'] ); ?>" value="<?php echo esc_attr( $data['threshold_value'] ); ?>" />
+					<span style="vertical-align: middle;">From:</span>
 					&nbsp;
-					<span style="vertical-align: middle;">If score is <?php echo esc_html( $state ); ?> change order status from:</span>
-					&nbsp;
-					<select style="width: auto;" name="<?php echo esc_attr( $state ); ?>_from" >
+					<select style="width: auto;vertical-align: middle;" name="<?php echo esc_attr( $state ); ?>_from" >
 						<?php
 						$select_value = $data['auto_settings'][ $state . '_from' ];
 						foreach ( $data['status'] as $key => $value ) :
@@ -202,9 +200,9 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 						?>
 					</select>
 					&nbsp;
-					<span style="vertical-align: middle;">to:</span>
+					<span style="vertical-align: middle;">To:</span>
 					&nbsp;
-					<select style="width: auto;" name="<?php echo esc_attr( $state ); ?>_to" >
+					<select style="width: auto;vertical-align: middle;" name="<?php echo esc_attr( $state ); ?>_to" >
 						<?php
 						$select_value = $data['auto_settings'][ $state . '_to' ];
 						foreach ( $data['status'] as $key => $value ) :

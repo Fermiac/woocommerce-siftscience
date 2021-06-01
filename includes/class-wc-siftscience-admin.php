@@ -275,10 +275,25 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
+						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Options::THRESHOLD_GOOD,
+						'Good Score Limit',
+						'Scores below this value are considered good and shown in green.',
+						array(
+							'default'  => 30,
+							'min'      => 0,
+							'max'      => 100,
+							'step'     => 1,
+							'css'      => 'width:75px;',
+							'desc_tip' => false,
+						)
+					),
+
+					$this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
 						'limit_good',
-						'Good Score Limit',
-						'Scores lower than this limit are considered good.',
+						'Process Good Orders',
+						'Automatically change order status if its Sift score is good.',
 						array(
 							'sift_state'      => 'good',
 							'auto_settings'   => $auto_update_settings,
@@ -289,10 +304,25 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 					),
 
 					$this->wc_element->create(
+						WC_SiftScience_Element::NUMBER,
+						WC_SiftScience_Options::THRESHOLD_BAD,
+						'Bad Score Limit',
+						'Scores above this value are considered bad and shown in red.',
+						array(
+							'default'  => 60,
+							'min'      => 0,
+							'max'      => 100,
+							'step'     => 1,
+							'css'      => 'width:75px;',
+							'desc_tip' => false,
+						)
+					),
+
+					$this->wc_element->create(
 						WC_SiftScience_Element::CUSTOM,
 						'limit_bad',
-						'Bad Score Limit',
-						'Scores higher than this limit are considered bad.',
+						'Process Bad Orders',
+						'Automatically change order status if its Sift score is bad.',
 						array(
 							'sift_state'      => 'bad',
 							'auto_settings'   => $auto_update_settings,
@@ -532,14 +562,6 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		private function save_custom_fields() {
 			if ( ! ( isset( $_REQUEST['_woosift_nonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_woosift_nonce'] ), 'woo-sifscience-settings' ) ) ) {
 				return;
-			}
-
-			if ( isset( $_REQUEST['limit_good'] ) ) {
-				$this->options->set_threshold_good( (int) sanitize_key( $_REQUEST['limit_good'] ) );
-			}
-
-			if ( isset( $_REQUEST['limit_bad'] ) ) {
-				$this->options->set_threshold_bad( (int) sanitize_key( $_REQUEST['limit_bad'] ) );
 			}
 
 			if ( isset( $_REQUEST['good_from'], $_REQUEST['good_to'], $_REQUEST['bad_from'], $_REQUEST['bad_to'] ) ) {
