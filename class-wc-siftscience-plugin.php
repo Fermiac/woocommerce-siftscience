@@ -25,9 +25,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 	// Make sure session is started as soon as possible.
 	if ( ! headers_sent() && session_status() !== PHP_SESSION_ACTIVE ) {
-		session_start( array(
-			'read_and_close' => true,
-		) );
+		session_start( array( 'read_and_close' => true ) );
 	}
 
 	require_once __DIR__ . '/class-wc-siftscience-dependencies.php';
