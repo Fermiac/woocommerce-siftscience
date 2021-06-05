@@ -3,3 +3,5 @@
 .vs
 .vscode
 .idea
+debug.log
+wp-errors.log
