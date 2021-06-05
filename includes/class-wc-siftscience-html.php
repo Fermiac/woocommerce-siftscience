@@ -13,12 +13,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 
+	require_once 'class-wc-siftscience-options.php';
+
 	/**
 	 * Helper class for generating html
 	 *
 	 * Class WC_SiftScience_Html
 	 */
 	class WC_SiftScience_Html {
+
+		/**
+		 * Options service
+		 *
+		 * @var WC_SiftScience_Options
+		 */
+		private $options;
+
+		/**
+		 * WC_SiftScience_Html constructor.
+		 *
+		 * @param WC_SiftScience_Options $options Options service.
+		 */
+		public function __construct( WC_SiftScience_Options $options ) {
+			$this->options = $options;
+		}
 
 		/**
 		 * This function displays sections in a bar separated list in regards of the current section
@@ -219,7 +237,7 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 */
 		public function enqueue_style( $css_name ) {
 			$src = plugin_dir_url( __DIR__ ) . "dist/css/$css_name.css";
-			wp_enqueue_style( 'wc-sift-' . $css_name, $src, array(), time() );
+			wp_enqueue_style( 'wc-sift-' . $css_name, $src, array(), $this->options->get_asset_version() );
 		}
 
 		/**
@@ -230,9 +248,8 @@ if ( ! class_exists( 'WC_SiftScience_Html' ) ) :
 		 * @param array  $deps Array of dependencies.
 		 */
 		public function enqueue_script( $name, $file_name, $deps = array() ) {
-			$version = time(); // TODO: Make this switchable for dev purposes.
-			$src     = plugin_dir_url( __DIR__ ) . "dist/js/$file_name.js";
-			wp_enqueue_script( $name, $src, $deps, $version, true );
+			$src = plugin_dir_url( __DIR__ ) . "dist/js/$file_name.js";
+			wp_enqueue_script( $name, $src, $deps, $this->options->get_asset_version(), true );
 		}
 	}
 endif;

@@ -87,6 +87,15 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		}
 
 		/**
+		 * Get the version to append at the and of CSS or JS files
+		 *
+		 * @return string
+		 */
+		public function get_asset_version() {
+			return defined( 'WP_DEBUG' ) ? (string) time() : self::get_version();
+		}
+
+		/**
 		 * Fetches the sift api key
 		 *
 		 * @return string
