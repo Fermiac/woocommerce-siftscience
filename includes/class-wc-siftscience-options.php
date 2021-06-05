@@ -24,6 +24,13 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		private $version;
 
 		/**
+		 * Either the version of the plugin or a timestamp for cache invalidation
+		 *
+		 * @var string
+		 */
+		private $asset_version;
+
+		/**
 		 * The current log level to log at
 		 *
 		 * @var int
@@ -66,6 +73,9 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 			$this->version        = WC_SiftScience_Plugin::PLUGIN_VERSION;
 			$this->log_level      = get_option( self::LOG_LEVEL_KEY, 2 );
 			$this->is_setup_value = get_option( self::IS_API_SETUP, '0' );
+
+			$is_debug            = defined( 'WP_DEBUG' ) && WP_DEBUG;
+			$this->asset_version = $is_debug ? (string) time() : self::get_version();
 		}
 
 		/**
@@ -92,7 +102,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 * @return string
 		 */
 		public function get_asset_version() {
-			return defined( 'WP_DEBUG' ) ? (string) time() : self::get_version();
+			return $this->asset_version;
 		}
 
 		/**
