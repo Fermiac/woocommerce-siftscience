@@ -11,7 +11,7 @@
  * Plugin URI: https://github.com/Fermiac/woocommerce-siftscience
  * Description: Get a handle on fraud with Sift - a modern approach to fraud prevention that uses machine learning.
  * Author: Nabeel Sulieman, Rami Jamleh, Lukas Svec
- * Version: 1.1.0
+ * Version: 1.2.1
  * Author URI: https://github.com/Fermiac/woocommerce-siftscience/wiki
  * License: GPL2
  */
@@ -35,7 +35,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * Class WC_SiftScience_Plugin Main class for the Sift plugin
 	 */
 	class WC_SiftScience_Plugin {
-		public const PLUGIN_VERSION = '1.1.0';
+		public const PLUGIN_VERSION = '1.2.1';
 
 		/**
 		 * Initialize all the classes and hook into everything
