@@ -1,10 +1,11 @@
 version: '3'
 services:
   wordpress:
-    image: wp-woocommerce
+    image: woosift
     ports:
-      - "80:80"
+      - "443:443"
       - "8085:8085"
       - "1080:1080"
     volumes:
       - '.:/var/www/wordpress/wp-content/plugins/woocommerce-siftscience'
+      - './temp/woocommerce-gateway-authorize-net-cim:/var/www/wordpress/wp-content/plugins/woocommerce-gateway-authorize-net-cim'

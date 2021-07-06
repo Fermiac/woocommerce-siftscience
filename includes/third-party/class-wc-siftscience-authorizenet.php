@@ -1,6 +1,6 @@
 <?php
 /**
- * Additional functionality related to the WooCommerce Stripe Gateway plugin
+ * Additional functionality related to the WooCommerce Authorize.net Gateway plugin
  *
  * @author Nabeel Sulieman, Rami Jamleh
  * @package sift-for-woocommerce
@@ -18,10 +18,10 @@ if ( ! class_exists( 'WC_SiftScience_AuthorizeNet' ) ) :
 	require_once dirname( __DIR__ ) . '/class-wc-siftscience-stats.php';
 
 	/**
-	 * Class WC_SiftScience_Stripe Stripe payment type management
+	 * Class WC_SiftScience_AuthorizeNet Authorize.net payment type management
 	 */
 	class WC_SiftScience_AuthorizeNet {
-		private const ORDER_DATA_KEY = '_wcsiftsci_stripe';
+		private const ORDER_DATA_KEY = '_wcsiftsci_authnet';
 
 		/**
 		 * Logging service
@@ -61,12 +61,12 @@ if ( ! class_exists( 'WC_SiftScience_AuthorizeNet' ) ) :
 		}
 
 		/**
-		 * Stores Stripe payment method info for later use in sift requests
+		 * Stores Authorize.net payment method info for later use in sift requests
 		 *
 		 * @param object   $request The original request data.
 		 * @param WC_Order $order Order to store payment info to.
 		 */
-		public function stripe_payment( $request, $order ) {
+		public function authnet_payment( $request, $order ) {
 			// Check that the card data is available.
 			if ( ! isset( $request, $request->source, $request->source->card ) ) {
 				return;
@@ -81,7 +81,7 @@ if ( ! class_exists( 'WC_SiftScience_AuthorizeNet' ) ) :
 
 			$payment_details = array(
 				'$payment_type'               => '$credit_card',
-				'$payment_gateway'            => '$stripe',
+				'$payment_gateway'            => '$authorizenet',
 				'$card_last4'                 => $card->last4,
 				'$cvv_result_code'            => $card->cvc_check,
 				'$stripe_address_line1_check' => $card->address_line1_check,
