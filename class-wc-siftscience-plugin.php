@@ -41,6 +41,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Initialize all the classes and hook into everything
 		 */
 		public function run() {
+
 			$dependencies = new WC_SiftScience_Dependencies();
 
 			/**
@@ -118,7 +119,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			// Authorize.net
 			// Check out action: woocommerce_checkout_create_order
-			add_action( 'wc_payment_gateway_authorize_net_cim_payment_processed', array( $authnet, 'authnet_payment' ), 10, 2 );
+			add_action( 'wc_payment_gateway_authorize_net_cim_payment_processed', array( $authnet, 'authnet_payment' ), 10, 1 );
 			add_filter( 'wc_siftscience_order_payment_method', array( $authnet, 'order_payment_method' ), 10, 2 );
 		}
 	}

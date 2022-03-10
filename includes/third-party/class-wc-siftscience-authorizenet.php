@@ -63,29 +63,31 @@ if ( ! class_exists( 'WC_SiftScience_AuthorizeNet' ) ) :
 		/**
 		 * Stores Authorize.net payment method info for later use in sift requests
 		 *
-		 * @param object   $request The original request data.
 		 * @param WC_Order $order Order to store payment info to.
 		 */
-		public function authnet_payment( $request, $order ) {
+		public function authnet_payment( $order ) {
+			$this->logger->log_info( "Authorize.net order processed: {$order->get_id()}: " . wp_json_encode( $order->get_meta_data() ) );
+
 			// Check that the card data is available.
-			if ( ! isset( $request, $request->source, $request->source->card ) ) {
+			if ( ! isset( $order, $order->payment ) ) {
+				$this->logger->log_info( 'Authorize.net exiting because no order data' );
 				return;
 			}
 
-			$card = $request->source->card;
-
-			// check that the card has all the expected data.
-			if ( ! isset( $card, $card->last4, $card->cvc_check, $card->address_line1_check, $card->address_zip_check ) ) {
+			$payment = $order->payment;
+			$this->logger->log_info( 'authnet payment info: ' . wp_json_encode( $payment ) );
+			if ( ! isset( $payment->last_four, $payment->card_type ) ) {
+				$this->logger->log_info( 'Authorize.net exiting because payment data is incomplete' );
 				return;
 			}
 
 			$payment_details = array(
 				'$payment_type'               => '$credit_card',
 				'$payment_gateway'            => '$authorizenet',
-				'$card_last4'                 => $card->last4,
-				'$cvv_result_code'            => $card->cvc_check,
-				'$stripe_address_line1_check' => $card->address_line1_check,
-				'$stripe_address_zip_check'   => $card->address_zip_check,
+				'$card_last4'                 => $payment->last_four,
+				// '$cvv_result_code'            => $card->cvc_check,
+				// '$stripe_address_line1_check' => $card->address_line1_check,
+				// '$stripe_address_zip_check'   => $card->address_zip_check,
 			);
 
 			$data = array( 'payment_method' => $payment_details );

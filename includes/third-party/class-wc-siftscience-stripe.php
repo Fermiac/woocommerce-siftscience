@@ -67,8 +67,11 @@ if ( ! class_exists( 'WC_SiftScience_Stripe' ) ) :
 		 * @param WC_Order $order Order to store payment info to.
 		 */
 		public function stripe_payment( $request, $order ) {
+			$this->logger->log_info( "WooSiftStripe detected order: {$order->get_id()}" );
+
 			// Check that the card data is available.
 			if ( ! isset( $request, $request->source, $request->source->card ) ) {
+				$this->logger->log_info( "Exiting due to missing request data." );
 				return;
 			}
 
@@ -76,6 +79,7 @@ if ( ! class_exists( 'WC_SiftScience_Stripe' ) ) :
 
 			// check that the card has all the expected data.
 			if ( ! isset( $card, $card->last4, $card->cvc_check, $card->address_line1_check, $card->address_zip_check ) ) {
+				$this->logger->log_info( "Exiting due to missing card data." );
 				return;
 			}
 
@@ -89,6 +93,7 @@ if ( ! class_exists( 'WC_SiftScience_Stripe' ) ) :
 			);
 
 			$data = array( 'payment_method' => $payment_details );
+			$this->logger->log_info( "Saving details: " . wp_json_encode( $data ) );
 			update_post_meta( $order->get_id(), self::ORDER_DATA_KEY, wp_json_encode( $data ) );
 		}
 

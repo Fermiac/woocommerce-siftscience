@@ -7,5 +7,4 @@ services:
       - "8085:8085"
       - "1080:1080"
     volumes:
-      - '.:/var/www/wordpress/wp-content/plugins/woocommerce-siftscience'
-      - './temp/woocommerce-gateway-authorize-net-cim:/var/www/wordpress/wp-content/plugins/woocommerce-gateway-authorize-net-cim'
+      - '.:/var/www/wp-content/plugins/woocommerce-siftscience'
