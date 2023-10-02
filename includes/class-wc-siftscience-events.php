@@ -244,7 +244,7 @@ if ( ! class_exists( 'WC_SiftScience_Events' ) ) :
 		 * @param object $username User object.
 		 */
 		public function login_failure( $username ) {
-			$this->eventss[] = $this->login->login_failure( $username );
+			$this->events[] = $this->login->login_failure( $username );
 		}
 
 		/**
