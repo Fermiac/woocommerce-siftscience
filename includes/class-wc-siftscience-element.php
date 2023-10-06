@@ -217,6 +217,8 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 
 		/**
 		 * This function constructs the custom html for the listed actions ID field.
+		 *
+		 * @param array $data The data that was passed in to the field renderer.
 		 */
 		public function score_actions_callback( array $data ) {
 			wp_enqueue_script( 'sift-score-actions', plugins_url( '../dist/js/admin-sift-score-actions.js', __FILE__ ), array( 'wp-util', 'jquery' ), false, true );
@@ -243,6 +245,13 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			<?php
 		}
 
+		/**
+		 * This method will generate each row's ui for the settings table.  It's used both to render existing data, and also new rows via wp.template!
+		 *
+		 * @param string $row_slug A unique identifier for the row, to group its array fields together.
+		 * @param array|null $action The row's data -- or just null if we're rendering an empty one.
+		 * @param array $data The data that was passed in to the field render -- so we can have access to the order status list and the like.
+		 */
 		public static function score_action_row_html( $row_slug, $action = null, $data = array() ) {
 			$action = wp_parse_args(
 				$action,

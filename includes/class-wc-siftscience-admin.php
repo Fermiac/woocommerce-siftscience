@@ -592,6 +592,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 
 				foreach ( $_REQUEST['score_actions'] as $_score_action ) {
 					$score_actions[] = array(
+						// Our only options for this should be `<` `<=` `>=` and `>` -- so strip anything not in `<` `>` and `=`
 						'comparison'   => preg_replace( '/[^\<\>=]/', '', $_score_action['comparison'] ),
 						'value'        => intval( $_score_action['value'] ),
 						'from_status'  => sanitize_key( $_score_action['from_status'] ),
