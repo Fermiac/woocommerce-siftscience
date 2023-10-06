@@ -39,6 +39,11 @@
     text-decoration: none;
 }
 
+.score_actions--ol > li:first-child .row-actions .sift-earlier,
+.score_actions--ol > li:last-child .row-actions .sift-later {
+    visibility: hidden;
+}
+
 .sift--score_actions--add {
     text-decoration: none;
 }
