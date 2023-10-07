@@ -250,6 +250,7 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 		 * @return Array [] the dictionary in which All fields are added.
 		 */
 		private function get_section_fields( $sub_section ) {
+			$this->html->enqueue_style( 'admin-settings' );
 
 			if ( 'main' === $sub_section ) {
 				$auto_update_settings = $this->options->get_order_auto_update_settings();
@@ -329,6 +330,18 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 							'threshold_value' => $this->options->get_threshold_bad(),
 							'callback'        => 'gb_callback',
 							'status'          => $this->status->get_status_options(),
+						)
+					),
+
+					$this->wc_element->create(
+						WC_SiftScience_Element::CUSTOM,
+						'score_actions',
+						'Actions Based on Sift Score',
+						'The first action whose prerequisites are met will run, the rest will not. Scores run from 0-100, higher is more likely fraud, lower is more likely legitimate.',
+						array(
+							'actions'  => $this->options->get_score_actions(),
+							'status'   => $this->status->get_status_options(),
+							'callback' => 'score_actions_callback',
 						)
 					),
 
@@ -572,6 +585,23 @@ if ( ! class_exists( 'WC_SiftScience_Admin' ) ) :
 				$bad_to    = sanitize_key( $_REQUEST['bad_to'] );
 
 				$this->options->set_order_auto_update_settings( $good_from, $good_to, $bad_from, $bad_to );
+			}
+
+			if ( isset( $_REQUEST['score_actions'] ) ) {
+				$score_actions = array();
+
+				foreach ( $_REQUEST['score_actions'] as $_score_action ) {
+					$score_actions[] = array(
+						// Our only options for this should be `<` `<=` `>=` and `>` -- so strip anything not in `<` `>` and `=`
+						'comparison'   => preg_replace( '/[^\<\>=]/', '', $_score_action['comparison'] ),
+						'value'        => intval( $_score_action['value'] ),
+						'from_status'  => sanitize_key( $_score_action['from_status'] ),
+						'to_status'    => sanitize_key( $_score_action['to_status'] ),
+						'other_action' => sanitize_key( $_score_action['other_action'] ),
+					);
+				}
+
+				$this->options->set_score_actions( $score_actions );
 			}
 		}
 	}

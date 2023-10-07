@@ -214,6 +214,93 @@ if ( ! class_exists( 'WC_SiftScience_Element' ) ) :
 			</tr>
 			<?php
 		}
+
+		/**
+		 * This function constructs the custom html for the listed actions ID field.
+		 *
+		 * @param array $data The data that was passed in to the field renderer.
+		 */
+		public function score_actions_callback( array $data ) {
+			wp_enqueue_script( 'sift-score-actions', plugins_url( '../dist/js/admin-sift-score-actions.js', __FILE__ ), array( 'wp-util', 'jquery' ), false, true );
+
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo esc_html( $data['title'] ); ?>
+				</th>
+				<td class="forminp">
+					<ol class="score_actions--ol">
+						<?php foreach ( $data['actions'] as $row_slug => $action ) : ?>
+							<?php self::score_action_row_html( $row_slug, $action, $data ); ?>
+						<?php endforeach; ?>
+					</ol>
+					<a href="#" class="sift--score_actions--add">➕ Add Row</a>
+					<p><?php echo esc_html( $data['desc'] ); ?></p>
+
+					<script type="text/html" id="tmpl-score-action">
+						<?php echo self::score_action_row_html( '{{data.row_slug}}', null, $data ); ?>
+					</script>
+				</td>
+			</tr>
+			<?php
+		}
+
+		/**
+		 * This method will generate each row's ui for the settings table.  It's used both to render existing data, and also new rows via wp.template!
+		 *
+		 * @param string $row_slug A unique identifier for the row, to group its array fields together.
+		 * @param array|null $action The row's data -- or just null if we're rendering an empty one.
+		 * @param array $data The data that was passed in to the field render -- so we can have access to the order status list and the like.
+		 */
+		public static function score_action_row_html( $row_slug, $action = null, $data = array() ) {
+			$action = wp_parse_args(
+				$action,
+				array(
+					'comparison'   => null,
+					'value'        => null,
+					'from_status'  => null,
+					'to_status'    => null,
+					'other_action' => 'nothing',
+				)
+			);
+			?>
+			<li data-row-slug="<?php echo esc_attr( $row_slug ); ?>">
+				If the score is
+				<select name="score_actions[<?php echo esc_attr( $row_slug ); ?>][comparison]">
+					<option></option>
+					<option value=">" <?php selected( '>', $action['comparison'] ); ?>>></option>
+					<option value=">=" <?php selected( '>=', $action['comparison'] ); ?>>>=</option>
+					<option value="<=" <?php selected( '<=', $action['comparison'] ); ?>><=</option>
+					<option value="<" <?php selected( '<', $action['comparison'] ); ?>><</option>
+				</select>
+				<input type="number" min="0" max="100" name="score_actions[<?php echo esc_attr( $row_slug ); ?>][value]" value="<?php echo esc_attr( $action['value'] ); ?>" />
+				and the order status is
+				<select name="score_actions[<?php echo esc_attr( $row_slug ); ?>][from_status]">
+					<?php foreach ( $data['status'] as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $action['from_status'] ); ?>><?php echo esc_html( $value ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				,<br />&nbsp;&nbsp;&nbsp;&nbsp; then change the order status to
+				<select name="score_actions[<?php echo esc_attr( $row_slug ); ?>][to_status]">
+					<?php foreach ( $data['status'] as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $action['to_status'] ); ?>><?php echo esc_html( $value ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				and
+				<select name="score_actions[<?php echo esc_attr( $row_slug ); ?>][other_action]">
+					<option value="nothing" <?php selected( 'nothing', $action['other_action'] ); ?>>Nothing further</option>
+					<option value="email_admin" <?php selected( 'email_admin', $action['other_action'] ); ?>>E-mail an Admin</option>
+					<option value="cancel_all_users_orders" <?php selected( 'cancel_all_users_orders', $action['other_action'] ); ?>>Cancel any of the user&rsquo;s other orders</option>
+				</select>
+				<span class="row-actions">
+					<a href="#" class="sift-earlier" title="Move this rule earlier">🔼</a>
+					<a href="#" class="sift-later" title="Move this rule later">🔽</a>
+					<a href="#" class="sift-delete" title="Delete this Rule">❌</a>
+				</span>
+			</li>
+			<?php
+		}
+
 		/**
 		 *
 		 * Adds batch_upload element, the div must have the ID of batch-upload.

@@ -58,6 +58,7 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 
 		public const THRESHOLD_GOOD    = self::SCHEMA . 'threshold_good';
 		public const THRESHOLD_BAD     = self::SCHEMA . 'threshold_bad';
+		public const SCORE_ACTIONS     = self::SCHEMA . 'score_actions';
 		public const AUTO_SEND_ENABLED = self::SCHEMA . 'auto_send_enabled';
 		public const MIN_ORDER_VALUE   = self::SCHEMA . 'min_order_value';
 		public const LOG_LEVEL_KEY     = self::SCHEMA . 'log_level';
@@ -184,6 +185,28 @@ if ( ! class_exists( 'WC_SiftScience_Options' ) ) :
 		 */
 		public function set_threshold_bad( int $value ) {
 			update_option( self::THRESHOLD_BAD, $value );
+		}
+
+		/**
+		 * Gets the available actions to take, based on Sift Score.
+		 */
+		public function get_score_actions() {
+			return get_option( self::SCORE_ACTIONS, array() );
+		}
+
+		/**
+		 * Sets the available actions to take, based on Sift Score.
+		 *
+		 * This should be an array of associative arrays.  Each option should have the following keys:
+		 *
+		 * `comparison`    (string) Either `>` `>=` `<=` or `<`
+		 * `value`         (integer) An integer between 0 and 100.
+		 * `from_status`   (string) One of `WC_SiftScience_Order_Status::get_status_options()`
+		 * `to_status`     (string) One of `WC_SiftScience_Order_Status::get_status_options()`
+		 * `other_actions` (string) Available extra actions we'd like to take.
+		 */
+		public function set_score_actions( array $actions ) {
+			update_option( self::SCORE_ACTIONS, $actions );
 		}
 
 		/**
