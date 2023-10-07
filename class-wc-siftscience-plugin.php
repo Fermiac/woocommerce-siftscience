@@ -41,6 +41,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * Initialize all the classes and hook into everything
 		 */
 		public function run() {
+
 			$dependencies = new WC_SiftScience_Dependencies();
 
 			/**
@@ -65,11 +66,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$stats = $dependencies->get( 'WC_SiftScience_Stats' );
 
 			// Wrap all the classes in error catcher.
-			$events = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Events' ), $logger, $stats );
-			$orders = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Orders' ), $logger, $stats );
-			$admin  = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Admin' ), $logger, $stats );
-			$api    = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Api' ), $logger, $stats );
-			$stripe = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Stripe' ), $logger, $stats );
+			$events  = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Events' ), $logger, $stats );
+			$orders  = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Orders' ), $logger, $stats );
+			$admin   = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Admin' ), $logger, $stats );
+			$api     = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Api' ), $logger, $stats );
+			$stripe  = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_Stripe' ), $logger, $stats );
+			$authnet = new WC_SiftScience_Instrumentation( $dependencies->get( 'WC_SiftScience_AuthorizeNet' ), $logger, $stats );
 
 			// Admin hooks.
 			add_filter( 'woocommerce_settings_tabs_array', array( $admin, 'add_settings_page' ), 30 );
@@ -114,6 +116,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			// Stripe.
 			add_action( 'wc_gateway_stripe_process_payment', array( $stripe, 'stripe_payment' ), 10, 2 );
 			add_filter( 'wc_siftscience_order_payment_method', array( $stripe, 'order_payment_method' ), 10, 2 );
+
+			// Authorize.net
+			// Check out action: woocommerce_checkout_create_order
+			add_action( 'wc_payment_gateway_authorize_net_cim_payment_processed', array( $authnet, 'authnet_payment' ), 10, 1 );
+			add_filter( 'wc_siftscience_order_payment_method', array( $authnet, 'order_payment_method' ), 10, 2 );
 		}
 	}
 
